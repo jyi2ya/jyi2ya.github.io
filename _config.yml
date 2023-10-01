@@ -105,7 +105,6 @@ deploy:
   type: ''
 
 theme_config:
-  default_post_title: "Untitled"
   # Header
   menu:
     Home: /
