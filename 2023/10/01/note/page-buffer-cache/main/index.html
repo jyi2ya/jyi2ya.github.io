@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><!-- hexo injector head_begin start --><script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- hexo injector head_begin end -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="Page&amp;#x2F;Buffer Cache 是什么？
+简介Page Cache
+试图最小化磁盘 IO
+
+本质上是一堆内存页面
+
+
+
+内存页面（Page）：一小段连续内存，是操作系统管理内存的最小单位
+
+
+包含了很多最近访问过的文件的内容
+意思是不包括 inode、目录等东西！
+
+
+
+
+对于 ino">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="jyi2ya">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Page/Buffer Cache 是什么？"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Hexo"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Page/Buffer Cache 是什么？ - Hexo</title>
+
+    <!-- Tachyons Core CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Google Analytics -->
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<div class="w-100 bg-1 ph5-ns ph3 text-light">
+    
+    <nav class="db dt-l w-100 mw8 center border-box pv3">
+        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="Hexo">
+            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="Hexo">
+        </a>
+        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/" 
+                    title="Home">
+                    Home
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/archives" 
+                    title="Archives">
+                    Archives
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/tags" 
+                    title="Tags">
+                    Tags
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/categories" 
+                    title="Categories">
+                    Categories
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/about.html" 
+                    title="About">
+                    About
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/contact.html" 
+                    title="Contact">
+                    Contact
+                </a>
+            
+        </div>
+    </nav>
+
+    <!-- Title -->
+    <div class="w-100 mw8 center vh-40 dt">
+        <div class="dtc v-mid white">
+            <h1 class="f1-l f2-m tc tc-m tl-ns">Page/Buffer Cache 是什么？</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2023-10-01</p>
+        </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="relative w-100 mw8 center white dn dn-m db-ns">
+        <i class="header-icon fa fa-file-text-o"></i>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
+                    <!-- Tags Vertical -->
+                    
+
+                    <!-- Main Post Content -->
+                    <p>Page&#x2F;Buffer Cache 是什么？</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="Page-Cache"><a href="#Page-Cache" class="headerlink" title="Page Cache"></a>Page Cache</h2><ul>
+<li><p>试图最小化磁盘 IO</p>
+</li>
+<li><p>本质上是一堆内存页面</p>
+</li>
+</ul>
+<blockquote>
+<p>内存页面（Page）：一小段连续内存，是操作系统管理内存的最小单位</p>
+</blockquote>
+<ul>
+<li>包含了很多最近访问过的<strong>文件的内容</strong><ul>
+<li>意思是不包括 inode、目录等东西！</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>对于 inode 和目录来说，他们的 page cache 的类似物分别叫做 inode cache 和 directory entry cache。其中 directory entry cache 又由 inode cache 组织而来。</p>
+</blockquote>
+<ul>
+<li><p>用途广泛，用于 file-backed mmap、buffered io，甚至 swap。</p>
+</li>
+<li><p>需要文件系统支持</p>
+</li>
+</ul>
+<h2 id="Buffer-Cache"><a href="#Buffer-Cache" class="headerlink" title="Buffer Cache"></a>Buffer Cache</h2><ul>
+<li><p>试图最小化磁盘 IO</p>
+</li>
+<li><p>本质上是内存里的一堆块</p>
+</li>
+</ul>
+<blockquote>
+<p>块：操作系统对磁盘操作的基本单位，在 Linux 中要求大小为 2 的整数次幂，且比 sector 大，比 page 小</p>
+</blockquote>
+<blockquote>
+<p>sector：磁盘读写数据的最小单位，由磁盘决定。</p>
+</blockquote>
+<ul>
+<li><p>包含了最近访问过的块</p>
+</li>
+<li><p>用途不多，基本上只用来加速块设备</p>
+</li>
+</ul>
+<blockquote>
+<p>块设备（Block Device）：支持随机读写的设备。典型的比如磁盘。</p>
+</blockquote>
+<ul>
+<li>不需要文件系统</li>
+</ul>
+<blockquote>
+<p>比如，文件系统的 superblock 一般会躺在 buffer cache 里面</p>
+</blockquote>
+<h2 id="两者的关系"><a href="#两者的关系" class="headerlink" title="两者的关系"></a>两者的关系</h2><p>可以参考下图（从 <a target="_blank" rel="noopener" href="https://www.usenix.org/legacy/publications/library/proceedings/usenix01/full_papers/kroeger/kroeger_html/node8.html">usenix</a> 上面偷的）：</p>
+<p><img src="/overview.png" alt="overview.png"></p>
+<blockquote>
+<p><strong>考古时间</strong></p>
+<p>为什么 page cache 是一堆内存页面，而 buffer cache 是一堆块呢？</p>
+<p>最开始 Linux 上面只有 buffer cache，此时 buffer cache 仅仅用于加速 buffered io 操作，向上与 read&#x2F;write 交互，向下与磁盘交互。所以 buffer cache 设计成一堆块是很合适的。</p>
+<p>page cache 则是为了支持 mmap，在 2.2 版本中引入的。由于它和内存关系比较紧密，所以设计成一堆内存页的形式。不过此时 buffered io 仍然只与 buffer cache 交互，不与 page cache 交互。要等两个 cache 合并之后才会出现大家所熟知的「调用 read&#x2F;write 之后会写 page cache，过一会儿由操作系统把脏页写回磁盘」这种模式。</p>
+</blockquote>
+<h1 id="一些比较复杂的东西"><a href="#一些比较复杂的东西" class="headerlink" title="一些比较复杂的东西"></a>一些比较复杂的东西</h1><h2 id="page-cache-和-buffer-cache-其实是一个东西？"><a href="#page-cache-和-buffer-cache-其实是一个东西？" class="headerlink" title="page cache 和 buffer cache 其实是一个东西？"></a>page cache 和 buffer cache 其实是一个东西？</h2><p>虽然逻辑上还是可以将他们分为两个东西，但是其实两者只是同一套数据的不同组织方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+---------------------------------------+</span><br><span class="line">| page                                  |</span><br><span class="line">|+-------+ +--------+ +--------++------+|</span><br><span class="line">||buffer1| | buffer2| |buffer3 ||buffer||</span><br><span class="line">||       | |        | |        ||  4   ||</span><br><span class="line">|+-------+ +--------+ +--------++------+|</span><br><span class="line">+---------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>（没找到合适的图所以画了个）</p>
+<p>每个 buffer 可以通过 <code>buffer_head</code> 结构体中的 <code>b_page</code> 字段获取自己对应的 page，同时 page 也可以通过 <code>page</code> 结构体中的 <code>buffers</code> 字段来得到自己所拥有的一组 buffer。</p>
+<h2 id="既然-page-cache-与-buffer-cache-合并了……"><a href="#既然-page-cache-与-buffer-cache-合并了……" class="headerlink" title="既然 page cache 与 buffer cache 合并了……"></a>既然 page cache 与 buffer cache 合并了……</h2><p>那如果我在 A 进程对 <code>/dev/sda1</code> 上的一个文件 F 的一个连续区域做 shared mmap，再在 B 进程对 <code>/dev/sda</code> 本身做 shared mmap，两个进程映射的实际磁盘空间一致，那 A 进程与 B 进程能映射到同一个 page 吗？</p>
+<p>答案是不行 :3。因为 A 进程的 page 是文件系统给的，而 B 进程得到的东西更像是一堆 buffer 组合成的 page。</p>
+<p>此时数据组织大概是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">+---------------------------------------+  +---------------------------------------+</span><br><span class="line">| A page                                |  | B page                                |</span><br><span class="line">|                                       |  |                                       |</span><br><span class="line">|                                       |  |                                       |</span><br><span class="line">|    o         o          o           o |  |   o       o          o         o      |</span><br><span class="line">|    |         |          |           | |  |   |       |          |         |      |</span><br><span class="line">+----|---------|----------|-----------|-+  +---|-------+----------+---------+------+</span><br><span class="line">     v         v          v           v        |       |          |         |</span><br><span class="line"> +-------+ +--------+ +--------+   +------+    |       |          |         |</span><br><span class="line">`|buffer1| | buffer2| |buffer3 |   |buffer|    |       |          |         |</span><br><span class="line"> |       | |        | |        |   |  4   |    |       |          |         |</span><br><span class="line"> +---^---+ +---^----+ +---^----+   +--^---+    |       |          |         |</span><br><span class="line">     +---------+----------|-----------+--------+       |          |         |</span><br><span class="line">               +----------|-----------+----------------+          |         |</span><br><span class="line">                          +-----------+---------------------------+         |</span><br><span class="line">                                      +---------------------------+---------+</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="一些好玩的接口"><a href="#一些好玩的接口" class="headerlink" title="一些好玩的接口"></a>一些好玩的接口</h1><h2 id="来点文件预读"><a href="#来点文件预读" class="headerlink" title="来点文件预读"></a>来点文件预读</h2><p>除了缓存已经读过&#x2F;写过的数据之外，猜测程序要读什么从而提前把它们读进 page cache 中，也能加快程序！</p>
+<ul>
+<li><p>posix_fadvise(2): <code>POSIX_FADV_SEQUENTIAL</code> 参数可以暗示内核自己将要顺序读文件。</p>
+</li>
+<li><p>madvise(2): <code>MADV_SEQUENTIAL</code> 参数可以暗示内核自己将顺序使用一些内存，配合 <code>mmap(2)</code> 使用。</p>
+</li>
+<li><p>readahead(2)：简单直接地告诉内核，偷偷多读一些东西（感觉这是个没用的屑调用……）。</p>
+</li>
+</ul>
+<h2 id="掉落擦车"><a href="#掉落擦车" class="headerlink" title="掉落擦车"></a>掉落擦车</h2><p>可以通过 <code>/proc/sys/vm/drop_caches</code> 来告知内核扔掉一些 cache 数据。可以通过 <code>echo X &gt; /proc/sys/vm/drop_caches</code> 来使用。其中 X 的取值可以为 1, 2 或 3。当 X 为 1 时意思是让内核扔掉所有 page cache 里面的数据。2 和 3 代表什么，不知道 :3。</p>
+<p>在测试一些 io-bounded 的程序时，为了防止 page cache 对测量结果造成干扰，可以在测试前运行一下。</p>
+<h1 id="未解之谜"><a href="#未解之谜" class="headerlink" title="未解之谜"></a>未解之谜</h1><p>发现自己还是不太看得懂 <code>free(1)</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">               total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:            13Gi       4.4Gi       3.2Gi       135Mi       6.5Gi       9.1Gi</span><br></pre></td></tr></table></figure>
+
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+
+
+                </div>
+                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
+                    
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 1: About -->
+                    <div class="mt5 mt0-l">
+    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
+        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
+            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="jyi2ya">
+        </div>
+        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
+            My name is Jonathan Klughertz and this is my blog.<br>I am a full stack software engineer with a strong front-end focus.<br> I currently live and work in Singapore, hit me up if you are in the region.
+        </div>
+    </article>
+</div>
+
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 2: Categories -->
+                    
+
+                    <!-- Widget 3: Recent Posts -->
+                    <div class="mt5 tc tl-l">
+    <h3>Recent Posts</h3>
+    
+        <p>
+            <a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/friends/main/">友链</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/restart/main/">重新开始</a>
+        </p>
+    
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="bg-1 ph2 ph5-ns pv5">
+        <div class="mv8">
+            <div class="center tc">
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
+                            <i class="fa fa-google-plus"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
+                            <i class="fa fa-behance"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
+                            <i class="fa fa-500px"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </div>
+                
+            </div>
+            <div class="f6 f5-ns center tc white pt5 fw3">
+                @Untitled. All right reserved | Design & Hexo <a class="link dim white" target="_blank" rel="noopener" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+            </div>
+        </div>
+    </div>
+
+<!-- After Footer -->
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

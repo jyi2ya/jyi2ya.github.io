@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><!-- hexo injector head_begin start --><script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- hexo injector head_begin end -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="对集群上 df 和 du 命令显示结果不一致的排查记录背景在集群上跑作业，然后把磁盘空间吃掉了。把占用空间很大的文件删掉后，du /home 命令的结果显示磁盘占用已经回到了正常水平，但是 df -h 显示，/home 所在分区的磁盘占用率还是 100%，也不能新建和修改文件。
+猜想不会是把文件系统">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="jyi2ya">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="对集群上 df 和 du 命令显示结果不一致的排查记录"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Hexo"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>对集群上 df 和 du 命令显示结果不一致的排查记录 - Hexo</title>
+
+    <!-- Tachyons Core CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Google Analytics -->
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<div class="w-100 bg-1 ph5-ns ph3 text-light">
+    
+    <nav class="db dt-l w-100 mw8 center border-box pv3">
+        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="Hexo">
+            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="Hexo">
+        </a>
+        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/" 
+                    title="Home">
+                    Home
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/archives" 
+                    title="Archives">
+                    Archives
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/tags" 
+                    title="Tags">
+                    Tags
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/categories" 
+                    title="Categories">
+                    Categories
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/about.html" 
+                    title="About">
+                    About
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/contact.html" 
+                    title="Contact">
+                    Contact
+                </a>
+            
+        </div>
+    </nav>
+
+    <!-- Title -->
+    <div class="w-100 mw8 center vh-40 dt">
+        <div class="dtc v-mid white">
+            <h1 class="f1-l f2-m tc tc-m tl-ns">对集群上 df 和 du 命令显示结果不一致的排查记录</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2023-10-01</p>
+        </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="relative w-100 mw8 center white dn dn-m db-ns">
+        <i class="header-icon fa fa-file-text-o"></i>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
+                    <!-- Tags Vertical -->
+                    
+
+                    <!-- Main Post Content -->
+                    <h1 id="对集群上-df-和-du-命令显示结果不一致的排查记录"><a href="#对集群上-df-和-du-命令显示结果不一致的排查记录" class="headerlink" title="对集群上 df 和 du 命令显示结果不一致的排查记录"></a>对集群上 df 和 du 命令显示结果不一致的排查记录</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在集群上跑作业，然后把磁盘空间吃掉了。把占用空间很大的文件删掉后，<code>du /home</code> 命令的结果显示磁盘占用已经回到了正常水平，但是 <code>df -h</code> 显示，<code>/home</code> 所在分区的磁盘占用率还是 100%，也不能新建和修改文件。</p>
+<h2 id="猜想"><a href="#猜想" class="headerlink" title="猜想"></a>猜想</h2><h3 id="不会是把文件系统弄坏了吧！"><a href="#不会是把文件系统弄坏了吧！" class="headerlink" title="不会是把文件系统弄坏了吧！"></a>不会是把文件系统弄坏了吧！</h3><p>仔细想了想好像不可能，因为平时都是用普通用户的身份工作的……不太可能搞出影响文件系统的操作。</p>
+<h3 id="有些人的小文件太多，把-inode-给用光了！"><a href="#有些人的小文件太多，把-inode-给用光了！" class="headerlink" title="有些人的小文件太多，把 inode 给用光了！"></a>有些人的小文件太多，把 inode 给用光了！</h3><p>看起来有可能，但是回想下很久很久以前自己做赛博仓鼠的时候遇到的问题，就会发现两个问题表现完全不一样。</p>
+<p>很久很久以前，赛博鼠鼠 jyi 试图往自己的鼠鼠洞里塞图片，发现没有磁盘空间了！他 <code>df</code> 了下，发现硬盘空间还有很多，但是新建文件就是会出错。他又试了试往已有的文件后面追加写入一些东西，好像可以成功。他觉得非常奇怪，“凭什么磁盘有空间，但是就是不让我放东西呢？”</p>
+<p>用一种比较笨蛋的方法来看 <code>ext&#123;2,3,4&#125;</code> 文件系统，就知道文件系统中，一个文件需要 1 个 inode 和许多许多 block。其中，inode 用来存放文件的元数据，block 用来存放文件本身。由于 block 数量一般多于 inode 的数量（block 的数量少于 inode 的数量有啥用啊……），所以可能会出现 inode 耗尽，而 block 有剩余的情况。在这种情况下，无法新建文件，却可以修改文件。</p>
+<p>因为赛博鼠鼠 jyi 非常菜，所以他与电脑搏斗了一番后才想起关于 inode 的知识。他 <code>df -i</code> 了一下，发现自己要存放图片的文件系统的 inode 已经用光了。最后他把一些图片打包成 sfs，再挂载到<del>世界树</del>目录树上，从而在原本的文件系统里回收了一些 inode，终于解决了这个问题。</p>
+<p>回到集群上来，为什么这个表现和集群上遇到的状况完全不一样呢？因为经过检查发现，集群上显示 <code>df -i</code> 不是 100%，<code>df -h</code> 显示的使用率是 100%；而很久很久以前和自己的电脑搏斗时，<code>df -i</code> 显示的使用率是 100%，<code>df -h</code> 则是比 100 小不少的数字。</p>
+<p>这说明集群上很可能不是很多小文件把 inode 用光的问题，更可能是巨大文件很简单地把 block 用光的问题。</p>
+<h3 id="有一些邪恶文件藏在了黑暗角落里！"><a href="#有一些邪恶文件藏在了黑暗角落里！" class="headerlink" title="有一些邪恶文件藏在了黑暗角落里！"></a>有一些邪恶文件藏在了黑暗角落里！</h3><p>Linux 下面是可以往非空目录上挂载文件系统的，挂载后原目录里有的文件将会被遮盖掉。这些文件显然会被 <code>df</code> 统计，但是不会被 <code>du</code> 统计。</p>
+<p>显然，最简单的方法就是把根目录之外的所有目录卸载，然后跑一下 <code>df</code> 和 <code>du</code>。然而，现在要操作的是运行中的系统（也许还有同学在上面跑神秘程序，那种中断了会遭遇线下真人快打的），不能这么粗暴地处理……</p>
+<p>最后我找了个 tmpfs <code>/run/mnt</code>（因为根目录下没法新建文件夹做挂载点了），然后 <code>mount --bind / /run/mnt</code>。接着进 <code>/run/mnt</code> 一看，发现 <code>df</code> 和 <code>du</code> 的结果仍然不同！仍然是 <code>du</code> 很少一点，<code>df</code> 巨大无比的结果。</p>
+<h2 id="破案"><a href="#破案" class="headerlink" title="破案"></a>破案</h2><p>正在自闭时，突然想起来，好像学文件系统时在懵懵懂懂的时候学到了 Linux 下 inode 结构体里，有关 <code>i_count</code> 和 <code>i_nlink</code> 的知识。其中，<code>i_count</code> 代表当前有多少个文件描述符引用了这个文件，<code>i_nlink</code> 代表这个文件在文件系统里有多少个硬链接。当且仅当 <code>i_count</code> 和 <code>i_nlink</code> 都为零时，这个 inode 和她所持有的 block 才被会释放。有没有这种可能，一个神秘邪恶，吃光了磁盘的巨大文件，它的 <code>i_nlink</code> 是 0 同时 <code>i_count</code> 非零，这样它不会被递归查看文件名的 <code>du</code> 找到，但是能被统计 block 的 <code>df</code> 给检查到呢？</p>
+<p>于是使用 <code>lsof | grep deleted</code> 一查，果然有一堆坏比 Perl 程序，打开了巨大文件没关。文件的所有者是我，大小有 780G。考虑到集群上好像只有我写 Perl，所以主谋是谁应该不言自明了……</p>
+<h2 id="结局"><a href="#结局" class="headerlink" title="结局"></a>结局</h2><p>使用天火圣裁发动了一次牛逼的攻击……其实是 <code>ps -u jyi</code>，把自己所有的进程，不管好比还是坏比都干掉了。然后 <code>df</code> 了几次，看着可用空间逐渐上涨。</p>
+<p>问题最终解决了，可喜可贺可喜可贺。另外给好朋友说这个事时，还听说在 “进程打开了文件，但是文件不小心删掉了” 这种情况下，在进程关闭之前，可以去 <code>/proc/X/fd/Y</code> 下面把文件找回来。其中 <code>X</code> 是进程 pid，<code>Y</code> 是软链接，名字就是文件描述符，目标是被打开的文件，用 <code>cat</code> 命令就可以把文件给找回来。利用的也是 inode 释放的机制。</p>
+<p>总之，Linux 真神奇啊 :3</p>
+
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+
+
+                </div>
+                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
+                    
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 1: About -->
+                    <div class="mt5 mt0-l">
+    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
+        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
+            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="jyi2ya">
+        </div>
+        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
+            My name is Jonathan Klughertz and this is my blog.<br>I am a full stack software engineer with a strong front-end focus.<br> I currently live and work in Singapore, hit me up if you are in the region.
+        </div>
+    </article>
+</div>
+
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 2: Categories -->
+                    
+
+                    <!-- Widget 3: Recent Posts -->
+                    <div class="mt5 tc tl-l">
+    <h3>Recent Posts</h3>
+    
+        <p>
+            <a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/friends/main/">友链</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/restart/main/">重新开始</a>
+        </p>
+    
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="bg-1 ph2 ph5-ns pv5">
+        <div class="mv8">
+            <div class="center tc">
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
+                            <i class="fa fa-google-plus"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
+                            <i class="fa fa-behance"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
+                            <i class="fa fa-500px"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </div>
+                
+            </div>
+            <div class="f6 f5-ns center tc white pt5 fw3">
+                @Untitled. All right reserved | Design & Hexo <a class="link dim white" target="_blank" rel="noopener" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+            </div>
+        </div>
+    </div>
+
+<!-- After Footer -->
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

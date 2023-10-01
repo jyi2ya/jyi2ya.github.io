@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><!-- hexo injector head_begin start --><script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- hexo injector head_begin end -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="一些书上不怎么讲的编译器优化方法内容预览注意：理论上，要搞清楚编译器所做的工作，我们应该从词法分析讲到中间代码生成，再从汇编生成讲到链接。但是因为大家都学过编译原理，从词法分析到汇编的一系列内容大家都已经学烂了。为了保证大家都有兴趣，我们把大部分能从《编译原理》和《现代编译原理：C语言描述》里面找到">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="jyi2ya">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="一些书上不怎么讲的编译器优化方法"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Hexo"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>一些书上不怎么讲的编译器优化方法 - Hexo</title>
+
+    <!-- Tachyons Core CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Google Analytics -->
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<div class="w-100 bg-1 ph5-ns ph3 text-light">
+    
+    <nav class="db dt-l w-100 mw8 center border-box pv3">
+        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="Hexo">
+            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="Hexo">
+        </a>
+        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/" 
+                    title="Home">
+                    Home
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/archives" 
+                    title="Archives">
+                    Archives
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/tags" 
+                    title="Tags">
+                    Tags
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/categories" 
+                    title="Categories">
+                    Categories
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/about.html" 
+                    title="About">
+                    About
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/contact.html" 
+                    title="Contact">
+                    Contact
+                </a>
+            
+        </div>
+    </nav>
+
+    <!-- Title -->
+    <div class="w-100 mw8 center vh-40 dt">
+        <div class="dtc v-mid white">
+            <h1 class="f1-l f2-m tc tc-m tl-ns">一些书上不怎么讲的编译器优化方法</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2023-10-01</p>
+        </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="relative w-100 mw8 center white dn dn-m db-ns">
+        <i class="header-icon fa fa-file-text-o"></i>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
+                    <!-- Tags Vertical -->
+                    
+
+                    <!-- Main Post Content -->
+                    <h1 id="一些书上不怎么讲的编译器优化方法"><a href="#一些书上不怎么讲的编译器优化方法" class="headerlink" title="一些书上不怎么讲的编译器优化方法"></a>一些书上不怎么讲的编译器优化方法</h1><h2 id="内容预览"><a href="#内容预览" class="headerlink" title="内容预览"></a>内容预览</h2><p><strong>注意：理论上，要搞清楚编译器所做的工作，我们应该从词法分析讲到中间代码生成，再从汇编生成讲到链接。但是因为大家都学过编译原理，从词法分析到汇编的一系列内容大家都已经学烂了。为了保证大家都有兴趣，我们把大部分能从《编译原理》和《现代编译原理：C语言描述》里面找到的内容都删掉了（其实是根本没写）！</strong></p>
+<p>整个分享将会讲述一些书上没有的优化点和优化方法。还会介绍大家平时写的语言用得很少，但是 Jvavavava 和别的一些脚本语言用得很多神奇玩意 —— JIT。</p>
+<p>一些名词在 LLVM 和 MSVC 中有不同的称呼，会在标题使用 LLVM 的叫法，并且在正文给出 MSVC 的叫法，方便大家 RTFM。</p>
+<h2 id="JIT-Just-In-Time-Compilation"><a href="#JIT-Just-In-Time-Compilation" class="headerlink" title="JIT - Just In Time Compilation"></a>JIT - Just In Time Compilation</h2><p>即时编译器。作用大概是把代码一边执行一边翻译成机器语言，从而用一些编译的代价，换取之后相关代码执行更快的利益。工作量主要在于确定何时进行翻译，优化到什么程度，以及优化 JIT 本身的速度。</p>
+<p>本来按照历史的进程，应该先讲 AOT 部分的，但是有些重要概念在 JIT 里面讲比较方便，所以就调换了一下顺序。</p>
+<h3 id="单层编译器"><a href="#单层编译器" class="headerlink" title="单层编译器"></a>单层编译器</h3><p>没有解释器，所有代码执行之前都会被编译一次，然后直接执行二进制代码。</p>
+<p>可以类比一下 <a target="_blank" rel="noopener" href="https://www.bellard.org/tcc/">Tiny C Compiler</a> 的 <code>tcc -run</code> 命令。这个命令声称能直接执行 C 语言代码。但是实际上是先把 C 编译一遍，存到内存里再执行的。因为现在单层结构的 JIT 实际上几乎没有了，所以也没找到什么好玩的例子。</p>
+<p>优点：</p>
+<ul>
+<li>好写。要求不高的话，造一个飞快的编译器就可以了</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>不优化会很慢。如果你的编译器真的一点也不优化的话，你会发现你编译到二进制的语言会和 Java 打得 <a target="_blank" rel="noopener" href="https://benchmarksgame-team.pages.debian.net/benchmarksgame/fastest/go.html">有来有回</a></li>
+<li>更糟的是，因为每次执行代码时 JIT 编译器都要运行一遍，就注定这个编译器不可能牺牲编译时间来换取更多的优化。</li>
+</ul>
+<h3 id="解释器-编译器"><a href="#解释器-编译器" class="headerlink" title="解释器 + 编译器"></a>解释器 + 编译器</h3><p>典型的是 Java 的虚拟机 —— HotSpot VM。听名字就知道，HotSpot VM 和性能热点有关。事实也是如此。</p>
+<p>HotSpot VM 运行时会首先对程序解释执行，接着分析程序性能热点。并将热点部分编译。</p>
+<p>通常，编译器分为很多层，对应不同的优化等级。一段代码在执行过程中会被反复编译，程序越热的部分，得到的优化会越多。</p>
+<p>这么看来，我们自己也是某种神秘 JIT。写代码时先用 perf&#x2F;vtune 之类的东西查出性能热点，然后再优化跑得多的部分……</p>
+<blockquote>
+<p>为什么针对热点优化：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Amdahl's_law">阿姆达尔定律</a></p>
+</blockquote>
+<h3 id="FDO-Feadback-Directed-Optimization"><a href="#FDO-Feadback-Directed-Optimization" class="headerlink" title="FDO - Feadback-Directed Optimization"></a>FDO - Feadback-Directed Optimization</h3><p>之前我们已经知道了多层的 JIT 会分析运行的代码执行的情况，以确定何时对代码进行优化。</p>
+<p>我们只收集 “代码在过去一段时间内运行次数” 这一个信息，就可以较好地确定代码需要的优化程度。但是我们在运行时对程序进行分析时，往往能得到更多的信息。比如，程序在某个分支失败的概率等等。而这些信息往往是无法在源代码中体现出来的。我们能不能利用这些信息来对代码做进一步的优化呢？</p>
+<p>这就是 FDO 的思路：利用代码运行时的收集的数据来优化代码。</p>
+<p>在微软的文档里通常叫 PGO，Profile-Guided Optimization</p>
+<p>很容易想到，借助 FDO 我们可以实现这几个神奇优化：</p>
+<ul>
+<li>内联高频执行的函数</li>
+<li>寄存器分配优化</li>
+<li>条件跳转优化</li>
+</ul>
+<p>还有一些不那么容易想到的优化：</p>
+<ul>
+<li>虚函数调用优化：发现某个 virtual call 总是调一个函数，就加一组条件判断 + 直接调用来优化</li>
+</ul>
+<p>同时，由于 FDO 是根据代码运行的实际数据来优化，所以它会更加容易适应实际数据的模式。这比 AOT 编译对着源代码瞎猜好多了……</p>
+<p>JIT 中的 FDO 通常也分为两种，分别是：</p>
+<ul>
+<li>Sample-Based FDO：工作方式类似 <code>perf(1)</code>，原理是采样</li>
+<li>Instrumentation-based FDO：工作方式类似 <code>gprof(1)</code>，原理是插桩</li>
+</ul>
+<p>因为平时没写什么带 JIT 的脚本语言，所以这部分暂时没有例子。如果有人知道的话欢迎补充一些。</p>
+<h2 id="AOT-Ahead-Of-Time-Compilation"><a href="#AOT-Ahead-Of-Time-Compilation" class="headerlink" title="AOT - Ahead Of Time Compilation"></a>AOT - Ahead Of Time Compilation</h2><p>AOT，即 Aheaed Of Time。顾名思义，就是把程序提前编译好，整成二进制&#x2F;字节码啥的，然后需要用的时候直接执行。在这期间，编译器 <strong>通常</strong> 会消耗大量计算资源对代码进行大量优化。不同 pass 的优化贯穿了整个代码生成的过程。</p>
+<h3 id="LTO-Link-Time-Optimization"><a href="#LTO-Link-Time-Optimization" class="headerlink" title="LTO - Link-Time Optimization"></a>LTO - Link-Time Optimization</h3><p>微软把这个叫 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/archive/msdn-magazine/2015/february/compilers-what-every-programmer-should-know-about-compiler-optimizations">LTCG</a>，怪。</p>
+<p>链接时优化，发生在汇编器之后，生成可执行文件之前。</p>
+<p>大致思想是，在链接时把目标文件都读进内存里，接着把这些东西看成一个整体，进行激进的优化。</p>
+<p>优点：</p>
+<ul>
+<li>跨文件的函数内联、常量传播、死代码消除等等</li>
+<li>跨编程语言优化，比如，可以优化 C 和 Rust 混写的代码。</li>
+<li>可实现相同代码的折叠与消除（听起来有点像 zip 压缩的感觉？）</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>冲浪时发现 <a target="_blank" rel="noopener" href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36912.pdf">有个文章</a> 说相同函数的折叠在涉及到函数指针的比较操作时可能不安全，至于为什么我暂且蒙在鼓里……</li>
+<li>非常慢。我在编译 rust 代码时如果开了 <code>lto = &quot;fat&quot;</code>，要在链接那里等好久。</li>
+</ul>
+<p>对策：</p>
+<ul>
+<li>将内存中的巨大二进制代码分块，并行进行 LTO。不过并行度越高，同一个优化线程所看到的代码就越少，优化机会也就越少。所以这里还是涉及到编译速度和编译质量折衷的问题……</li>
+</ul>
+<p>具体到实现上的话，<a target="_blank" rel="noopener" href="https://gcc.gnu.org/onlinedocs/gccint/LTO-Overview.html">GCC</a> 和 <a target="_blank" rel="noopener" href="https://llvm.org/docs/LinkTimeOptimization.html">LLVM</a> 不约而同（约了也说不定，反正大家都你偷我的我偷你的……）地选择了 bitcode 的形式。也就是说，开启 LTO 相关的编译选项后，生成的目标文件中将不再是机器码，而是编译器自己的 bitcode。至于为什么这样设计，官方文档说如果换用其他方案会产生工程复杂性等诸多问题，因为我没写过链接器，不太知道咋回事，所以也暂且蒙在鼓里。</p>
+<p>同时，GCC 和 LLVM 各自又把 LTO 的过程划分成了好几个阶段，并不是一趟跑完的（所以才这么慢啊）。</p>
+<h3 id="FDO-Feadback-Directed-Optimization-1"><a href="#FDO-Feadback-Directed-Optimization-1" class="headerlink" title="FDO - Feadback-Directed Optimization"></a>FDO - Feadback-Directed Optimization</h3><p>上面讲 JIT 的时候就已经提到了 FDO，我们知道 FDO 是需要依靠代码运行时的信息来决定优化方式。这种优化似乎天生是适合 JIT 的，因为 JIT 在解释执行代码的时候就能自然地拿到很多关于程序运行情况的信息。</p>
+<p>如果我们说，在 AOT 编译里面也能做 FDO 呢？</p>
+<p>以 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/profile-guided-optimizations?view=msvc-170">MSVC</a> 为例（他们会把这个操作叫 PGO），它的大概流程是：</p>
+<ol>
+<li>先用一些魔法参数编译出一个可执行文件</li>
+<li>运行这个可执行文件几次（称为 train run），它会自动收集运行信息并且写到某个文件里</li>
+<li>另一些魔法参数，使编译器参考之前收集到的信息来编译出最终的可执行文件</li>
+</ol>
+<p>LLVM 好像也有类似物，叫做 <a target="_blank" rel="noopener" href="https://github.com/google/autofdo">autofdo</a>，由 Google 开发，有几页 <a target="_blank" rel="noopener" href="https://www.llvm.org/devmtg/2013-04/novillo-slides.pdf">简单介绍</a>。但是我还没看完，懒狗程度令人感叹。</p>
+<p>之前我们提到，JIT 里面的 FDO 有很多优化，比如：</p>
+<ul>
+<li>内联高频执行的函数</li>
+<li>寄存器分配优化</li>
+<li>条件跳转优化</li>
+</ul>
+<p>相比之下， AOT 的 FDO 还能做出更多神奇的优化，比如：</p>
+<ul>
+<li>基本块优化：可以把经常执行的一些基本块放到同一个 page 里面</li>
+<li>死代码隔离：把多次 train run 都没有使用的代码放一个独立的 section 里面，如果它们没真的没被运行，就不用给它们分配 page 了！</li>
+<li>错误处理代码隔离：同死代码隔离。</li>
+</ul>
+<p>然而，在 AOT 上应用 FDO 还会有很多不可忽略的缺点：</p>
+<ul>
+<li>编译模型十分复杂</li>
+<li>大大增加编译时间</li>
+<li>如果 train run 时使用的数据不够典型，甚至可能做出负优化</li>
+</ul>
+<p>所以，目前 FDO 技术暂时还没有在 AOT 里面被广泛使用。</p>
+<h3 id="BOLT-Binary-Optimization-and-Layout-Tool"><a href="#BOLT-Binary-Optimization-and-Layout-Tool" class="headerlink" title="BOLT - Binary Optimization and Layout Tool"></a>BOLT - Binary Optimization and Layout Tool</h3><p>似乎是 LLVM 专属的，目前还没有在别的地方找到类似物。仓库在 <a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/tree/main/bolt">这里</a>。</p>
+<p>和 FDO 很像，也是基于运行时的信息来优化代码。不过和 FDO 不同之处在于，FDO 在产出可执行文件时需要根据收集到信息重新链接程序，而 BOLT 则是直接基于已有的可执行程序重建控制流等信息，接着调整整个程序布局。</p>
+<p>由于不需要重新链接，BOLT 甚至可以对没有源码的库或者可执行程序优化。</p>
+<p>非常科技。</p>
+<h2 id="吔我-AI-啦"><a href="#吔我-AI-啦" class="headerlink" title="吔我 AI 啦"></a>吔我 AI 啦</h2><p>能不能用 AI 来帮我优化代码啊妈的</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><blockquote>
+<p>快过年了，不要再讨论什么 AOT JIT 之类了。你写的各种离谱的 pass 和不知道怎么优化出来的代码回到家并不能给你带来任何实质性作用，朋友们兜里掏出一大把钱吃喝玩乐，你默默的在家里用各种晦涩难懂的语言和各种奇奇怪怪的技术优化出来的代码压根不对。亲戚朋友吃饭问你收获了什么你说我差点把图着色 RA 写出来了，亲戚们懵逼了，你还在心里默默嘲笑他们，笑他们不懂 Register Allocation，不懂 Local 和 Global 的区别，不懂 IR 除了 SSA 还能做 SoN，不懂一个 SSA 可以被你们玩出Hashed SSA，formal SSA，也笑他们根本不知道你的编译器的diagnosis都弄了个 TTY 真彩色 但实际上根本没人在意。你父母的同事都在说自己的子女一年的收获，儿子买了个房，女儿买了个车，姑娘升职加薪了，你的父母默默无言，说我的儿子整了个小电脑，天天黑框敲个烂代码天天对着笑，一天折腾那个 Lit 和 GTEST，破电脑开起来嗡嗡响，家里的电表转的是越来越快了，头上的头发越来越少了，人也越来越魔怔了</p>
+</blockquote>
+<p>编译器越来越强了，以往很多的技巧（比如著名的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Duff%27s_device">Duff’s Device</a>）正在随着编译技术的发展而成为历史。</p>
+<p>任何编译器做优化都需要足够的信息，比如，有了控制流图就可以做可达性分析，多了运行时得到的信息又可以做 FDO。</p>
+<p>而人对自己正在面对的问题，知道的信息总会是比编译器多的。所以，你要把你知道的东西或显式（比如，<code>likely()</code> 和 <code>unlikely</code>）或隐式（比如，不用向后跳的 <code>goto</code> 以免破坏可规约性）地告诉编译器，让编译器来帮你完成复杂而繁琐的优化。</p>
+<p>快进到和编译器双向奔赴然后结婚😋😋</p>
+
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+
+
+                </div>
+                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
+                    
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 1: About -->
+                    <div class="mt5 mt0-l">
+    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
+        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
+            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="jyi2ya">
+        </div>
+        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
+            My name is Jonathan Klughertz and this is my blog.<br>I am a full stack software engineer with a strong front-end focus.<br> I currently live and work in Singapore, hit me up if you are in the region.
+        </div>
+    </article>
+</div>
+
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 2: Categories -->
+                    
+
+                    <!-- Widget 3: Recent Posts -->
+                    <div class="mt5 tc tl-l">
+    <h3>Recent Posts</h3>
+    
+        <p>
+            <a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/friends/main/">友链</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/restart/main/">重新开始</a>
+        </p>
+    
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="bg-1 ph2 ph5-ns pv5">
+        <div class="mv8">
+            <div class="center tc">
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
+                            <i class="fa fa-google-plus"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
+                            <i class="fa fa-behance"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
+                            <i class="fa fa-500px"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </div>
+                
+            </div>
+            <div class="f6 f5-ns center tc white pt5 fw3">
+                @Untitled. All right reserved | Design & Hexo <a class="link dim white" target="_blank" rel="noopener" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+            </div>
+        </div>
+    </div>
+
+<!-- After Footer -->
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

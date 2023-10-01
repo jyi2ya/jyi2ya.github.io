@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><!-- hexo injector head_begin start --><script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- hexo injector head_begin end -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="CSAPP Data Lab 做题记录（下）摸了好几天，来做浮点部分……
+题目列表floatScale2传入一个无符号整数，把它当作单精度浮点数，乘二后输出。
+很自然地想到提取出符号、阶码和尾数，接着根据是否为规格化的浮点数分情况处理，拼起来返回，比较简单。
+12345678910111213141">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="jyi2ya">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="CSAPP Data Lab 做题记录（下）"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Hexo"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>CSAPP Data Lab 做题记录（下） - Hexo</title>
+
+    <!-- Tachyons Core CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Google Analytics -->
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<div class="w-100 bg-1 ph5-ns ph3 text-light">
+    
+    <nav class="db dt-l w-100 mw8 center border-box pv3">
+        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="Hexo">
+            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="Hexo">
+        </a>
+        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/" 
+                    title="Home">
+                    Home
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/archives" 
+                    title="Archives">
+                    Archives
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/tags" 
+                    title="Tags">
+                    Tags
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/categories" 
+                    title="Categories">
+                    Categories
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/about.html" 
+                    title="About">
+                    About
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/contact.html" 
+                    title="Contact">
+                    Contact
+                </a>
+            
+        </div>
+    </nav>
+
+    <!-- Title -->
+    <div class="w-100 mw8 center vh-40 dt">
+        <div class="dtc v-mid white">
+            <h1 class="f1-l f2-m tc tc-m tl-ns">CSAPP Data Lab 做题记录（下）</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2023-10-01</p>
+        </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="relative w-100 mw8 center white dn dn-m db-ns">
+        <i class="header-icon fa fa-file-text-o"></i>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
+                    <!-- Tags Vertical -->
+                    
+
+                    <!-- Main Post Content -->
+                    <h1 id="CSAPP-Data-Lab-做题记录（下）"><a href="#CSAPP-Data-Lab-做题记录（下）" class="headerlink" title="CSAPP Data Lab 做题记录（下）"></a>CSAPP Data Lab 做题记录（下）</h1><p>摸了好几天，来做浮点部分……</p>
+<h2 id="题目列表"><a href="#题目列表" class="headerlink" title="题目列表"></a>题目列表</h2><h3 id="floatScale2"><a href="#floatScale2" class="headerlink" title="floatScale2"></a>floatScale2</h3><p>传入一个无符号整数，把它当作单精度浮点数，乘二后输出。</p>
+<p>很自然地想到提取出符号、阶码和尾数，接着根据是否为规格化的浮点数分情况处理，拼起来返回，比较简单。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="title function_">floatScale2</span><span class="params">(<span class="type">unsigned</span> uf)</span> &#123;</span><br><span class="line">  <span class="type">int</span> sign, expo, frac;</span><br><span class="line">  <span class="type">int</span> bias = <span class="number">127</span>;</span><br><span class="line">  sign = (uf &gt;&gt; <span class="number">31</span>) &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">1</span>) - <span class="number">1</span>);</span><br><span class="line">  expo = (uf &gt;&gt; <span class="number">23</span>) &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">8</span>) - <span class="number">1</span>);</span><br><span class="line">  frac = uf &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">23</span>) - <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">if</span> (expo == <span class="number">0xff</span>)</span><br><span class="line">	  <span class="keyword">return</span> uf;</span><br><span class="line">  <span class="keyword">if</span> (expo) &#123;</span><br><span class="line">	  ++expo;</span><br><span class="line">	  <span class="keyword">if</span> (expo == <span class="number">0xff</span>)</span><br><span class="line">		  frac = <span class="number">0</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	  frac *= <span class="number">2</span>;</span><br><span class="line">	  <span class="keyword">if</span> (frac &amp; (<span class="number">1</span> &lt;&lt; <span class="number">23</span>)) &#123;</span><br><span class="line">		  expo = <span class="number">1</span>;</span><br><span class="line">		  frac &amp;= ~(<span class="number">1</span> &lt;&lt; <span class="number">23</span>);</span><br><span class="line">	  &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (sign &lt;&lt; <span class="number">31</span>) | (expo &lt;&lt; <span class="number">23</span>) | frac;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="floatFloat2Int"><a href="#floatFloat2Int" class="headerlink" title="floatFloat2Int"></a>floatFloat2Int</h3><p>传入一个无符号整数 uf，把它当作单精度浮点数，返回它截断后的整数部分。也就是 <code>(int)uf</code>。如果出现溢出，则返回 0x80000000u（书上说这是与 Intel 兼容的微处理器指定的 “整数不确定” 值）。</p>
+<p>感觉也比较简单……弄出阶码、尾数之后，暴力移位就行了。</p>
+<p>代码里最后根据 sign 决定返回 ans 还是 -ans，而没有考虑最终结果为 INT_MIN，导致计算 ans 时溢出的问题。是因为 32 位的 float 类型无法精确表示 32 位的 INT_MIN，所以这里不用考虑 int 正负表示区间不对称的问题。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">floatFloat2Int</span><span class="params">(<span class="type">unsigned</span> uf)</span> &#123;</span><br><span class="line">  <span class="type">int</span> sign, expo;</span><br><span class="line">  <span class="type">unsigned</span> frac;</span><br><span class="line">  <span class="type">int</span> ans;</span><br><span class="line">  <span class="type">int</span> bias = <span class="number">127</span>;</span><br><span class="line">  <span class="type">int</span> error = <span class="number">0x80000000</span>u;</span><br><span class="line">  sign = (uf &gt;&gt; <span class="number">31</span>) &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">1</span>) - <span class="number">1</span>);</span><br><span class="line">  expo = (uf &gt;&gt; <span class="number">23</span>) &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">8</span>) - <span class="number">1</span>);</span><br><span class="line">  frac = uf &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">23</span>) - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (expo == <span class="number">0xff</span>)</span><br><span class="line">	  <span class="keyword">return</span> error;</span><br><span class="line">  expo -= bias;</span><br><span class="line">  <span class="keyword">if</span> (expo &lt; <span class="number">0</span>)</span><br><span class="line">	  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> (expo &gt; <span class="number">31</span>)</span><br><span class="line">	  <span class="keyword">return</span> error;</span><br><span class="line">  frac |= (<span class="number">1</span> &lt;&lt; <span class="number">23</span>);</span><br><span class="line">  frac &lt;&lt;= <span class="number">8</span>;</span><br><span class="line">  frac &gt;&gt;= (<span class="number">31</span> - expo);</span><br><span class="line">  ans = frac;</span><br><span class="line">  <span class="keyword">if</span> (sign)</span><br><span class="line">	  ans = -ans;</span><br><span class="line">  <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="floatPower2"><a href="#floatPower2" class="headerlink" title="floatPower2"></a>floatPower2</h3><p>传入一个整数 $x$，返回单精度浮点数 $2^x$。如果结果太小则返回 0，太大则返回 +INF。</p>
+<p>非常简单，只要改阶码部分，尾数部分保持全零即可。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="title function_">floatPower2</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="type">int</span> bias = <span class="number">127</span>;</span><br><span class="line">    <span class="type">int</span> sign = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> expo = x + bias;</span><br><span class="line">    <span class="type">int</span> frac = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (expo &gt;= <span class="number">0xff</span>)</span><br><span class="line">	    expo = <span class="number">0xff</span>;</span><br><span class="line">    <span class="keyword">if</span> (expo &lt;= <span class="number">0</span>)</span><br><span class="line">	    expo = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (sign &lt;&lt; <span class="number">31</span>) | (expo &lt;&lt; <span class="number">23</span>) | frac;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总体来看浮点数部分比整数部分简单，没准是因为前面写整数时把各种运算练得比较熟了？</p>
+<p>做完了之后感觉自己对计算机中数字表示理解加深了<del>甚至感觉可以全用位运算来实现各种操作符</del>。</p>
+<p>还有就是觉得整数的补码表示与 IEEE754 浮点数的一些性质特别神奇，怎么说不愧是广泛使用的标准。</p>
+<p>调试时用了不少之前几乎没用过的联合体（union），应该说终于意识到这个东西怎么用了……</p>
+<h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><p><img src="/./datalab-result.png" alt="测试结果"></p>
+
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+
+
+                </div>
+                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
+                    
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 1: About -->
+                    <div class="mt5 mt0-l">
+    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
+        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
+            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="jyi2ya">
+        </div>
+        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
+            My name is Jonathan Klughertz and this is my blog.<br>I am a full stack software engineer with a strong front-end focus.<br> I currently live and work in Singapore, hit me up if you are in the region.
+        </div>
+    </article>
+</div>
+
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 2: Categories -->
+                    
+
+                    <!-- Widget 3: Recent Posts -->
+                    <div class="mt5 tc tl-l">
+    <h3>Recent Posts</h3>
+    
+        <p>
+            <a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/friends/main/">友链</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/restart/main/">重新开始</a>
+        </p>
+    
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="bg-1 ph2 ph5-ns pv5">
+        <div class="mv8">
+            <div class="center tc">
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
+                            <i class="fa fa-google-plus"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
+                            <i class="fa fa-behance"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
+                            <i class="fa fa-500px"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </div>
+                
+            </div>
+            <div class="f6 f5-ns center tc white pt5 fw3">
+                @Untitled. All right reserved | Design & Hexo <a class="link dim white" target="_blank" rel="noopener" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+            </div>
+        </div>
+    </div>
+
+<!-- After Footer -->
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><!-- hexo injector head_begin start --><script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- hexo injector head_begin end -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="后现代编程语言介绍什么叫后现代编程语言？你猜？
+
+预览
+Perl 历史
+Perl 设计理念：TIMTOWTDI
+TIMTOWTDI 的范式
+TIMTOWTDI 的语法
+
+
+Perl 很方便
+You GUESS？
+PCRE
+Perl 的不知道多少个操作符
+
+
+Perl 的缺点
+鬼畜代码大赏
+JAPH
+">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="jyi2ya">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="后现代编程语言介绍"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Hexo"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>后现代编程语言介绍 - Hexo</title>
+
+    <!-- Tachyons Core CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Google Analytics -->
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<div class="w-100 bg-1 ph5-ns ph3 text-light">
+    
+    <nav class="db dt-l w-100 mw8 center border-box pv3">
+        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="Hexo">
+            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="Hexo">
+        </a>
+        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/" 
+                    title="Home">
+                    Home
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/archives" 
+                    title="Archives">
+                    Archives
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/tags" 
+                    title="Tags">
+                    Tags
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/categories" 
+                    title="Categories">
+                    Categories
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/about.html" 
+                    title="About">
+                    About
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/contact.html" 
+                    title="Contact">
+                    Contact
+                </a>
+            
+        </div>
+    </nav>
+
+    <!-- Title -->
+    <div class="w-100 mw8 center vh-40 dt">
+        <div class="dtc v-mid white">
+            <h1 class="f1-l f2-m tc tc-m tl-ns">后现代编程语言介绍</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2023-10-01</p>
+        </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="relative w-100 mw8 center white dn dn-m db-ns">
+        <i class="header-icon fa fa-file-text-o"></i>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
+                    <!-- Tags Vertical -->
+                    
+
+                    <!-- Main Post Content -->
+                    <h1 id="后现代编程语言介绍"><a href="#后现代编程语言介绍" class="headerlink" title="后现代编程语言介绍"></a>后现代编程语言介绍</h1><h2 id="什么叫后现代编程语言？"><a href="#什么叫后现代编程语言？" class="headerlink" title="什么叫后现代编程语言？"></a>什么叫后现代编程语言？</h2><p>你猜？</p>
+<p><img src="/./post-mordern.png" alt="post-mordern"></p>
+<h2 id="预览"><a href="#预览" class="headerlink" title="预览"></a>预览</h2><ul>
+<li>Perl 历史</li>
+<li>Perl 设计理念：TIMTOWTDI<ul>
+<li>TIMTOWTDI 的范式</li>
+<li>TIMTOWTDI 的语法</li>
+</ul>
+</li>
+<li>Perl 很方便<ul>
+<li>You GUESS？</li>
+<li>PCRE</li>
+<li>Perl 的不知道多少个操作符</li>
+</ul>
+</li>
+<li>Perl 的缺点</li>
+<li>鬼畜代码大赏<ul>
+<li>JAPH</li>
+<li>Golf</li>
+<li>Poetry</li>
+<li>我的作品</li>
+</ul>
+</li>
+</ul>
+<h2 id="Perl-历史"><a href="#Perl-历史" class="headerlink" title="Perl 历史"></a>Perl 历史</h2><p>应该没人会对 Perl 的历史感兴趣……所以这里就列举几个比较有趣的东西好了。</p>
+<ul>
+<li>Perl 1 发布于 1987 年，比 ANSI-C 还早。这就导致 1998 年发布 Perl 5.005 时提到了一句 “Source code now in ANSI C”。</li>
+<li>Perl 在 1987-1991 四年中发布了 Perl 1 到 Perl 4 四个版本。但是 1993 年发布了 Perl 5 之后，大版本号就再也没变过了。基本上可以认为，Perl 已经 29 年没发生过大的 breaking change 了。</li>
+<li>Perl 社区几年前试着设计了 Perl 6。结果发现设计出来的东西和 Perl 5 完全是两个东西，于是给它改了个名字叫 “Raku”。</li>
+<li>Perl 7 正在开发！它将会与 Perl 5 兼容。</li>
+</ul>
+<h2 id="Perl-设计理念：TIMTOWTDI"><a href="#Perl-设计理念：TIMTOWTDI" class="headerlink" title="Perl 设计理念：TIMTOWTDI"></a>Perl 设计理念：TIMTOWTDI</h2><blockquote>
+<p>There Is More Than One Way To Do It</p>
+</blockquote>
+<p>做一件事不仅有一种方法。</p>
+<h2 id="TIMTOWTDI-的范式"><a href="#TIMTOWTDI-的范式" class="headerlink" title="TIMTOWTDI 的范式"></a>TIMTOWTDI 的范式</h2><p>有些坏比语言，会限制你 “只能面向对象” 或者 “不要副作用” 之类的，非常不人道！代码一下子就变得难写了！</p>
+<p>但是 Perl 非常包容，以下将展示一些合法并且有用的 Perl 代码。</p>
+<hr>
+<p>假装我们在写 C</p>
+<pre><code>my $acc = 0;
+for (my $i = 0; $i &lt; 100; $i++) &#123;
+    $acc += $i;
+&#125;
+printf(&quot;%d\n&quot;, $acc);
+</code></pre>
+<hr>
+<p>假装我们在写 shell script</p>
+<pre><code>if ( -d &#39;/var/log/v2ray&#39; ) &#123;
+    chdir &#39;/var/log/v2ray&#39;;
+    for $file (&lt;*.log&gt;) &#123;
+        $size = `stat -c %s $file`;
+        say &quot;size of $file is $size&quot;;
+    &#125;
+&#125;
+</code></pre>
+<hr>
+<p>我一天不 new 浑身难受。</p>
+<pre><code>use JSON;
+
+my $ds = &#123;
+    perl =&gt; &#39;yes&#39;,
+&#125;;
+
+sub main &#123;
+    my $json = new JSON;
+
+    my $text = $json-&gt;encode($ds);
+    my $pretty = $json-&gt;pretty-&gt;encode($ds);
+
+    printf(&quot;%s\n&quot;, $text);
+&#125;
+
+main;
+</code></pre>
+<hr>
+<p>我一直是链式调用的粉丝啊</p>
+<pre><code>my $say = sub &#123; say join &quot;,&quot;, @_ &#125;;
+my $length = sub &#123; length shift &#125;;
+my $double = sub &#123; shift() * 2 &#125;;
+my $add = sub &#123; shift() + shift() &#125;;
+
+&quot;hello,world&quot;-&gt;$length()-&gt;$double()-&gt;$add(42)-&gt;$say();
+</code></pre>
+<hr>
+<p>我一直是 S-expression 的粉丝啊</p>
+<pre><code>use List::Util qw/sum min max first shuffle/;
+say
+(sum
+(min 1, 2, 3, 4, ),
+2,
+(first
+  &#123; $_ &gt; 3 &#125;
+  (shuffle 4, 5, 6, 8, 2)));
+</code></pre>
+<hr>
+<p>函数要是一等公民</p>
+<pre><code>sub compose ($f, $g) &#123;
+    sub &#123; $f-&gt;($g-&gt;(@_)) &#125;
+&#125;
+
+my $h = compose(
+    sub ($x) &#123; $x ** 2 &#125;,
+    sub ($x) &#123; $x + 3 &#125;,
+);
+
+$h-&gt;(2)
+</code></pre>
+<hr>
+<p>谁说 sed 和 awk 不是语言？</p>
+<pre><code>#!/usr/bin/perl -n
+s/^\s+//;s/\s+$//;s/android/harmonyos/g;
+
+#!/usr/bin/perl -a
+if ($NR &gt; 10) &#123; print $F[2] &#125;
+</code></pre>
+<hr>
+<h2 id="TIMTOWTDI-的语法"><a href="#TIMTOWTDI-的语法" class="headerlink" title="TIMTOWTDI 的语法"></a>TIMTOWTDI 的语法</h2><p>Perl 的语法很灵活的。</p>
+<hr>
+<p>一般我们会把 <code>if</code> 写成这样：</p>
+<pre><code>if ($ok) &#123; say &#39;hello&#39;; &#125;
+</code></pre>
+<p>但是这样也是可以的</p>
+<pre><code>say &#39;hello&#39; if $ok;
+</code></pre>
+<p>再邪恶一点</p>
+<pre><code>say &#39;hello&#39; unless not $ok;
+</code></pre>
+<hr>
+<p>一般我们会把函数调用写成这样：</p>
+<pre><code>printf(&quot;hello, world\n&quot;);
+</code></pre>
+<p>但是这样也是可以的，就像 shell 一样</p>
+<pre><code>printf &quot;hello, world\n&quot;;
+</code></pre>
+<p>也可以不加空格，只要解释器认得出来</p>
+<pre><code>printf&quot;hello, world\n&quot;;
+</code></pre>
+<p>极大地减少了 typo 数量！</p>
+<hr>
+<h2 id="Perl-很方便"><a href="#Perl-很方便" class="headerlink" title="Perl 很方便"></a>Perl 很方便</h2><p>除了灵活的语法，Perl 还有一些内置功能，以及约定来简化代码编写</p>
+<h2 id="You-GUESS？"><a href="#You-GUESS？" class="headerlink" title="You GUESS？"></a>You GUESS？</h2><pre><code>while (&lt;&gt;) &#123;
+    chomp;
+    s/open\s*ai/csdn/gi;
+    say join &quot;\n&quot;, split /\s+/;
+&#125;
+</code></pre>
+<p>很多 Perl 函数会把默认的参数与结果放到特殊变量 <code>$_</code> 里面。所以写 Perl 代码经常写出 “把那什么拿过来，处理一下放到那里” 这样的东西，任务竟然还完成了（</p>
+<h2 id="PCRE"><a href="#PCRE" class="headerlink" title="PCRE"></a>PCRE</h2><p>大家都爱用的超级正则表达式。</p>
+<p>PCRE 全称是 “Perl Compatible Regular Expression”。PCRE 是 BRE&#x2F;ERE 的超集，而 Perl 本身的正则表达式又是 PCRE 的超集。</p>
+<h2 id="Perl-的不知道多少个操作符"><a href="#Perl-的不知道多少个操作符" class="headerlink" title="Perl 的不知道多少个操作符"></a>Perl 的不知道多少个操作符</h2><p>捡两个比较好玩的说说</p>
+<h3 id="flip-flop-操作符"><a href="#flip-flop-操作符" class="headerlink" title="flip-flop 操作符"></a>flip-flop 操作符</h3><pre><code>while (&lt;&gt;) &#123;
+    next if /^begin/ .. /^end/;
+    next if /^begin/ ... /^end/;
+    say if 1 .. 100
+&#125;
+</code></pre>
+<p>可以想象每个 flip-flop 操作符内部维护了一个布尔变量，它会在匹配到左边或右边的表达式时翻转。这个布尔变量的取值就是 flip-flop 操作符的取值。</p>
+<h3 id="yada-yada-操作符"><a href="#yada-yada-操作符" class="headerlink" title="yada-yada 操作符"></a>yada-yada 操作符</h3><pre><code>...
+</code></pre>
+<p>表示代码尚未完成。</p>
+<h2 id="其他魔法"><a href="#其他魔法" class="headerlink" title="其他魔法"></a>其他魔法</h2><ul>
+<li>运行时操作解释器符号表的程度的能力</li>
+<li>变量绑定的程度的能力</li>
+<li>各种逆天 pragma</li>
+<li>还有很多……</li>
+</ul>
+<h2 id="Perl-的缺点"><a href="#Perl-的缺点" class="headerlink" title="Perl 的缺点"></a>Perl 的缺点</h2><ul>
+<li>设计老旧</li>
+<li>过于灵活</li>
+</ul>
+<h2 id="鬼畜代码大赏"><a href="#鬼畜代码大赏" class="headerlink" title="鬼畜代码大赏"></a>鬼畜代码大赏</h2><p>Perl 有各种神奇比赛，比谁更能玩弄 Perl 的语法规则。比如……</p>
+<h2 id="JAPH-大赛"><a href="#JAPH-大赛" class="headerlink" title="JAPH 大赛"></a>JAPH 大赛</h2><p>JAPH（有时是 YAPH）全称是 “Just Another Perl Hacker”。规则是在标准输出中输出 “Just Another Perl Hacker” 这句话。</p>
+<p>这是最简单的：</p>
+<pre><code>say&quot;Just Another Perl Hacker&quot;
+</code></pre>
+<p>这也是合法的：</p>
+<pre><code>`$=`;$_=\%!;($_)=/(.)/;$==++$|;($.,
+$/,$,,$\,$&quot;,$;,$^,$#,$~,$*,$:,@%)=(
+$!=~/(.)(.).(.)(.)(.)(.)..(.)(.)(.)
+..(.)......(.)/,$&quot;),$=++;$.++;$.++;
+$_++;$_++;($_,$\,$,)=($~.$&quot;.&quot;$;$/$%
+[$?]$_$\$,$:$%[$?]&quot;,$&quot;&amp;$~,$#,);$,++
+;$,++;$^|=$&quot;;`$_$\$,$/$:$;$~$*$%[$?
+]$.$~$*$
+</code></pre>
+
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+
+
+                </div>
+                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
+                    
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 1: About -->
+                    <div class="mt5 mt0-l">
+    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
+        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
+            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="jyi2ya">
+        </div>
+        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
+            My name is Jonathan Klughertz and this is my blog.<br>I am a full stack software engineer with a strong front-end focus.<br> I currently live and work in Singapore, hit me up if you are in the region.
+        </div>
+    </article>
+</div>
+
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 2: Categories -->
+                    
+
+                    <!-- Widget 3: Recent Posts -->
+                    <div class="mt5 tc tl-l">
+    <h3>Recent Posts</h3>
+    
+        <p>
+            <a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/friends/main/">友链</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/restart/main/">重新开始</a>
+        </p>
+    
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="bg-1 ph2 ph5-ns pv5">
+        <div class="mv8">
+            <div class="center tc">
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
+                            <i class="fa fa-google-plus"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
+                            <i class="fa fa-behance"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
+                            <i class="fa fa-500px"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </div>
+                
+            </div>
+            <div class="f6 f5-ns center tc white pt5 fw3">
+                @Untitled. All right reserved | Design & Hexo <a class="link dim white" target="_blank" rel="noopener" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+            </div>
+        </div>
+    </div>
+
+<!-- After Footer -->
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

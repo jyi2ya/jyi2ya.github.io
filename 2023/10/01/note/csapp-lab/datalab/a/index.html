@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><!-- hexo injector head_begin start --><script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- hexo injector head_begin end -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="CSAPP Data Lab 做题记录（上）准备工作访问 http://csapp.cs.cmu.edu/3e/labs.html 试图下载网页上醒目的 datalab.tar，发现需要身份验证。后来发现点后面的小东西可以直接下载。读了 readme 之后知道 datalab.tar 好像是教师用的">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="jyi2ya">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="CSAPP Data Lab 做题记录（上）"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Hexo"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>CSAPP Data Lab 做题记录（上） - Hexo</title>
+
+    <!-- Tachyons Core CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Google Analytics -->
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<div class="w-100 bg-1 ph5-ns ph3 text-light">
+    
+    <nav class="db dt-l w-100 mw8 center border-box pv3">
+        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="Hexo">
+            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="Hexo">
+        </a>
+        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/" 
+                    title="Home">
+                    Home
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/archives" 
+                    title="Archives">
+                    Archives
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/tags" 
+                    title="Tags">
+                    Tags
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/categories" 
+                    title="Categories">
+                    Categories
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/about.html" 
+                    title="About">
+                    About
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/contact.html" 
+                    title="Contact">
+                    Contact
+                </a>
+            
+        </div>
+    </nav>
+
+    <!-- Title -->
+    <div class="w-100 mw8 center vh-40 dt">
+        <div class="dtc v-mid white">
+            <h1 class="f1-l f2-m tc tc-m tl-ns">CSAPP Data Lab 做题记录（上）</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2023-10-01</p>
+        </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="relative w-100 mw8 center white dn dn-m db-ns">
+        <i class="header-icon fa fa-file-text-o"></i>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
+                    <!-- Tags Vertical -->
+                    
+
+                    <!-- Main Post Content -->
+                    <h1 id="CSAPP-Data-Lab-做题记录（上）"><a href="#CSAPP-Data-Lab-做题记录（上）" class="headerlink" title="CSAPP Data Lab 做题记录（上）"></a>CSAPP Data Lab 做题记录（上）</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>访问 <a target="_blank" rel="noopener" href="http://csapp.cs.cmu.edu/3e/labs.html">http://csapp.cs.cmu.edu/3e/labs.html</a> 试图下载网页上醒目的 datalab.tar，发现需要身份验证。后来发现点后面的小东西可以直接下载。读了 readme 之后知道 datalab.tar 好像是教师用的，用来生成学生的包（datalab-handout），datalab-handout 才是学生用的。</p>
+<p><img src="/datalab-webpage.png" alt="datalab 的神秘链接"></p>
+<p>读文档，知道实验是要用位运算来模拟各种整数运算，还要用整数运算模拟浮点运算。好像评测还实现了一个小工具来查是否用到了违规的操作符。</p>
+<p>看文档上说需要安装 bison 和 flex，以为检查违规小工具也需要编译，正打算看一下代码发现包里直接发了个二进制文件下来……</p>
+<p>发现评测程序是用 Perl 写的，古老。</p>
+<p>Driverlab.pm 里好像手写了一个 http 客户端？看起来是搞那个 Beat the Prof 比赛的，应该不用管它。</p>
+<p>依照手册指示，要先 make 一下把 btest 给编译好。结果遇到神奇问题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">% 09:19:42 jyi@Syameimaru-Aya ~/s/c/d/c/d/datalab-handout</span><br><span class="line">0 make</span><br><span class="line">gcc -O -Wall -m32 -lm -o btest bits.c btest.c decl.c tests.c</span><br><span class="line">In file included from btest.c:16:</span><br><span class="line">/usr/include/stdio.h:27:10: fatal error: bits/libc-header-start.h: No such file or directory</span><br><span class="line">   27 | #include &lt;bits/libc-header-start.h&gt;</span><br><span class="line">      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">compilation terminated.</span><br><span class="line">In file included from decl.c:1:</span><br><span class="line">/usr/include/stdio.h:27:10: fatal error: bits/libc-header-start.h: No such file or directory</span><br><span class="line">   27 | #include &lt;bits/libc-header-start.h&gt;</span><br><span class="line">      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">compilation terminated.</span><br><span class="line">In file included from /usr/lib/gcc/x86_64-linux-gnu/10/include/limits.h:195,</span><br><span class="line">                 from /usr/lib/gcc/x86_64-linux-gnu/10/include/syslimits.h:7,</span><br><span class="line">                 from /usr/lib/gcc/x86_64-linux-gnu/10/include/limits.h:34,</span><br><span class="line">                 from tests.c:3:</span><br><span class="line">/usr/include/limits.h:26:10: fatal error: bits/libc-header-start.h: No such file or directory</span><br><span class="line">   26 | #include &lt;bits/libc-header-start.h&gt;</span><br><span class="line">      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">compilation terminated.</span><br><span class="line">make: *** [Makefile:11: btest] Error 1</span><br></pre></td></tr></table></figure>
+
+<p>检查了一发发现是 makefile 里指定了 <code>-m32</code> 但是我没有 32 位的库，装了个 gcc-multilib。至于为啥不用 <code>-m64</code> 编译……因为那里面说什么 “not 64-bit safe”，没太懂。</p>
+<h2 id="题目列表"><a href="#题目列表" class="headerlink" title="题目列表"></a>题目列表</h2><h3 id="bitXor"><a href="#bitXor" class="headerlink" title="bitXor"></a>bitXor</h3><p>给定两个数，返回他们的异或。</p>
+<p>首先由真值表写出把异或运算写成最小项之和的形式，就是 $X \oplus Y &#x3D; X\bar{Y} + \bar{X}Y$。然后跑跑发现零分，是因为我们没有 <code>|</code> 可以用……用德摩根定律画画柿子得到 $\bar{\bar{X\bar{Y}}\bar{\bar{X}Y}}$，避开 <code>|</code>，就能过了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">bitXor</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> ~(~(~x &amp; y) &amp; ~(x &amp; ~y));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="tmin"><a href="#tmin" class="headerlink" title="tmin"></a>tmin</h3><p>返回最小的有符号整数。</p>
+<p>题目假设机器使用补码表示法，我们知道这个数的位模式应该长得比较像 1000…000。题目又假设了我们机器上的整数都是 32 位的，所以我们把 1 左移 31 位返回就行了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">tmin</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span> &lt;&lt; <span class="number">31</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="isTmax"><a href="#isTmax" class="headerlink" title="isTmax"></a>isTmax</h3><p>判断给定的 x 是不是最大的有符号整数。</p>
+<p>考虑到题目假定机器采用补码表示法，最大的有符号整数 tmax 的位模式应该是 01111…111。好像把 tmin 的结果取反就是了，但是他没给 <code>&lt;&lt;</code> 操作符，题目又禁止使用超过 255 的整数，所以 tmax 应该搞不出来。</p>
+<p>倒是有一个检查加一向上溢出（假设溢出的行为和无符号整数差不多）取反后是不是和自己相等（<code>~(x + 1) == x</code>）的想法，但是有符号数溢出好像是 ub 啊。题目也没有规定溢出会采用什么方式。</p>
+<p>先这么做好了……-1 要特判一下因为 -1 取反加一后马上就溢出了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">isTmax</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (!((~(x + <span class="number">1</span>)) ^ x)) &amp; (!!(x + <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="allOddBits"><a href="#allOddBits" class="headerlink" title="allOddBits"></a>allOddBits</h3><p>判断给定 x 的奇数二进制位上是否全为 1。</p>
+<p>……这样吗？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">allOddBits</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (x &gt;&gt; <span class="number">1</span>) &amp; (x &gt;&gt; <span class="number">3</span>) &amp; (x &gt;&gt; <span class="number">5</span>) &amp; (x &gt;&gt; <span class="number">7</span>) &amp; (x &gt;&gt; <span class="number">9</span>) &amp;</span><br><span class="line">  (x &gt;&gt; <span class="number">11</span>) &amp; (x &gt;&gt; <span class="number">13</span>) &amp; (x &gt;&gt; <span class="number">15</span>) &amp; (x &gt;&gt; <span class="number">17</span>) &amp; (x &gt;&gt; <span class="number">19</span>) &amp;</span><br><span class="line">  (x &gt;&gt; <span class="number">21</span>) &amp; (x &gt;&gt; <span class="number">23</span>) &amp; (x &gt;&gt; <span class="number">25</span>) &amp; (x &gt;&gt; <span class="number">27</span>) &amp; (x &gt;&gt; <span class="number">29</span>) &amp;</span><br><span class="line">  (x &gt;&gt; <span class="number">31</span>) &amp; <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测了一下发现性能分数没有拿到，最多只能使用 12 个操作符，而这里用了 33 个。考虑进行优化。因为我们可以直接使用 8 位整数，所以我们可以考虑将输入的东西每 8 位与一下，再用一个掩码检查得到的东西奇数位上是否都为 1。这样就能减少计算了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">allOddBits</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> !((x &amp; (x &gt;&gt; <span class="number">8</span>) &amp; (x &gt;&gt; <span class="number">16</span>) &amp; (x &gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xaa</span>) ^ <span class="number">0xaa</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只用了 9 个操作符耶！</p>
+<h3 id="negate"><a href="#negate" class="headerlink" title="negate"></a>negate</h3><p>求给定数的相反数。</p>
+<p>这个可以使用我们熟知的小结论，把 x 取反后再加一直接得到结果，非常简单。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">negate</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (~x) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="isAsciiDigit"><a href="#isAsciiDigit" class="headerlink" title="isAsciiDigit"></a>isAsciiDigit</h3><p>判断给定输入是不是 ASCII 编码中的数字。</p>
+<p>我们已经有了比较两个数字是否相等的便利算法，只要打表检查是否等于每个可能的数字，将结果或起来就是最终答案。但是这样显然是拿不到性能分的嘛。</p>
+<p>嗯……如果 x 的最高位为 1，那它是个负数，就不是 ASCII 的数字了。排除这种情况后，接下来就只要考虑正数比大小。</p>
+<p><del>发现异或的结果的最高位是两个数字第一个不同之处，找出谁是 1 谁就更大。问题就变成了如何取一个数的最高位。</del>并没有想到什么取一个数最高位的便利算法……</p>
+<p>考虑利用一下题目特性，ASCII 的 0 和 9 是 110000 和 111001，想到搞一个东西来检查 x 的前面 26 位是否全为 0，而且第 5、6 位为 1。接着再判断后四位是否符合第四位为 0，或者第 2、3 位为零……</p>
+<p>折腾一下得到这样的答案：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">isAsciiDigit</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (!((~<span class="number">0x3f</span>) &amp; x)) &amp; (!((<span class="number">0x30</span> &amp; x) ^ <span class="number">0x30</span>)) &amp;</span><br><span class="line">	  (!(<span class="number">0x8</span> &amp; x) | (!(<span class="number">0x6</span> &amp; x)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>轻松过关</p>
+<h3 id="conditional"><a href="#conditional" class="headerlink" title="conditional"></a>conditional</h3><p>实现类似三目运算符的功能。</p>
+<p>要实现 <code>x ? y : z</code> 的话，应该很容易想到 <code>(!!x) * y + (!x) * z</code> 这种的……但是我们没有乘号。可以想到使用与号替代一下，就是想办法弄一个掩码，当 x 为真时它是全 1，x 为假时它是全零这种的。感觉比较简单。</p>
+<p>代码里为了节省符号把掩码弄成当 x 为真时是全 0，x 为假时是全 1。使用方法还是差不多的吧。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">conditional</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> z)</span> &#123;</span><br><span class="line">  <span class="type">int</span> mask = !x;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">1</span>) | mask;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">2</span>) | mask;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">4</span>) | mask;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">8</span>) | mask;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">16</span>) | mask;</span><br><span class="line">  <span class="keyword">return</span> ((~mask) &amp; y) | (mask &amp; z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写后面的 howManyBits 的时候获得了重大技术革新，现在有一种便利操作来生成掩码了！</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">conditional</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> z)</span> &#123;</span><br><span class="line">  <span class="type">int</span> mask = (~(!x)) + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> ((~mask) &amp; y) | (mask &amp; z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果 x 是 0，则 <code>~(!x)</code> 位模式为 1111…1110，加 1 后刚好是全 1。</p>
+<p>如果 x 是 1，则 <code>~(!x)</code> 位模式为 1111…1111，加 1 向上溢出后刚好是全 0。</p>
+<h3 id="isLessOrEqual"><a href="#isLessOrEqual" class="headerlink" title="isLessOrEqual"></a>isLessOrEqual</h3><p>判断给定的两个数是否满足小于等于关系。</p>
+<p>小于等于就是不大于嘛，接下来考虑判断两个数的大于关系。</p>
+<p><del>这个好像在 isAsciiDigit 那个题里的踩过一次，所以接着思路往下想……如何取一个数的最高位。</del>发现取最高位的话怎么写都会拿不完性能分。</p>
+<p>突然想到好像两个数相减一下再判断结果是否为正数就行，原来刚刚想那么多是脑子打结了。</p>
+<p>先判断两个数是否正好为一正一负，如果是的话可以直接给结果。否则相减判断结果正负，这时两个同号的数相减必不可能溢出。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">isLessOrEqual</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (((x &gt;&gt; <span class="number">31</span>) &amp; <span class="number">1</span>) | (!(y &gt;&gt; <span class="number">31</span>))) &amp;</span><br><span class="line">	  ((((x &gt;&gt; <span class="number">31</span>) &amp; <span class="number">1</span>) &amp; (!(y &gt;&gt; <span class="number">31</span>))) | (!((y + (~x) + <span class="number">1</span>) &gt;&gt; <span class="number">31</span>)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>拿下。</p>
+<h3 id="logicalNeg"><a href="#logicalNeg" class="headerlink" title="logicalNeg"></a>logicalNeg</h3><p>实现逻辑非，不能使用感叹号。</p>
+<p>感觉和 allOddBits 很像！只不过那个是求奇数位上全为 1，这里是求存在某一位为 1。</p>
+<p>用类似的方法实现一下就好啦。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">logicalNeg</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">16</span>);</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">8</span>);</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">4</span>);</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">2</span>);</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span> ^ (x &amp; <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后 return 那个奇怪的表达式其实是 <code>1 - x</code> 拆过来的。发现直接写 <code>2 + (~x)</code> 会拿不到性能分，符号刚好多一个。</p>
+<h3 id="howManyBits"><a href="#howManyBits" class="headerlink" title="howManyBits"></a>howManyBits</h3><p>求最少用多少个位可以表示出给定数字。</p>
+<p>其实就是 $\log_{2}$ 啦。</p>
+<p>先假定 x 是负数，根据补码表示法我们需要能够表示 $[ x, -x - 1 ]$ 的所有数。全部当成无符号整数之后需要表示的范围是 $[0, ((<del>x) &lt;&lt; 1) + 1]$，只要我们能够用一些位表示出最大的数，那么这些位一定可以表示出所有数。因此答案就是 $\log_{2}(((</del>x) &lt;&lt; 1) + 1)$（向上取整）。</p>
+<p>同理，如果 x 是正数，则需要能够表示 $[ -x - 1, x ]$ 的所有数，答案是 $\log_{2}((x &lt;&lt; 1) + 1)$。</p>
+<p>至于如何取对数……猜测是要使用类似 logicalNeg 和 allOddBits 那样类似分治（？）的做法来完成，先考虑分成两半的情形：如果高 16 位不为零，可以给答案加上 16，接着再把高 16 位移动到低 16 位，按照类似的方式处理低 16 位；如果高 16 位为零，则直接处理低 16 位。依次类推直到处理完只剩一位的情况。</p>
+<p>用力实现一下就好了。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">howManyBits</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">  <span class="type">int</span> h16, h8, h4, h2, h1, h0;</span><br><span class="line">  <span class="type">int</span> sign = x &gt;&gt; <span class="number">31</span>;</span><br><span class="line">  <span class="type">int</span> range = (((x &amp; (~sign)) | ((~x) &amp; sign)) &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  h16 = (~(!!(range &gt;&gt; <span class="number">16</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h16 &amp; <span class="number">16</span>);</span><br><span class="line">  range = range &gt;&gt; (h16 &amp; <span class="number">16</span>);</span><br><span class="line"></span><br><span class="line">  h8 = (~(!!((range &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h8 &amp; <span class="number">8</span>);</span><br><span class="line">  range = range &gt;&gt; (h8 &amp; <span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">  h4 = (~(!!((range &gt;&gt; <span class="number">4</span>) &amp; <span class="number">0xf</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h4 &amp; <span class="number">4</span>);</span><br><span class="line">  range = range &gt;&gt; (h4 &amp; <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">  h2 = (~(!!((range &gt;&gt; <span class="number">2</span>) &amp; <span class="number">0x3</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h2 &amp; <span class="number">2</span>);</span><br><span class="line">  range = range &gt;&gt; (h2 &amp; <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">  h1 = (~(!!((range &gt;&gt; <span class="number">1</span>) &amp; <span class="number">0x1</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h1 &amp; <span class="number">1</span>);</span><br><span class="line">  range = range &gt;&gt; (h1 &amp; <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  h0 = (~(range &amp; <span class="number">0x1</span>)) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h0 &amp; <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>真不容易！</p>
+
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+
+
+                </div>
+                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
+                    
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 1: About -->
+                    <div class="mt5 mt0-l">
+    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
+        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
+            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="jyi2ya">
+        </div>
+        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
+            My name is Jonathan Klughertz and this is my blog.<br>I am a full stack software engineer with a strong front-end focus.<br> I currently live and work in Singapore, hit me up if you are in the region.
+        </div>
+    </article>
+</div>
+
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 2: Categories -->
+                    
+
+                    <!-- Widget 3: Recent Posts -->
+                    <div class="mt5 tc tl-l">
+    <h3>Recent Posts</h3>
+    
+        <p>
+            <a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/friends/main/">友链</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/restart/main/">重新开始</a>
+        </p>
+    
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="bg-1 ph2 ph5-ns pv5">
+        <div class="mv8">
+            <div class="center tc">
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
+                            <i class="fa fa-google-plus"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
+                            <i class="fa fa-behance"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
+                            <i class="fa fa-500px"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </div>
+                
+            </div>
+            <div class="f6 f5-ns center tc white pt5 fw3">
+                @Untitled. All right reserved | Design & Hexo <a class="link dim white" target="_blank" rel="noopener" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+            </div>
+        </div>
+    </div>
+
+<!-- After Footer -->
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

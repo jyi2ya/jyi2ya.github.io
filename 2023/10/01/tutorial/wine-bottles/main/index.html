@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><!-- hexo injector head_begin start --><script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- hexo injector head_begin end -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="Bottles 安装好名字！Bottles 是类似 winetricks 的小软件，用于自动配置 wine、自动安装并配置软件。至于为什么有了 winetricks 还需要新的小软件，bottles 在他们官网上给出了解释：bottles 希望提供中心化的依赖处理系统，并且希望拥有比 winetri">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="jyi2ya">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Bottles 安装"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Hexo"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Bottles 安装 - Hexo</title>
+
+    <!-- Tachyons Core CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    <!-- Google Analytics -->
+    
+
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body>
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<div class="w-100 bg-1 ph5-ns ph3 text-light">
+    
+    <nav class="db dt-l w-100 mw8 center border-box pv3">
+        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="Hexo">
+            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="Hexo">
+        </a>
+        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/" 
+                    title="Home">
+                    Home
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/archives" 
+                    title="Archives">
+                    Archives
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/tags" 
+                    title="Tags">
+                    Tags
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/categories" 
+                    title="Categories">
+                    Categories
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/about.html" 
+                    title="About">
+                    About
+                </a>
+            
+                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
+                    href="/contact.html" 
+                    title="Contact">
+                    Contact
+                </a>
+            
+        </div>
+    </nav>
+
+    <!-- Title -->
+    <div class="w-100 mw8 center vh-40 dt">
+        <div class="dtc v-mid white">
+            <h1 class="f1-l f2-m tc tc-m tl-ns">Bottles 安装</h1>
+            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2023-10-01</p>
+        </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="relative w-100 mw8 center white dn dn-m db-ns">
+        <i class="header-icon fa fa-file-text-o"></i>
+    </div>
+</div>
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
+                    <!-- Tags Vertical -->
+                    
+
+                    <!-- Main Post Content -->
+                    <h1 id="Bottles-安装"><a href="#Bottles-安装" class="headerlink" title="Bottles 安装"></a>Bottles 安装</h1><h2 id="好名字！"><a href="#好名字！" class="headerlink" title="好名字！"></a>好名字！</h2><p><a target="_blank" rel="noopener" href="https://docs.usebottles.com/">Bottles</a> 是类似 winetricks 的小软件，用于自动配置 wine、自动安装并配置软件。至于为什么有了 winetricks 还需要新的小软件，bottles 在他们官网上给出了<a target="_blank" rel="noopener" href="https://docs.usebottles.com/faq/where-is-winetricks">解释</a>：bottles 希望提供中心化的依赖处理系统，并且希望拥有比 winetricks 更强的扩展性。总之不是重复造轮子就对了。</p>
+<p>之前试着用 winetricks 一键安装 qq，结果有一个托管在 ftp.hp.org 上的文件一直下载不下来。接着我就把 winetricks 扬了。</p>
+<p>Wine bottles，酒瓶子。:D</p>
+<h2 id="安装和安装过程的问题修复"><a href="#安装和安装过程的问题修复" class="headerlink" title="安装和安装过程的问题修复"></a>安装和安装过程的问题修复</h2><p>参考<a target="_blank" rel="noopener" href="https://docs.usebottles.com/getting-started/installation">官方的安装指南</a></p>
+<h3 id="直接使用包管理器安装"><a href="#直接使用包管理器安装" class="headerlink" title="直接使用包管理器安装"></a>直接使用包管理器安装</h3><p><a target="_blank" rel="noopener" href="https://docs.usebottles.com/getting-started/installation">官方的安装指南</a>里面说，bottles 在多个发行版的源里有包。比如 fedora，就可以使用 <code>sudo dnf install bottles</code> 来安装。其他支持的发行版可以去安装指南里头看看。</p>
+<p>但是 debian 源竟然没有包，神奇……明明代码目录里有个 <code>debian/</code>，这不指明了是要人打包吗？</p>
+<h3 id="编译-deb-包，再使用包管理器安装"><a href="#编译-deb-包，再使用包管理器安装" class="headerlink" title="编译 deb 包，再使用包管理器安装"></a>编译 deb 包，再使用包管理器安装</h3><h4 id="编译-deb-包"><a href="#编译-deb-包" class="headerlink" title="编译 deb 包"></a>编译 deb 包</h4><p>因为 debian 源里面没有 bottles 的包，所以我们需要编译代码。同时为了维护依赖，便于删除，我们利用代码目录里面 <code>debian/</code> 下的东西把它打成 deb 包，再使用 <code>apt</code> 命令安装。</p>
+<p>bottles 使用 meson 和 ninja 作为构建系统。听说这两个东西很先进，打算改天去学一下。从 <a target="_blank" rel="noopener" href="https://blog.devgenius.io/how-to-build-debian-packages-from-meson-ninja-d1c28b60e709">devgenius.io</a> 上现学了怎么使用 meson&#x2F;ninja 打 deb 包：</p>
+<ol>
+<li>首先安装 <code>debhelper</code> <code>build-essentials</code> 和 <code>dh-make</code>。其中 <code>debhelper</code> 和 <code>dh-make</code> 是 debian 的软件包构建相关工具。<code>build-essentials</code> 则是软件开发的基础工具，包含 <code>make</code> 等小工具。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install debhelper build-essentials dh-make</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>接着下载代码并且进入环境：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/bottlesdevs/Bottles</span><br><span class="line"><span class="built_in">cd</span> Bottles</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>然后运行 debian 包的自动配置脚本，指定构建系统为 meson：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dh_auto_configure --buildsystem=meson</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>最后运行构建软件包的命令。参数的 <code>-b</code> 是指仅构建二进制的 deb 包。因为是命令是偷来的所以也不是很清楚参数有什么用……</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-buildpackage -rfakeroot -us -uc -b</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>回到上级目录，发现 deb 包出现了！</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ../ &amp;&amp; <span class="built_in">ls</span> -l</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">total 284</span><br><span class="line">drwxrwxr-x 1 root root    672 Mar  5 20:02 Bottles-2022.2.28-trento-2/</span><br><span class="line">-rw-r--r-- 1 root root   6872 Mar  5 20:02 com.usebottles.bottles_2022.2.28-trento-2_amd64.buildinfo</span><br><span class="line">-rw-r--r-- 1 root root   5004 Mar  5 20:02 com.usebottles.bottles_2022.2.28-trento-2_amd64.changes</span><br><span class="line">-rw-r--r-- 1 root root 269408 Mar  5 20:02 com.usebottles.bottles_2022.2.28-trento-2_amd64.deb</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>安装</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt -y install ./com.usebottles.bottles.*.deb</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>检查有没有 bottles 命令</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> bottles</span><br></pre></td></tr></table></figure>
+
+<p>如果出现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bottles is /usr/bin/bottles</span><br></pre></td></tr></table></figure>
+
+<p>说明安装成功！</p>
+<h2 id="启动和启动过程的问题修复"><a href="#启动和启动过程的问题修复" class="headerlink" title="启动和启动过程的问题修复"></a>启动和启动过程的问题修复</h2><p>在我这儿 bottles 安装好后运行命令并不能直接启动，会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">% [1] 20:43:10 jyi@Syameimaru-Aya ~</span><br><span class="line">0 bottles</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;/usr/bin/bottles&quot;, line 56, in &lt;module&gt;</span><br><span class="line">    from bottles import main</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/main.py&quot;, line 32, in &lt;module&gt;</span><br><span class="line">    from bottles.window import MainWindow</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/window.py&quot;, line 35, in &lt;module&gt;</span><br><span class="line">    from bottles.views.details import DetailsView</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/views/details.py&quot;, line 25, in &lt;module&gt;</span><br><span class="line">    from bottles.views.bottle_details import BottleView</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/views/bottle_details.py&quot;, line 36, in &lt;module&gt;</span><br><span class="line">    from bottles.dialogs.generic import MessageDialog</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/dialogs/generic.py&quot;, line 20, in &lt;module&gt;</span><br><span class="line">    gi.require_version(&#x27;GtkSource&#x27;, &#x27;4&#x27;)</span><br><span class="line">  File &quot;/usr/lib/python3/dist-packages/gi/__init__.py&quot;, line 129, in require_version</span><br><span class="line">    raise ValueError(&#x27;Namespace %s not available for version %s&#x27; %</span><br><span class="line">ValueError: Namespace GtkSource not available for version 4</span><br></pre></td></tr></table></figure>
+
+<p>经过搜索发现这里是缺少了 <code>gir1.2-gtksource-4</code> 的库。估计是写依赖时写漏了。使用 <code>sudo apt install gir1.2-gtksource-4</code> 安装上就可以正常运行了。</p>
+<h2 id="简易使用"><a href="#简易使用" class="headerlink" title="简易使用"></a>简易使用</h2><p>安装运行之后会出现欢迎界面，点几下 “下一步” 之后 bottles 会下载相关组件。这个很慢，可能是因为服务器在国外。多等一会儿就好了。等的时候可以写写博客之类的……</p>
+<p>之后使用方式非常显然，所以就不写了（咕了）。</p>
+
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+
+
+                </div>
+                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
+                    
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 1: About -->
+                    <div class="mt5 mt0-l">
+    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
+        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
+            <img src="http://tachyons.io/img/avatar_1.jpg" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="jyi2ya">
+        </div>
+        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
+            My name is Jonathan Klughertz and this is my blog.<br>I am a full stack software engineer with a strong front-end focus.<br> I currently live and work in Singapore, hit me up if you are in the region.
+        </div>
+    </article>
+</div>
+
+                    <hr class="dn-l mw4 black-50 mt5" />
+                    
+                    <!-- Widget 2: Categories -->
+                    
+
+                    <!-- Widget 3: Recent Posts -->
+                    <div class="mt5 tc tl-l">
+    <h3>Recent Posts</h3>
+    
+        <p>
+            <a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/friends/main/">友链</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a>
+        </p>
+    
+        <p>
+            <a href="/2023/10/01/nonsense/restart/main/">重新开始</a>
+        </p>
+    
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="bg-1 ph2 ph5-ns pv5">
+        <div class="mv8">
+            <div class="center tc">
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://twitter.com/?lang=en" target="_blank">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.facebook.com/" target="_blank">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://dribbble.com/" target="_blank">
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://github.com/klugjo/hexo-theme-anodyne" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://plus.google.com/" target="_blank">
+                            <i class="fa fa-google-plus"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://www.behance.net/" target="_blank">
+                            <i class="fa fa-behance"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="https://500px.com/" target="_blank">
+                            <i class="fa fa-500px"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="mailto:test@example.com" target="_blank">
+                            <i class="fa fa-envelope"></i>
+                        </a>
+                    </div>
+                
+                    <div class="dib mh3">
+                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </div>
+                
+            </div>
+            <div class="f6 f5-ns center tc white pt5 fw3">
+                @Untitled. All right reserved | Design & Hexo <a class="link dim white" target="_blank" rel="noopener" href="http://www.codeblocq.com/">Jonathan Klughertz</a>
+            </div>
+        </div>
+    </div>
+
+<!-- After Footer -->
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
