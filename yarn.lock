@@ -572,6 +572,11 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hexo-baidu-url-push@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.npmjs.org/hexo-baidu-url-push/-/hexo-baidu-url-push-0.1.8.tgz"
+  integrity sha512-mDQXonB7yrNHNv+/JrDnEFMiQsuZlThQ9/GqJZ9WbbzHxM9fAY7t+geKtqmXJ/Z7RxbE37u3fEJy5j7xAO8gGg==
+
 hexo-cli@^4.3.0:
   version "4.3.1"
   resolved "https://registry.npmjs.org/hexo-cli/-/hexo-cli-4.3.1.tgz"
@@ -712,6 +717,11 @@ hexo-theme-landscape@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/hexo-theme-landscape/-/hexo-theme-landscape-1.0.0.tgz"
   integrity sha512-bWQJWMqQI78wWiJPQZq5pJBH20TM442ShCaHGRetuEgMraxH0OKxB3NTupJzNEkzEk8DV2yrdizkXdKN6i501A==
+
+hexo-theme-minidyne@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.npmjs.org/hexo-theme-minidyne/-/hexo-theme-minidyne-3.3.4.tgz"
+  integrity sha512-K8P6BLpEQ6RU13vgTZYihalcshW8rb5XY75JXee7PrQIwizR4XX/v8RWhjVVyMxJ4q0Y66KZ+SiqRrJYDQm1Qw==
 
 hexo-util@^2.0.0, hexo-util@^2.5.0, hexo-util@^2.7.0:
   version "2.7.0"
