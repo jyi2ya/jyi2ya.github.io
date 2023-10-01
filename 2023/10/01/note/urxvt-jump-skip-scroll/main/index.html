@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><!-- hexo injector head_begin start --><script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- hexo injector head_begin end -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="urxvt 跑得比 alacritty 还快，为什么呢？答案答案是 urxvt 并没有老老实实地绘制其内程序输出的每一个字符，而是通过一些非常取巧的方法，减少了屏幕渲染的内容数量。
+具体来说，是用了以下两个优化：
+
+jump scroll：如果短时间内需要渲染很多行，那么 urxvt 仅会在收到的行">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="jyi2ya">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Hexo"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Hexo"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="website" />
+    
+
+    <!--Page Cover for sharing-->
+    
+        <meta property="og:image" content="https://i❤️.ws/emoji-image/🦄.png" />
+    
+
+    <!-- Page permalink -->
+    
+        <meta property="og:url" content="https://jyi2ya.github.io/2023/10/01/note/urxvt-jump-skip-scroll/main/" />
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+        <meta name="twitter:site" content="@johndoe" />
+    
+
+    <meta name="generator" content="Hexo" />
+
+    <!-- Title -->
+    
+    <title>Hexo</title>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+<link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body class="sans-serif">
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<header class="w-100 bg-1 ph5-ns ph3 text-light">
+
+    <nav class="db w-100 mw8 center border-box pv3">
+        <div class="db v-mid w-100 tc tr-ns">
+            
+            
+        </div>
+    </nav>
+
+    <div class="w-100 tc db dt-ns">
+        <!-- Title -->
+        <div class="dib dtc-ns w-90-ns white">
+            <h1 class="f1-ns tc tc-ns tl-ns">default_post_title</h1>
+        </div>
+        <!-- Icon -->
+        <div class="dib dtc-ns w-10-ns f1 f-5-ns f-6-l mb2">
+            <span class="ec">🧙</span>
+        </div>
+    </div>
+    
+</header>
+
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 mw7 left lh-copy pr4-ns pr0-m post-content">
+
+                    <!-- Main Post Content -->
+                    <h1 id="urxvt-跑得比-alacritty-还快，为什么呢？"><a href="#urxvt-跑得比-alacritty-还快，为什么呢？" class="headerlink" title="urxvt 跑得比 alacritty 还快，为什么呢？"></a>urxvt 跑得比 alacritty 还快，为什么呢？</h1><h2 id="答案"><a href="#答案" class="headerlink" title="答案"></a>答案</h2><p>答案是 urxvt 并没有老老实实地绘制其内程序输出的每一个字符，而是通过一些非常取巧的方法，减少了屏幕渲染的内容数量。</p>
+<p>具体来说，是用了以下两个优化：</p>
+<ul>
+<li>jump scroll：如果短时间内需要渲染很多行，那么 urxvt 仅会在收到的行能充满一屏时尝试刷新。</li>
+<li>skip scroll：在 jump scroll 的基础上，限制刷新率为 60 Hz。</li>
+</ul>
+<p>开启这两个优化之后，urxvt 收到的很多内容实际上都被直接扔进历史记录里了，根本没在屏幕上出现过。同时，因为人的眼睛是非常低速的设备，所以即使这些内容没有在屏幕上出现，也不会影响使用体验。</p>
+<p>如果禁用掉这些小优化，urxvt 的速度大概仅是 alacritty 的 1&#x2F;2 到 1&#x2F;3。</p>
+<h2 id="alacritty-与-urxvt-的简介"><a href="#alacritty-与-urxvt-的简介" class="headerlink" title="alacritty 与 urxvt 的简介"></a>alacritty 与 urxvt 的简介</h2><p>urxvt 本身是个二十多年前的老东西，使用了很多奇怪的 X 特性。配置文件和 xterm 一样非常奇怪，可能是 Xorg 给世界留下的遗产之一……使用 C 和 C++ 编写，用 Perl 扩展。rxvt 的可扩展性很强，对标准支持也很好，各种 corner case 处理相对比较完善。</p>
+<p>alacritty 是个很新的项目，号称要成为最快的终端。使用超级炒作语言 rust 开发，并且实现了 GPU 加速。他们一度声称自己是 “Fastest Terminal Emulator in Existence（现存最快终端）”。但是在 2020 年末的 <a target="_blank" rel="noopener" href="https://github.com/alacritty/alacritty/commit/3d7b16d4b0d867268c315f421904f3a2dc81a72d">一次提交</a> 中不知道为什么他们换了说法，甚至连大家炒作时最爱的 “Blazing Fast” 也干没了。可能是开发者开发地表最速终端的梦想在现实里撞车了。非常快乐，大家快去围观。总之，相比项目早期的自述，现在的自述温和了很多。</p>
+<p>两个都是非常好的终端。我之前是在 Windows 下用 alacritty，在 Linux 下用 urxvt。</p>
+<h2 id="为什么需要关注终端速度"><a href="#为什么需要关注终端速度" class="headerlink" title="为什么需要关注终端速度"></a>为什么需要关注终端速度</h2><p>……其实意义也不是很大，因为大家在输出内容太长的时候都会 <code>| less</code> 一下，用 pager 分页来看，终端速度对使用体验的影响很小。</p>
+<p>但是既然速度是个能比的项目，那总会有人抱着一种宝可梦对决的心态来研究两个终端谁快谁慢，这也促进了这篇水帖的诞生！</p>
+<h2 id="urxvt-的小优化相关代码"><a href="#urxvt-的小优化相关代码" class="headerlink" title="urxvt 的小优化相关代码"></a>urxvt 的小优化相关代码</h2><p>摘自 urxvt 代码仓库 <code>src/command.C</code> 的第 2267 行。</p>
+<pre><code>if (ecb_unlikely (ch == C0_LF || str &gt;= eol))
+  &#123;
+    if (ch == C0_LF)
+      nlines++;
+
+    refresh_count++;
+
+    if (!option (Opt_jumpScroll) || refresh_count &gt;= nrow - 1)
+      &#123;
+        refresh_count = 0;
+
+        if (!option (Opt_skipScroll) || ev_time () &gt; ev::now () + 1. / 60.)
+          &#123;
+            refreshnow = true;
+            ch = NOCHAR;
+            break;
+          &#125;
+      &#125;
+</code></pre>
+<p>大概就是它用一堆错综复杂的条件变量实现了上面提到的小优化，整段代码唯一的注释的是这样的：</p>
+<pre><code>/*
+ * If there have been a lot of new lines, then update the screen
+ * What the heck we&#39;ll cheat and only refresh less than every page-full.
+ * if skipScroll is enabled.
+ */
+</code></pre>
+<p>摆了。这啥 GNU-style 的神秘老代码看得我头疼……</p>
+
+
+                    
+                        <div class="pt3">
+                            <span class="ec pr2">🕗</span>2023-10-01
+                        </div>
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<footer class="bg-1 ph2 ph5-ns pv5 center tc">
+    
+</footer>
+
+
+</body>
+
+</html>

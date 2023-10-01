@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><!-- hexo injector head_begin start --><script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- hexo injector head_begin end -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="使用 complete-alias 补全 bash 别名的参数命令别名众所周知，bash 中有个很方便的功能，使用 alias 命令创建命令别名。比如：
+123456789101112# Gitalias cg=&amp;#x27;cd `git rev-parse --show-toplevel || e">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="jyi2ya">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Hexo"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Hexo"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="website" />
+    
+
+    <!--Page Cover for sharing-->
+    
+        <meta property="og:image" content="https://i❤️.ws/emoji-image/🦄.png" />
+    
+
+    <!-- Page permalink -->
+    
+        <meta property="og:url" content="https://jyi2ya.github.io/2023/10/01/tutorial/complete-alias/main/" />
+    
+
+    <meta name="twitter:card" content="summary" />
+    
+        <meta name="twitter:site" content="@johndoe" />
+    
+
+    <meta name="generator" content="Hexo" />
+
+    <!-- Title -->
+    
+    <title>Hexo</title>
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+<link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+
+<body class="sans-serif">
+
+<!-- Main Content -->
+<!-- Banner -->
+<!-- Banner -->
+<header class="w-100 bg-1 ph5-ns ph3 text-light">
+
+    <nav class="db w-100 mw8 center border-box pv3">
+        <div class="db v-mid w-100 tc tr-ns">
+            
+            
+        </div>
+    </nav>
+
+    <div class="w-100 tc db dt-ns">
+        <!-- Title -->
+        <div class="dib dtc-ns w-90-ns white">
+            <h1 class="f1-ns tc tc-ns tl-ns">default_post_title</h1>
+        </div>
+        <!-- Icon -->
+        <div class="dib dtc-ns w-10-ns f1 f-5-ns f-6-l mb2">
+            <span class="ec">🧙</span>
+        </div>
+    </div>
+    
+</header>
+
+
+<!-- Content -->
+<div class="w-100 ph2 ph4-m ph5-l mv5">
+    <div class="content">
+        <div class="mw8 center">
+            <div class="cf">
+                <div class="fl w-100 mw7 left lh-copy pr4-ns pr0-m post-content">
+
+                    <!-- Main Post Content -->
+                    <h1 id="使用-complete-alias-补全-bash-别名的参数"><a href="#使用-complete-alias-补全-bash-别名的参数" class="headerlink" title="使用 complete-alias 补全 bash 别名的参数"></a>使用 complete-alias 补全 bash 别名的参数</h1><h2 id="命令别名"><a href="#命令别名" class="headerlink" title="命令别名"></a>命令别名</h2><p>众所周知，bash 中有个很方便的功能，使用 <code>alias</code> 命令创建命令别名。比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Git</span></span><br><span class="line"><span class="built_in">alias</span> cg=<span class="string">&#x27;cd `git rev-parse --show-toplevel || echo .`&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> gaA=<span class="string">&#x27;git add -A&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> gad=<span class="string">&#x27;git add&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> gbc=<span class="string">&#x27;git branch&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> gcm=<span class="string">&#x27;git commit&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> gco=<span class="string">&#x27;git checkout&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> gst=<span class="string">&#x27;git status&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> gcl=<span class="string">&#x27;git clone&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> glg=<span class="string">&#x27;git log --graph&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> gmg=<span class="string">&#x27;git merge&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> gdf=<span class="string">&#x27;git diff&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样，如果我们输入 <code>gcl</code>，bash 就会认为我们输入的是 <code>git clone</code>。极大地减少了输入字母的数量。</p>
+<h2 id="命令参数补全"><a href="#命令参数补全" class="headerlink" title="命令参数补全"></a>命令参数补全</h2><p>bash 还有另一个强大的功能，命令参数补全。这个命令参数补全不仅仅是补全当前目录下的文件，而是根据当前已经输入的命令和参数，猜测补全下一个参数。一般来说发行版都会提供大量写好的补全脚本，可以直接使用。</p>
+<p>以 Debian 为例，安装 <code>bash-completion</code> 软件包后，在 <code>~/.bashrc</code> 中加上 <code>source /etc/bash_completion</code>。接着输入命令，连续按下两下 <code>tab</code> 键就可以触发补全功能（按下 <code>tab</code> 键的地方在下面用 <code>&lt;TAB&gt;</code> 表示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">% 19:50:08 (master) ~/sr/md/bl/note/complete-alias</span><br><span class="line">0 ls --h&lt;TAB&gt;&lt;TAB&gt;</span><br><span class="line">--help                --hide-control-chars  --hyperlink</span><br><span class="line">--hide=               --human-readable</span><br></pre></td></tr></table></figure>
+
+<p>虽然说没有 zsh 的好用就是啦。</p>
+<h2 id="但是有一个小问题"><a href="#但是有一个小问题" class="headerlink" title="但是有一个小问题"></a>但是有一个小问题</h2><p>bash 的命令参数补全是根据命令名来确定的，举一个简单的例子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">_id</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">local</span> cur prev words cword</span><br><span class="line">    _init_completion || <span class="built_in">return</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$cur</span> == -* ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">local</span> opts=$(_parse_help <span class="string">&quot;<span class="variable">$1</span>&quot;</span>)</span><br><span class="line">        [[ <span class="variable">$opts</span> ]] || opts=<span class="string">&quot;-G -g -u&quot;</span> <span class="comment"># POSIX fallback</span></span><br><span class="line">        COMPREPLY=($(compgen -W <span class="string">&quot;<span class="variable">$opts</span>&quot;</span> -- <span class="string">&quot;<span class="variable">$cur</span>&quot;</span>))</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        COMPREPLY=($(compgen -u <span class="string">&quot;<span class="variable">$cur</span>&quot;</span>))</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125; &amp;&amp;</span><br><span class="line">    complete -F _id <span class="built_in">id</span></span><br></pre></td></tr></table></figure>
+
+<p>这是从 <code>/usr/share/bash-completion/completions/id</code> 里面摘抄的补全相关代码。可以看到，代码里先实现了 shell 函数 <code>_id</code>，再用 <code>complete -F _id id</code> 来把 <code>id</code> 命令相关的补全和 <code>_id</code> 绑定在一起。即需要补全 <code>id</code> 命令的参数时，会用某种方式调用 <code>_id</code> 函数。</p>
+<p>这样确实可以处理很多情况，但是对别名无效。比如我们运行 <code>alias gco=&#39;git checkout&#39;</code>，把 <code>gco</code> 作为 <code>git checkout</code> 的别名。当我们输入 <code>gco</code> 再按 <code>tab</code> 键时，因为没有绑定 <code>gco</code> 相关的补全函数，所以 bash 不知道如何补全，只能在后面接上文件名。</p>
+<p>我们期待的行为应该是输入 <code>gco</code> 再按 <code>tab</code> 就和输入 <code>git checkout</code> 再按 <code>tab</code> 一样，可以补全出分支名称：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% 20:03:23 (master) ~/sr/md/bl/note/complete-alias</span><br><span class="line">0 git checkout&lt;TAB&gt;&lt;TAB&gt;</span><br><span class="line">HEAD                 linux-csharp-build   master               ORIG_HEAD</span><br></pre></td></tr></table></figure>
+
+<h2 id="小问题解决了"><a href="#小问题解决了" class="headerlink" title="小问题解决了"></a>小问题解决了</h2><p>之前肯定也有人遇到过一样的问题，并且造了相关的轮子。这儿有一个好用的：<a target="_blank" rel="noopener" href="https://github.com/cykerway/complete-alias">complete-alias</a>。</p>
+<p>我们只要把仓库里面 <code>complete_alias</code> 文件中的内容复制下来，贴到 <code>~/.bashrc</code> 尾巴上（有 1000 多行，有点野蛮。讲究的人可以把它放到某个目录里然后 <code>.bashrc</code> 里面用 <code>source</code> 命令处理？），再把最后一行 <code>#complete -F _complete_alias &quot;$&#123;!BASH_ALIASES[@]&#125;&quot;</code> 前面的井号 <code>#</code> 删掉就算配置完成。重新启动 bash 即可使用。</p>
+<p>总而言之挺开箱即用的，配置不费劲。</p>
+<p>效果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% 20:14:27 (master) ~/sr/md/bl/note/complete-alias</span><br><span class="line">0 gco&lt;TAB&gt;&lt;TAB&gt;</span><br><span class="line">HEAD                 linux-csharp-build   master               ORIG_HEAD</span><br></pre></td></tr></table></figure>
+
+
+                    
+                        <div class="pt3">
+                            <span class="ec pr2">🕗</span>2023-10-01
+                        </div>
+                    
+                    <!-- Tags Bottom -->
+                    
+
+                    <!-- Comments -->
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<footer class="bg-1 ph2 ph5-ns pv5 center tc">
+    
+</footer>
+
+
+</body>
+
+</html>
