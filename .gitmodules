@@ -1,0 +1,3 @@
+[submodule "themes/anodyne"]
+	path = themes/anodyne
+	url = https://github.com/klugjo/hexo-theme-anodyne
