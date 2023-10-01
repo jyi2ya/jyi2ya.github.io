@@ -103,3 +103,52 @@ theme: minidyne
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+theme_config:
+  default_post_title: "Untitled"
+  # Header
+  menu:
+    Home: /
+    About: /about.html
+  
+  # Index banner text
+  index_banner_text: welcome to my website
+
+  # Logo
+  index_icon: ❤️
+
+  default_post_title: "Untitled"
+
+  default_post_icon: 🧙
+
+  # Social Media Platforms, also used for comments
+  social_platforms:
+    # - url: https://stackoverflow.com/users/12345/johndoe
+    #   icon: stackoverflow
+    #   name: Stack Overflow
+    # - url: https://github.com/johndoe/
+    #   icon: github
+    #   type: github
+    #   name: GitHub
+    #   repository: johndoe.blog
+    # - url: https://linkedin.com/in/johndoe
+    #   icon: linkedin
+    #   type: linkedin
+    #   name: LinkedIn
+    # - url: https://twitter.com/johndoe
+    #   icon: twitter
+    #   type: twitter
+    #   name: Twitter
+    #   account: johndoe
+    # - url: https://www.flickr.com/photos/johndoe/
+    #   icon: flickr
+    #   type: flickr
+    #   name: Flickr
+    # - url: https://mastodon.social/@johndoe
+    #   icon: mastodon
+    #   type: mastodon
+    #   name: Mastodon
+    - url: /rss2.xml
+      icon: rss
+      type: rss
+      name: Rss
