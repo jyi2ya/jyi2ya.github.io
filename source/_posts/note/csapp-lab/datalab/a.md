@@ -1,3 +1,9 @@
+---
+title: CSAPP Data Lab 做题记录（上）
+date: 2023-10-01 17:48:39
+tags:
+---
+
 # CSAPP Data Lab 做题记录（上）
 
 ## 准备工作
@@ -220,7 +226,7 @@ int logicalNeg(int x) {
 
 最后 return 那个奇怪的表达式其实是 `1 - x` 拆过来的。发现直接写 `2 + (~x)` 会拿不到性能分，符号刚好多一个。
 
-### howManyBits 
+### howManyBits
 
 求最少用多少个位可以表示出给定数字。
 

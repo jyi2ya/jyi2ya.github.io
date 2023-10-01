@@ -1,3 +1,9 @@
+---
+title: 使用 complete-alias 补全 bash 别名的参数
+date: 2023-10-01 17:48:39
+tags:
+---
+
 # 使用 complete-alias 补全 bash 别名的参数
 
 ## 命令别名

@@ -1,3 +1,9 @@
+---
+title: Perf 笔记
+date: 2023-10-01 17:48:39
+tags:
+---
+
 # Perf 笔记
 
 环境 ``Linux Syameimaru-Aya 5.17.0-2-amd64 #1 SMP PREEMPT Debian 5.17.6-1 (2022-05-11) x86_64 GNU/Linux``。
@@ -36,14 +42,14 @@ in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
 
 ```plain
 root@Syameimaru-Aya:~/tmp# echo -1 > /proc/sys/kernel/perf_event_paranoid
-root@Syameimaru-Aya:~/tmp# 
+root@Syameimaru-Aya:~/tmp#
 ```
 
 接着 ``perf`` 就可以正常运行了。
 
 ```plain
 20:27 Syameimaru-Aya ~/sr/la/hpc/perf
-0 cat a.c 
+0 cat a.c
 #include <stdio.h>
 
 int main(void) {

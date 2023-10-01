@@ -1,3 +1,9 @@
+---
+title: 友链
+date: 2023-10-01 17:48:39
+tags:
+---
+
 # 友链
 
 cyx 吃夜宵：https://yxchen.net/

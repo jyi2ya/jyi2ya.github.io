@@ -1,3 +1,9 @@
+---
+title: urxvt 跑得比 alacritty 还快，为什么呢？
+date: 2023-10-01 17:48:39
+tags:
+---
+
 # urxvt 跑得比 alacritty 还快，为什么呢？
 
 ## 答案

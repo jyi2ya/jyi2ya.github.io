@@ -1,3 +1,9 @@
+---
+title: hyperfine 使用指南
+date: 2023-10-01 17:48:39
+tags:
+---
+
 hyperfine 使用指南
 ==================
 

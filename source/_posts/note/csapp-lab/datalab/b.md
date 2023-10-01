@@ -1,10 +1,16 @@
+---
+title: CSAPP Data Lab 做题记录（下）
+date: 2023-10-01 17:48:39
+tags:
+---
+
 # CSAPP Data Lab 做题记录（下）
 
 摸了好几天，来做浮点部分……
 
 ## 题目列表
 
-### floatScale2 
+### floatScale2
 
 传入一个无符号整数，把它当作单精度浮点数，乘二后输出。
 
@@ -35,7 +41,7 @@ unsigned floatScale2(unsigned uf) {
 }
 ```
 
-### floatFloat2Int 
+### floatFloat2Int
 
 传入一个无符号整数 uf，把它当作单精度浮点数，返回它截断后的整数部分。也就是 `(int)uf`。如果出现溢出，则返回 0x80000000u（书上说这是与 Intel 兼容的微处理器指定的 “整数不确定” 值）。
 
@@ -71,7 +77,7 @@ int floatFloat2Int(unsigned uf) {
 }
 ```
 
-### floatPower2 
+### floatPower2
 
 传入一个整数 $x$，返回单精度浮点数 $2^x$。如果结果太小则返回 0，太大则返回 +INF。
 

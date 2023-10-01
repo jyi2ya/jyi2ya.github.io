@@ -1,3 +1,9 @@
+---
+title: Bottles 安装
+date: 2023-10-01 17:48:39
+tags:
+---
+
 # Bottles 安装
 
 ## 好名字！
@@ -93,7 +99,7 @@ bottles is /usr/bin/bottles
 
 ```plain
 % [1] 20:43:10 jyi@Syameimaru-Aya ~
-0 bottles 
+0 bottles
 Traceback (most recent call last):
   File "/usr/bin/bottles", line 56, in <module>
     from bottles import main
