@@ -19,6 +19,9 @@ jobs:
         run: |
           git submodule init
           git submodule update
+      - name: update theme configuration
+        run: |
+          cp _config.anodyne.yml themes/anodyne/_config.yml
       - name: Use Node.js 18.x
         uses: actions/setup-node@v2
         with:
