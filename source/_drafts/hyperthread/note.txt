@@ -1,0 +1,46 @@
+作者：Harry Zhu
+链接：https://www.zhihu.com/question/397592841/answer/2266547842
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+# 获取一共安装了几个CPU，服务器一般都是双路CPU
+cat /proc/cpuinfo | grep "physical id" | sort | uniq
+physical id     : 0
+physical id     : 1
+
+# 获取每个CPU有多少实体核心
+cat /proc/cpuinfo | grep "cpu cores"|sort -u
+cpu cores       : 10
+
+# Linux 下面获取CPU实体内核的id
+# 在我演示的这台机器上，实体CPU的核心id编号为 0，1，2，3，4，8，9，10，11，12；
+# 所以逻辑CPU（即超线程出来的CPU的id编号就是）5，6，7，13，14，15，16，17，18，19；
+cat /proc/cpuinfo | grep "core id"|sort -u
+core id         : 0
+core id         : 1
+core id         : 10
+core id         : 11
+core id         : 12
+core id         : 2
+core id         : 3
+core id         : 4
+core id         : 8
+core id         : 9
+
+# 所以我们要做到实时禁用逻辑CPU，只需要循环把
+# 5，6，7，13，14，15，16，17，18，19编号的CPU禁用就可以了
+# 比如禁用 19 号CPU：
+cd /sys/devices/system/cpu/cpu19
+ls
+cache  cpuidle  crash_notes  node1  online  thermal_throttle  topology
+more online
+1
+# 你只需要把这个 online里面的数字1修改成为 0，就是禁用了，修改成为 1 就是启用；
+# 如果把上面 10个 逻辑CPU的online文件内容全部改成0，就禁用了该CPU的所有逻辑核心
+echo "1">online
+
+
+# 所以你想“实时”开关超线程，你用你的脚本循环修改 online 里面的数字就可以了
+# 根本不需要要别人给你做，自己动手就可以完成了
+
+lscpu --extend
