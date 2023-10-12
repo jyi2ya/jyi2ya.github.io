@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
-<head><!-- hexo injector head_begin start --><script>
+<html>
+    <head><!-- hexo injector head_begin start --><script>
 (function(){
     var bp = document.createElement('script');
     var curProtocol = window.location.protocol.split(':')[0];
@@ -17,200 +15,93 @@
 })();
 </script>
 <!-- hexo injector head_begin end -->
-
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>Hexo | </title>
     
+<link rel="stylesheet" href="/css/reset.css">
 
-    <!--Author-->
-    
-        <meta name="author" content="jyi2ya">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="Hexo"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="Hexo"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="website" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>page - Hexo</title>
-
-    <!-- Tachyons Core CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Custom CSS -->
     
 <link rel="stylesheet" href="/css/style.css">
 
-
-    <!-- Google Analytics -->
     
+<link rel="stylesheet" href="/css/markdown.css">
 
+    
+<link rel="stylesheet" href="/css/fonts.css">
 
 <meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
 </head>
-
-
-<body>
-
-<!-- Main Content -->
-<!-- Banner -->
-<!-- Banner -->
-<div class="w-100 bg-1 ph5-ns ph3 text-light">
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="header">
+    <a class="logo" href="/">Hexo</a>
+    <ul class="nav">
+        
+        <li><a href="/">首页</a></li>
+        
+        <li><a href="/archives">归档</a></li>
+        
+        <li><a href="/about">关于</a></li>
+        
+    </ul>
+</div>
+                
+                <div class="post-list">
     
-    <nav class="db dt-l w-100 mw8 center border-box pv3">
-        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="Hexo">
-            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="Hexo">
-        </a>
-        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
-                    href="/" 
-                    title="Home">
-                    Home
-                </a>
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
-                    href="/archives" 
-                    title="Archives">
-                    Archives
-                </a>
-            
-        </div>
-    </nav>
+    <div class="post">
+        <a class="post-title" href="/2023/10/01/note/csapp-lab/datalab/a/">CSAPP Data Lab 做题记录（上）</a>
+        <div class="post-except">
+            CSAPP Data Lab 做题记录（上）准备工作访问 http://csapp.cs.cmu.edu/3e/labs.html 试图下载网页上醒目的 datalab.tar，发现需要身份验证。后来发现点后面的小东西可以直接下载。读了 readme 之后知道 datalab.tar 好像是教师用的，用来生成学生的包（datalab-handout），datalab-handout 才是学生用的。
 
-    <!-- Title -->
-    <div class="w-100 mw8 center vh-40 dt">
-        <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">欢迎</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">这是我的博客</p>
+读文档，知道实验是要用位运算来模拟各种整数运算，还要用整数运算模拟浮点运算。
+            <a class="read-more" href="/2023/10/01/note/csapp-lab/datalab/a/"> ... </a>
         </div>
+        <div class="post-date">2023.10.01</div>
     </div>
-
-    <!-- Icon -->
-    <div class="relative w-100 mw8 center white dn dn-m db-ns">
-        <i class="header-icon fa fa fa-magic"></i>
+    
+    <div class="post">
+        <a class="post-title" href="/2023/10/01/note/csapp-lab/datalab/b/">CSAPP Data Lab 做题记录（下）</a>
+        <div class="post-except">
+            CSAPP Data Lab 做题记录（下）摸了好几天，来做浮点部分……
+题目列表floatScale2传入一个无符号整数，把它当作单精度浮点数，乘二后输出。
+很自然地想到提取出符号、阶码和尾数，接着根据是否为规格化的浮点数分情况处理，拼起来返回，比较简单。
+12345678910111213141516171819202122unsigned floatScale2(unsigned uf) &#123;  int sign, expo, frac;  int bias =
+            <a class="read-more" href="/2023/10/01/note/csapp-lab/datalab/b/"> ... </a>
+        </div>
+        <div class="post-date">2023.10.01</div>
     </div>
+    
 </div>
 
-<!-- Content -->
-<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
-    <div class="content">
-        <div class="mw8 center">
-            
-                <a href="/2023/10/01/note/csapp-lab/datalab/a/">
-    <div class="dt w-100 hover-border-main-color pointer pa3 border-color bl mv4">
-        <div class="dtc v-mid w-90 black-70">
-            <div>
-                
-                    <span class="f5 fw3 lh-copy pr4">2023-10-01</span> 
-                
-                
-            </div>
-            <span class="f3 fw3 lh-copy">CSAPP Data Lab 做题记录（上）<span>
-        </div>
-        <div class="dtc v-mid w-10 f1 black-50 tr">
-            <i class="fa fa-file-text-o"></i>
-        </div>
-    </div>
-</a>
-            
-                <a href="/2023/10/01/note/csapp-lab/datalab/b/">
-    <div class="dt w-100 hover-border-main-color pointer pa3 border-color bl mv4">
-        <div class="dtc v-mid w-90 black-70">
-            <div>
-                
-                    <span class="f5 fw3 lh-copy pr4">2023-10-01</span> 
-                
-                
-            </div>
-            <span class="f3 fw3 lh-copy">CSAPP Data Lab 做题记录（下）<span>
-        </div>
-        <div class="dtc v-mid w-10 f1 black-50 tr">
-            <i class="fa fa-file-text-o"></i>
-        </div>
-    </div>
-</a>
-            
-        </div>
-    </div>
-    
-    <div class="flex items-center justify-center pa4">
-        <a href="/page/2/" 
-            class="f5 no-underline inline-flex items-center pa3 ba border-box mr4 gray hover-border-main-color hover-text-main-color">
-            <i class="w1 pr2 fa fa-chevron-left" aria-hidden="true"></i>
-            <span class="pl1">Previous</span>
-        </a>
-        <a href="/" 
-            class="f5 no-underline inline-flex items-center pa3 ba border-box light-gray cursor-default">
-            <span class="pr1">Next</span>
-            <i class="w1 pl2 fa fa-chevron-right" aria-hidden="true"></i>
-        </a>
-    </div>
+<div class="paginator">
+    <a class="extend prev" rel="prev" href="/page/2/">上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+</div>
 
+                <div class="footer">
+    <span>Copyright © 2022 Hexo</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
 </div>
 
 
-<!-- Footer -->
-<div class="bg-1 ph2 ph5-ns pv5">
-        <div class="mv8">
-            <div class="center tc">
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://github.com/jyi2ya" target="_blank">
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
-                            <i class="fa fa-rss"></i>
-                        </a>
-                    </div>
-                
-            </div>
-            <div class="f6 f5-ns center tc white pt5 fw3">
-                
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
             </div>
         </div>
-    </div>
-
-<!-- After Footer -->
-<!-- Disqus Comments -->
-
-
-
-</body>
-
+    </body>
 </html>

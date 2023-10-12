@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
-<head><!-- hexo injector head_begin start --><script>
+<html>
+    <head><!-- hexo injector head_begin start --><script>
 (function(){
     var bp = document.createElement('script');
     var curProtocol = window.location.protocol.split(':')[0];
@@ -17,127 +15,49 @@
 })();
 </script>
 <!-- hexo injector head_begin end -->
-
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.png">
+    <title>Hexo | </title>
     
-        <meta name="description" content="对集群上 df 和 du 命令显示结果不一致的排查记录背景在集群上跑作业，然后把磁盘空间吃掉了。把占用空间很大的文件删掉后，du /home 命令的结果显示磁盘占用已经回到了正常水平，但是 df -h 显示，/home 所在分区的磁盘占用率还是 100%，也不能新建和修改文件。
-猜想不会是把文件系统">
-    
+<link rel="stylesheet" href="/css/reset.css">
 
-    <!--Author-->
-    
-        <meta name="author" content="jyi2ya">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="对集群上 df 和 du 命令显示结果不一致的排查记录"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="Hexo"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-    <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>对集群上 df 和 du 命令显示结果不一致的排查记录 - Hexo</title>
-
-    <!-- Tachyons Core CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Custom CSS -->
     
 <link rel="stylesheet" href="/css/style.css">
 
-
-    <!-- Google Analytics -->
     
+<link rel="stylesheet" href="/css/markdown.css">
 
+    
+<link rel="stylesheet" href="/css/fonts.css">
 
 <meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
 </head>
-
-
-<body>
-
-<!-- Main Content -->
-<!-- Banner -->
-<!-- Banner -->
-<div class="w-100 bg-1 ph5-ns ph3 text-light">
-    
-    <nav class="db dt-l w-100 mw8 center border-box pv3">
-        <a class="db dtc-l v-mid link dim w-100 w-25-l tc tl-l mb2 mb0-l white" href="/" title="Hexo">
-            <img src="http://www.codeblocq.com/assets/projects/hexo-theme-anodyne/assets/anodyne.svg" class="dib h3" alt="Hexo">
-        </a>
-        <div class="db dtc-l v-mid w-100 w-75-l tc tr-l">
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
-                    href="/" 
-                    title="Home">
-                    Home
-                </a>
-            
-                <a class="link dim f6 f5-l dib mr3 mr4-l white" 
-                    href="/archives" 
-                    title="Archives">
-                    Archives
-                </a>
-            
-        </div>
-    </nav>
-
-    <!-- Title -->
-    <div class="w-100 mw8 center vh-40 dt">
-        <div class="dtc v-mid white">
-            <h1 class="f1-l f2-m tc tc-m tl-ns">对集群上 df 和 du 命令显示结果不一致的排查记录</h1>
-            <p class="f4 fw3 pab-100px tc tc-m tl-ns">2023-10-01</p>
-        </div>
-    </div>
-
-    <!-- Icon -->
-    <div class="relative w-100 mw8 center white dn dn-m db-ns">
-        <i class="header-icon fa fa-file-text-o"></i>
-    </div>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">Hexo</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
 </div>
+                
+                <div class="post-main">
 
-<!-- Content -->
-<div class="w-100 ph2 ph4-m ph5-l mv5 mv6-l">
-    <div class="content">
-        <div class="mw8 center">
-            <div class="cf">
-                <div class="fl w-100 w-70-l mw7 left fw3 lh-copy pr4-ns pr0-m post-content">
-                    <!-- Tags Vertical -->
-                    
-
-                    <!-- Main Post Content -->
-                    <h1 id="对集群上-df-和-du-命令显示结果不一致的排查记录"><a href="#对集群上-df-和-du-命令显示结果不一致的排查记录" class="headerlink" title="对集群上 df 和 du 命令显示结果不一致的排查记录"></a>对集群上 df 和 du 命令显示结果不一致的排查记录</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在集群上跑作业，然后把磁盘空间吃掉了。把占用空间很大的文件删掉后，<code>du /home</code> 命令的结果显示磁盘占用已经回到了正常水平，但是 <code>df -h</code> 显示，<code>/home</code> 所在分区的磁盘占用率还是 100%，也不能新建和修改文件。</p>
+    
+    
+        <div class="post-main-title">
+            对集群上 df 和 du 命令显示结果不一致的排查记录
+        </div>
+        <div class="post-meta">
+            2023-10-01
+        </div>
+        <div class="post-md">
+            <h1 id="对集群上-df-和-du-命令显示结果不一致的排查记录"><a href="#对集群上-df-和-du-命令显示结果不一致的排查记录" class="headerlink" title="对集群上 df 和 du 命令显示结果不一致的排查记录"></a>对集群上 df 和 du 命令显示结果不一致的排查记录</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在集群上跑作业，然后把磁盘空间吃掉了。把占用空间很大的文件删掉后，<code>du /home</code> 命令的结果显示磁盘占用已经回到了正常水平，但是 <code>df -h</code> 显示，<code>/home</code> 所在分区的磁盘占用率还是 100%，也不能新建和修改文件。</p>
 <h2 id="猜想"><a href="#猜想" class="headerlink" title="猜想"></a>猜想</h2><h3 id="不会是把文件系统弄坏了吧！"><a href="#不会是把文件系统弄坏了吧！" class="headerlink" title="不会是把文件系统弄坏了吧！"></a>不会是把文件系统弄坏了吧！</h3><p>仔细想了想好像不可能，因为平时都是用普通用户的身份工作的……不太可能搞出影响文件系统的操作。</p>
 <h3 id="有些人的小文件太多，把-inode-给用光了！"><a href="#有些人的小文件太多，把-inode-给用光了！" class="headerlink" title="有些人的小文件太多，把 inode 给用光了！"></a>有些人的小文件太多，把 inode 给用光了！</h3><p>看起来有可能，但是回想下很久很久以前自己做赛博仓鼠的时候遇到的问题，就会发现两个问题表现完全不一样。</p>
 <p>很久很久以前，赛博鼠鼠 jyi 试图往自己的鼠鼠洞里塞图片，发现没有磁盘空间了！他 <code>df</code> 了下，发现硬盘空间还有很多，但是新建文件就是会出错。他又试了试往已有的文件后面追加写入一些东西，好像可以成功。他觉得非常奇怪，“凭什么磁盘有空间，但是就是不让我放东西呢？”</p>
@@ -154,98 +74,32 @@
 <p>问题最终解决了，可喜可贺可喜可贺。另外给好朋友说这个事时，还听说在 “进程打开了文件，但是文件不小心删掉了” 这种情况下，在进程关闭之前，可以去 <code>/proc/X/fd/Y</code> 下面把文件找回来。其中 <code>X</code> 是进程 pid，<code>Y</code> 是软链接，名字就是文件描述符，目标是被打开的文件，用 <code>cat</code> 命令就可以把文件给找回来。利用的也是 inode 释放的机制。</p>
 <p>总之，Linux 真神奇啊 :3</p>
 
-                    
-                    <!-- Tags Bottom -->
-                    
-
-                    <!-- Comments -->
-                    
-
-
-
-                </div>
-                <div class="fl w-100 w-30-l center fw3 lh-copy pl4-ns tl black-50">
-                    
-                    <hr class="dn-l mw4 black-50 mt5" />
-                    
-                    <!-- Widget 1: About -->
-                    <div class="mt5 mt0-l">
-    <article class="dt db-l mw8 mw8-m mw5-ns center ml0-l bg-white mv3">
-        <div class="dn dtc-m db-l v-mid tc pr4 pr0-l" style="min-width: 6rem;">
-            <img src="" class="mb4-l br-100 h3 w3 h4-l w4-l dib" title="jyi2ya">
         </div>
-        <div class="dtc db-l v-mid lh-copy measure center f6 black-50 tj">
-            
-        </div>
-    </article>
+
+    
+
 </div>
-
-                    <hr class="dn-l mw4 black-50 mt5" />
-                    
-                    <!-- Widget 2: Categories -->
-                    
-
-                    <!-- Widget 3: Recent Posts -->
-                    <div class="mt5 tc tl-l">
-    <h3>Recent Posts</h3>
-    
-        <p>
-            <a href="/2023/10/01/tutorial/complete-alias/main/">使用 complete-alias 补全 bash 别名的参数</a>
-        </p>
-    
-        <p>
-            <a href="/2023/10/01/tutorial/hyperfine/main/">hyperfine 使用指南</a>
-        </p>
-    
-        <p>
-            <a href="/2023/10/01/tutorial/shell-abbr/main/">一些能够节省按键次数的 bash 配置</a>
-        </p>
-    
-        <p>
-            <a href="/2023/10/01/tutorial/toc-for-cnblogs/main/">博客园上可用的 markdown 目录生成器</a>
-        </p>
-    
-        <p>
-            <a href="/2023/10/01/tutorial/wine-bottles/main/">Bottles 安装</a>
-        </p>
-    
-</div>
-                </div>
-            </div>
-        </div>
-    </div>
+                <div class="footer">
+    <span>Copyright © 2022 Hexo</span>
+    <span>Theme Designed By <a target="_blank" href="https://zheli.design/one-paper">這李設計</a></span>
 </div>
 
 
-<!-- Footer -->
-<div class="bg-1 ph2 ph5-ns pv5">
-        <div class="mv8">
-            <div class="center tc">
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="https://github.com/jyi2ya" target="_blank">
-                            <i class="fa fa-github"></i>
-                        </a>
-                    </div>
-                
-                    <div class="dib mh3">
-                        <a class="f3 f2-ns white dim" href="/#" target="_blank">
-                            <i class="fa fa-rss"></i>
-                        </a>
-                    </div>
-                
-            </div>
-            <div class="f6 f5-ns center tc white pt5 fw3">
-                
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
             </div>
         </div>
-    </div>
-
-<!-- After Footer -->
-<!-- Disqus Comments -->
-
-
-
-</body>
-
+    </body>
 </html>
