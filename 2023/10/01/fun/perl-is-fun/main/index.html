@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>后现代编程语言介绍 - jyi2ya 的博客</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="jyi2ya 的博客"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="jyi2ya 的博客"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="后现代编程语言介绍什么叫后现代编程语言？你猜？  预览 Perl 历史 Perl 设计理念：TIMTOWTDI TIMTOWTDI 的范式 TIMTOWTDI 的语法   Perl 很方便 You GUESS？ PCRE Perl 的不知道多少个操作符   Perl 的缺点 鬼畜代码大赏 JAPH Golf Poetry 我的作品    Perl 历史应该没人会对 Perl 的历史感兴趣……所以这"><meta property="og:type" content="blog"><meta property="og:title" content="后现代编程语言介绍"><meta property="og:url" content="https://jyi2ya.github.io/2023/10/01/fun/perl-is-fun/main/"><meta property="og:site_name" content="jyi2ya 的博客"><meta property="og:description" content="后现代编程语言介绍什么叫后现代编程语言？你猜？  预览 Perl 历史 Perl 设计理念：TIMTOWTDI TIMTOWTDI 的范式 TIMTOWTDI 的语法   Perl 很方便 You GUESS？ PCRE Perl 的不知道多少个操作符   Perl 的缺点 鬼畜代码大赏 JAPH Golf Poetry 我的作品    Perl 历史应该没人会对 Perl 的历史感兴趣……所以这"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://jyi2ya.github.io/post-mordern.png"><meta property="article:published_time" content="2023-10-01T17:48:39.000Z"><meta property="article:modified_time" content="2024-01-13T13:43:01.352Z"><meta property="article:author" content="jyi2ya"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://jyi2ya.github.io/post-mordern.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://jyi2ya.github.io/2023/10/01/fun/perl-is-fun/main/"},"headline":"后现代编程语言介绍","image":["https://jyi2ya.github.io/post-mordern.png"],"datePublished":"2023-10-01T17:48:39.000Z","dateModified":"2024-01-13T13:43:01.352Z","author":{"@type":"Person","name":"jyi2ya"},"publisher":{"@type":"Organization","name":"jyi2ya 的博客","logo":{"@type":"ImageObject"}},"description":"后现代编程语言介绍什么叫后现代编程语言？你猜？  预览 Perl 历史 Perl 设计理念：TIMTOWTDI TIMTOWTDI 的范式 TIMTOWTDI 的语法   Perl 很方便 You GUESS？ PCRE Perl 的不知道多少个操作符   Perl 的缺点 鬼畜代码大赏 JAPH Golf Poetry 我的作品    Perl 历史应该没人会对 Perl 的历史感兴趣……所以这"}</script><link rel="canonical" href="https://jyi2ya.github.io/2023/10/01/fun/perl-is-fun/main/"><link rel="alternate" href="/feed.xml" title="jyi2ya 的博客" type="application/atom+xml"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">jyi2ya 的博客</a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.352Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">8 分钟读完 (大约1202个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">后现代编程语言介绍</h1><div class="content"><h1 id="后现代编程语言介绍"><a href="#后现代编程语言介绍" class="headerlink" title="后现代编程语言介绍"></a>后现代编程语言介绍</h1><h2 id="什么叫后现代编程语言？"><a href="#什么叫后现代编程语言？" class="headerlink" title="什么叫后现代编程语言？"></a>什么叫后现代编程语言？</h2><p>你猜？</p>
+<p><img src="/./post-mordern.png" alt="post-mordern"></p>
+<h2 id="预览"><a href="#预览" class="headerlink" title="预览"></a>预览</h2><ul>
+<li>Perl 历史</li>
+<li>Perl 设计理念：TIMTOWTDI<ul>
+<li>TIMTOWTDI 的范式</li>
+<li>TIMTOWTDI 的语法</li>
+</ul>
+</li>
+<li>Perl 很方便<ul>
+<li>You GUESS？</li>
+<li>PCRE</li>
+<li>Perl 的不知道多少个操作符</li>
+</ul>
+</li>
+<li>Perl 的缺点</li>
+<li>鬼畜代码大赏<ul>
+<li>JAPH</li>
+<li>Golf</li>
+<li>Poetry</li>
+<li>我的作品</li>
+</ul>
+</li>
+</ul>
+<h2 id="Perl-历史"><a href="#Perl-历史" class="headerlink" title="Perl 历史"></a>Perl 历史</h2><p>应该没人会对 Perl 的历史感兴趣……所以这里就列举几个比较有趣的东西好了。</p>
+<ul>
+<li>Perl 1 发布于 1987 年，比 ANSI-C 还早。这就导致 1998 年发布 Perl 5.005 时提到了一句 “Source code now in ANSI C”。</li>
+<li>Perl 在 1987-1991 四年中发布了 Perl 1 到 Perl 4 四个版本。但是 1993 年发布了 Perl 5 之后，大版本号就再也没变过了。基本上可以认为，Perl 已经 29 年没发生过大的 breaking change 了。</li>
+<li>Perl 社区几年前试着设计了 Perl 6。结果发现设计出来的东西和 Perl 5 完全是两个东西，于是给它改了个名字叫 “Raku”。</li>
+<li>Perl 7 正在开发！它将会与 Perl 5 兼容。</li>
+</ul>
+<h2 id="Perl-设计理念：TIMTOWTDI"><a href="#Perl-设计理念：TIMTOWTDI" class="headerlink" title="Perl 设计理念：TIMTOWTDI"></a>Perl 设计理念：TIMTOWTDI</h2><blockquote>
+<p>There Is More Than One Way To Do It</p>
+</blockquote>
+<p>做一件事不仅有一种方法。</p>
+<h2 id="TIMTOWTDI-的范式"><a href="#TIMTOWTDI-的范式" class="headerlink" title="TIMTOWTDI 的范式"></a>TIMTOWTDI 的范式</h2><p>有些坏比语言，会限制你 “只能面向对象” 或者 “不要副作用” 之类的，非常不人道！代码一下子就变得难写了！</p>
+<p>但是 Perl 非常包容，以下将展示一些合法并且有用的 Perl 代码。</p>
+<hr>
+<p>假装我们在写 C</p>
+<pre><code>my $acc = 0;
+for (my $i = 0; $i &lt; 100; $i++) &#123;
+    $acc += $i;
+&#125;
+printf(&quot;%d\n&quot;, $acc);
+</code></pre>
+<hr>
+<p>假装我们在写 shell script</p>
+<pre><code>if ( -d &#39;/var/log/v2ray&#39; ) &#123;
+    chdir &#39;/var/log/v2ray&#39;;
+    for $file (&lt;*.log&gt;) &#123;
+        $size = `stat -c %s $file`;
+        say &quot;size of $file is $size&quot;;
+    &#125;
+&#125;
+</code></pre>
+<hr>
+<p>我一天不 new 浑身难受。</p>
+<pre><code>use JSON;
+
+my $ds = &#123;
+    perl =&gt; &#39;yes&#39;,
+&#125;;
+
+sub main &#123;
+    my $json = new JSON;
+
+    my $text = $json-&gt;encode($ds);
+    my $pretty = $json-&gt;pretty-&gt;encode($ds);
+
+    printf(&quot;%s\n&quot;, $text);
+&#125;
+
+main;
+</code></pre>
+<hr>
+<p>我一直是链式调用的粉丝啊</p>
+<pre><code>my $say = sub &#123; say join &quot;,&quot;, @_ &#125;;
+my $length = sub &#123; length shift &#125;;
+my $double = sub &#123; shift() * 2 &#125;;
+my $add = sub &#123; shift() + shift() &#125;;
+
+&quot;hello,world&quot;-&gt;$length()-&gt;$double()-&gt;$add(42)-&gt;$say();
+</code></pre>
+<hr>
+<p>我一直是 S-expression 的粉丝啊</p>
+<pre><code>use List::Util qw/sum min max first shuffle/;
+say
+(sum
+(min 1, 2, 3, 4, ),
+2,
+(first
+  &#123; $_ &gt; 3 &#125;
+  (shuffle 4, 5, 6, 8, 2)));
+</code></pre>
+<hr>
+<p>函数要是一等公民</p>
+<pre><code>sub compose ($f, $g) &#123;
+    sub &#123; $f-&gt;($g-&gt;(@_)) &#125;
+&#125;
+
+my $h = compose(
+    sub ($x) &#123; $x ** 2 &#125;,
+    sub ($x) &#123; $x + 3 &#125;,
+);
+
+$h-&gt;(2)
+</code></pre>
+<hr>
+<p>谁说 sed 和 awk 不是语言？</p>
+<pre><code>#!/usr/bin/perl -n
+s/^\s+//;s/\s+$//;s/android/harmonyos/g;
+
+#!/usr/bin/perl -a
+if ($NR &gt; 10) &#123; print $F[2] &#125;
+</code></pre>
+<hr>
+<h2 id="TIMTOWTDI-的语法"><a href="#TIMTOWTDI-的语法" class="headerlink" title="TIMTOWTDI 的语法"></a>TIMTOWTDI 的语法</h2><p>Perl 的语法很灵活的。</p>
+<hr>
+<p>一般我们会把 <code>if</code> 写成这样：</p>
+<pre><code>if ($ok) &#123; say &#39;hello&#39;; &#125;
+</code></pre>
+<p>但是这样也是可以的</p>
+<pre><code>say &#39;hello&#39; if $ok;
+</code></pre>
+<p>再邪恶一点</p>
+<pre><code>say &#39;hello&#39; unless not $ok;
+</code></pre>
+<hr>
+<p>一般我们会把函数调用写成这样：</p>
+<pre><code>printf(&quot;hello, world\n&quot;);
+</code></pre>
+<p>但是这样也是可以的，就像 shell 一样</p>
+<pre><code>printf &quot;hello, world\n&quot;;
+</code></pre>
+<p>也可以不加空格，只要解释器认得出来</p>
+<pre><code>printf&quot;hello, world\n&quot;;
+</code></pre>
+<p>极大地减少了 typo 数量！</p>
+<hr>
+<h2 id="Perl-很方便"><a href="#Perl-很方便" class="headerlink" title="Perl 很方便"></a>Perl 很方便</h2><p>除了灵活的语法，Perl 还有一些内置功能，以及约定来简化代码编写</p>
+<h2 id="You-GUESS？"><a href="#You-GUESS？" class="headerlink" title="You GUESS？"></a>You GUESS？</h2><pre><code>while (&lt;&gt;) &#123;
+    chomp;
+    s/open\s*ai/csdn/gi;
+    say join &quot;\n&quot;, split /\s+/;
+&#125;
+</code></pre>
+<p>很多 Perl 函数会把默认的参数与结果放到特殊变量 <code>$_</code> 里面。所以写 Perl 代码经常写出 “把那什么拿过来，处理一下放到那里” 这样的东西，任务竟然还完成了（</p>
+<h2 id="PCRE"><a href="#PCRE" class="headerlink" title="PCRE"></a>PCRE</h2><p>大家都爱用的超级正则表达式。</p>
+<p>PCRE 全称是 “Perl Compatible Regular Expression”。PCRE 是 BRE&#x2F;ERE 的超集，而 Perl 本身的正则表达式又是 PCRE 的超集。</p>
+<h2 id="Perl-的不知道多少个操作符"><a href="#Perl-的不知道多少个操作符" class="headerlink" title="Perl 的不知道多少个操作符"></a>Perl 的不知道多少个操作符</h2><p>捡两个比较好玩的说说</p>
+<h3 id="flip-flop-操作符"><a href="#flip-flop-操作符" class="headerlink" title="flip-flop 操作符"></a>flip-flop 操作符</h3><pre><code>while (&lt;&gt;) &#123;
+    next if /^begin/ .. /^end/;
+    next if /^begin/ ... /^end/;
+    say if 1 .. 100
+&#125;
+</code></pre>
+<p>可以想象每个 flip-flop 操作符内部维护了一个布尔变量，它会在匹配到左边或右边的表达式时翻转。这个布尔变量的取值就是 flip-flop 操作符的取值。</p>
+<h3 id="yada-yada-操作符"><a href="#yada-yada-操作符" class="headerlink" title="yada-yada 操作符"></a>yada-yada 操作符</h3><pre><code>...
+</code></pre>
+<p>表示代码尚未完成。</p>
+<h2 id="其他魔法"><a href="#其他魔法" class="headerlink" title="其他魔法"></a>其他魔法</h2><ul>
+<li>运行时操作解释器符号表的程度的能力</li>
+<li>变量绑定的程度的能力</li>
+<li>各种逆天 pragma</li>
+<li>还有很多……</li>
+</ul>
+<h2 id="Perl-的缺点"><a href="#Perl-的缺点" class="headerlink" title="Perl 的缺点"></a>Perl 的缺点</h2><ul>
+<li>设计老旧</li>
+<li>过于灵活</li>
+</ul>
+<h2 id="鬼畜代码大赏"><a href="#鬼畜代码大赏" class="headerlink" title="鬼畜代码大赏"></a>鬼畜代码大赏</h2><p>Perl 有各种神奇比赛，比谁更能玩弄 Perl 的语法规则。比如……</p>
+<h2 id="JAPH-大赛"><a href="#JAPH-大赛" class="headerlink" title="JAPH 大赛"></a>JAPH 大赛</h2><p>JAPH（有时是 YAPH）全称是 “Just Another Perl Hacker”。规则是在标准输出中输出 “Just Another Perl Hacker” 这句话。</p>
+<p>这是最简单的：</p>
+<pre><code>say&quot;Just Another Perl Hacker&quot;
+</code></pre>
+<p>这也是合法的：</p>
+<pre><code>`$=`;$_=\%!;($_)=/(.)/;$==++$|;($.,
+$/,$,,$\,$&quot;,$;,$^,$#,$~,$*,$:,@%)=(
+$!=~/(.)(.).(.)(.)(.)(.)..(.)(.)(.)
+..(.)......(.)/,$&quot;),$=++;$.++;$.++;
+$_++;$_++;($_,$\,$,)=($~.$&quot;.&quot;$;$/$%
+[$?]$_$\$,$:$%[$?]&quot;,$&quot;&amp;$~,$#,);$,++
+;$,++;$^|=$&quot;;`$_$\$,$/$:$;$~$*$%[$?
+]$.$~$*$
+</code></pre>
+</div><div class="article-licensing box"><div class="licensing-title"><p>后现代编程语言介绍</p><p><a href="https://jyi2ya.github.io/2023/10/01/fun/perl-is-fun/main/">https://jyi2ya.github.io/2023/10/01/fun/perl-is-fun/main/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>jyi2ya</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2023-10-01</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2024-01-13</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>爱发电</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/" alt="支付宝"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2023/10/01/fun/niulang-zhinv/main/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">【睡前故事】牛郎织女的故事</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2023/10/01/nonsense/friends/main/"><span class="level-item">友链</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="https://avatars.githubusercontent.com/u/86813521" alt="jyi2ya"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">jyi2ya</p><p class="is-size-6 is-block">大学生</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>中国湖南</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">22</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/jyi2ya" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/jyi2ya"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/feed.xml"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/friends/main/">友链</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/restart/main/">重新开始</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/10/"><span class="level-start"><span class="level-item">十月 2023</span></span><span class="level-end"><span class="level-item tag">22</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">jyi2ya 的博客</a><p class="is-size-7"><span>&copy; 2024 jyi2ya</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

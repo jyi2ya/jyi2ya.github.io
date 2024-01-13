@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>一些书上不怎么讲的编译器优化方法 - jyi2ya 的博客</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="jyi2ya 的博客"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="jyi2ya 的博客"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="一些书上不怎么讲的编译器优化方法内容预览注意：理论上，要搞清楚编译器所做的工作，我们应该从词法分析讲到中间代码生成，再从汇编生成讲到链接。但是因为大家都学过编译原理，从词法分析到汇编的一系列内容大家都已经学烂了。为了保证大家都有兴趣，我们把大部分能从《编译原理》和《现代编译原理：C语言描述》里面找到的内容都删掉了（其实是根本没写）！ 整个分享将会讲述一些书上没有的优化点和优化方法。还会介绍大家平时"><meta property="og:type" content="blog"><meta property="og:title" content="一些书上不怎么讲的编译器优化方法"><meta property="og:url" content="https://jyi2ya.github.io/2023/10/01/note/lto-plo/main/"><meta property="og:site_name" content="jyi2ya 的博客"><meta property="og:description" content="一些书上不怎么讲的编译器优化方法内容预览注意：理论上，要搞清楚编译器所做的工作，我们应该从词法分析讲到中间代码生成，再从汇编生成讲到链接。但是因为大家都学过编译原理，从词法分析到汇编的一系列内容大家都已经学烂了。为了保证大家都有兴趣，我们把大部分能从《编译原理》和《现代编译原理：C语言描述》里面找到的内容都删掉了（其实是根本没写）！ 整个分享将会讲述一些书上没有的优化点和优化方法。还会介绍大家平时"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://jyi2ya.github.io/img/og_image.png"><meta property="article:published_time" content="2023-10-01T17:48:39.000Z"><meta property="article:modified_time" content="2024-01-13T13:43:01.356Z"><meta property="article:author" content="jyi2ya"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://jyi2ya.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://jyi2ya.github.io/2023/10/01/note/lto-plo/main/"},"headline":"一些书上不怎么讲的编译器优化方法","image":["https://jyi2ya.github.io/img/og_image.png"],"datePublished":"2023-10-01T17:48:39.000Z","dateModified":"2024-01-13T13:43:01.356Z","author":{"@type":"Person","name":"jyi2ya"},"publisher":{"@type":"Organization","name":"jyi2ya 的博客","logo":{"@type":"ImageObject"}},"description":"一些书上不怎么讲的编译器优化方法内容预览注意：理论上，要搞清楚编译器所做的工作，我们应该从词法分析讲到中间代码生成，再从汇编生成讲到链接。但是因为大家都学过编译原理，从词法分析到汇编的一系列内容大家都已经学烂了。为了保证大家都有兴趣，我们把大部分能从《编译原理》和《现代编译原理：C语言描述》里面找到的内容都删掉了（其实是根本没写）！ 整个分享将会讲述一些书上没有的优化点和优化方法。还会介绍大家平时"}</script><link rel="canonical" href="https://jyi2ya.github.io/2023/10/01/note/lto-plo/main/"><link rel="alternate" href="/feed.xml" title="jyi2ya 的博客" type="application/atom+xml"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">jyi2ya 的博客</a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.356Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">23 分钟读完 (大约3393个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">一些书上不怎么讲的编译器优化方法</h1><div class="content"><h1 id="一些书上不怎么讲的编译器优化方法"><a href="#一些书上不怎么讲的编译器优化方法" class="headerlink" title="一些书上不怎么讲的编译器优化方法"></a>一些书上不怎么讲的编译器优化方法</h1><h2 id="内容预览"><a href="#内容预览" class="headerlink" title="内容预览"></a>内容预览</h2><p><strong>注意：理论上，要搞清楚编译器所做的工作，我们应该从词法分析讲到中间代码生成，再从汇编生成讲到链接。但是因为大家都学过编译原理，从词法分析到汇编的一系列内容大家都已经学烂了。为了保证大家都有兴趣，我们把大部分能从《编译原理》和《现代编译原理：C语言描述》里面找到的内容都删掉了（其实是根本没写）！</strong></p>
+<p>整个分享将会讲述一些书上没有的优化点和优化方法。还会介绍大家平时写的语言用得很少，但是 Jvavavava 和别的一些脚本语言用得很多神奇玩意 —— JIT。</p>
+<p>一些名词在 LLVM 和 MSVC 中有不同的称呼，会在标题使用 LLVM 的叫法，并且在正文给出 MSVC 的叫法，方便大家 RTFM。</p>
+<h2 id="JIT-Just-In-Time-Compilation"><a href="#JIT-Just-In-Time-Compilation" class="headerlink" title="JIT - Just In Time Compilation"></a>JIT - Just In Time Compilation</h2><p>即时编译器。作用大概是把代码一边执行一边翻译成机器语言，从而用一些编译的代价，换取之后相关代码执行更快的利益。工作量主要在于确定何时进行翻译，优化到什么程度，以及优化 JIT 本身的速度。</p>
+<p>本来按照历史的进程，应该先讲 AOT 部分的，但是有些重要概念在 JIT 里面讲比较方便，所以就调换了一下顺序。</p>
+<h3 id="单层编译器"><a href="#单层编译器" class="headerlink" title="单层编译器"></a>单层编译器</h3><p>没有解释器，所有代码执行之前都会被编译一次，然后直接执行二进制代码。</p>
+<p>可以类比一下 <a target="_blank" rel="noopener" href="https://www.bellard.org/tcc/">Tiny C Compiler</a> 的 <code>tcc -run</code> 命令。这个命令声称能直接执行 C 语言代码。但是实际上是先把 C 编译一遍，存到内存里再执行的。因为现在单层结构的 JIT 实际上几乎没有了，所以也没找到什么好玩的例子。</p>
+<p>优点：</p>
+<ul>
+<li>好写。要求不高的话，造一个飞快的编译器就可以了</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>不优化会很慢。如果你的编译器真的一点也不优化的话，你会发现你编译到二进制的语言会和 Java 打得 <a target="_blank" rel="noopener" href="https://benchmarksgame-team.pages.debian.net/benchmarksgame/fastest/go.html">有来有回</a></li>
+<li>更糟的是，因为每次执行代码时 JIT 编译器都要运行一遍，就注定这个编译器不可能牺牲编译时间来换取更多的优化。</li>
+</ul>
+<h3 id="解释器-编译器"><a href="#解释器-编译器" class="headerlink" title="解释器 + 编译器"></a>解释器 + 编译器</h3><p>典型的是 Java 的虚拟机 —— HotSpot VM。听名字就知道，HotSpot VM 和性能热点有关。事实也是如此。</p>
+<p>HotSpot VM 运行时会首先对程序解释执行，接着分析程序性能热点。并将热点部分编译。</p>
+<p>通常，编译器分为很多层，对应不同的优化等级。一段代码在执行过程中会被反复编译，程序越热的部分，得到的优化会越多。</p>
+<p>这么看来，我们自己也是某种神秘 JIT。写代码时先用 perf&#x2F;vtune 之类的东西查出性能热点，然后再优化跑得多的部分……</p>
+<blockquote>
+<p>为什么针对热点优化：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Amdahl's_law">阿姆达尔定律</a></p>
+</blockquote>
+<h3 id="FDO-Feadback-Directed-Optimization"><a href="#FDO-Feadback-Directed-Optimization" class="headerlink" title="FDO - Feadback-Directed Optimization"></a>FDO - Feadback-Directed Optimization</h3><p>之前我们已经知道了多层的 JIT 会分析运行的代码执行的情况，以确定何时对代码进行优化。</p>
+<p>我们只收集 “代码在过去一段时间内运行次数” 这一个信息，就可以较好地确定代码需要的优化程度。但是我们在运行时对程序进行分析时，往往能得到更多的信息。比如，程序在某个分支失败的概率等等。而这些信息往往是无法在源代码中体现出来的。我们能不能利用这些信息来对代码做进一步的优化呢？</p>
+<p>这就是 FDO 的思路：利用代码运行时的收集的数据来优化代码。</p>
+<p>在微软的文档里通常叫 PGO，Profile-Guided Optimization</p>
+<p>很容易想到，借助 FDO 我们可以实现这几个神奇优化：</p>
+<ul>
+<li>内联高频执行的函数</li>
+<li>寄存器分配优化</li>
+<li>条件跳转优化</li>
+</ul>
+<p>还有一些不那么容易想到的优化：</p>
+<ul>
+<li>虚函数调用优化：发现某个 virtual call 总是调一个函数，就加一组条件判断 + 直接调用来优化</li>
+</ul>
+<p>同时，由于 FDO 是根据代码运行的实际数据来优化，所以它会更加容易适应实际数据的模式。这比 AOT 编译对着源代码瞎猜好多了……</p>
+<p>JIT 中的 FDO 通常也分为两种，分别是：</p>
+<ul>
+<li>Sample-Based FDO：工作方式类似 <code>perf(1)</code>，原理是采样</li>
+<li>Instrumentation-based FDO：工作方式类似 <code>gprof(1)</code>，原理是插桩</li>
+</ul>
+<p>因为平时没写什么带 JIT 的脚本语言，所以这部分暂时没有例子。如果有人知道的话欢迎补充一些。</p>
+<h2 id="AOT-Ahead-Of-Time-Compilation"><a href="#AOT-Ahead-Of-Time-Compilation" class="headerlink" title="AOT - Ahead Of Time Compilation"></a>AOT - Ahead Of Time Compilation</h2><p>AOT，即 Aheaed Of Time。顾名思义，就是把程序提前编译好，整成二进制&#x2F;字节码啥的，然后需要用的时候直接执行。在这期间，编译器 <strong>通常</strong> 会消耗大量计算资源对代码进行大量优化。不同 pass 的优化贯穿了整个代码生成的过程。</p>
+<h3 id="LTO-Link-Time-Optimization"><a href="#LTO-Link-Time-Optimization" class="headerlink" title="LTO - Link-Time Optimization"></a>LTO - Link-Time Optimization</h3><p>微软把这个叫 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/archive/msdn-magazine/2015/february/compilers-what-every-programmer-should-know-about-compiler-optimizations">LTCG</a>，怪。</p>
+<p>链接时优化，发生在汇编器之后，生成可执行文件之前。</p>
+<p>大致思想是，在链接时把目标文件都读进内存里，接着把这些东西看成一个整体，进行激进的优化。</p>
+<p>优点：</p>
+<ul>
+<li>跨文件的函数内联、常量传播、死代码消除等等</li>
+<li>跨编程语言优化，比如，可以优化 C 和 Rust 混写的代码。</li>
+<li>可实现相同代码的折叠与消除（听起来有点像 zip 压缩的感觉？）</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>冲浪时发现 <a target="_blank" rel="noopener" href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36912.pdf">有个文章</a> 说相同函数的折叠在涉及到函数指针的比较操作时可能不安全，至于为什么我暂且蒙在鼓里……</li>
+<li>非常慢。我在编译 rust 代码时如果开了 <code>lto = &quot;fat&quot;</code>，要在链接那里等好久。</li>
+</ul>
+<p>对策：</p>
+<ul>
+<li>将内存中的巨大二进制代码分块，并行进行 LTO。不过并行度越高，同一个优化线程所看到的代码就越少，优化机会也就越少。所以这里还是涉及到编译速度和编译质量折衷的问题……</li>
+</ul>
+<p>具体到实现上的话，<a target="_blank" rel="noopener" href="https://gcc.gnu.org/onlinedocs/gccint/LTO-Overview.html">GCC</a> 和 <a target="_blank" rel="noopener" href="https://llvm.org/docs/LinkTimeOptimization.html">LLVM</a> 不约而同（约了也说不定，反正大家都你偷我的我偷你的……）地选择了 bitcode 的形式。也就是说，开启 LTO 相关的编译选项后，生成的目标文件中将不再是机器码，而是编译器自己的 bitcode。至于为什么这样设计，官方文档说如果换用其他方案会产生工程复杂性等诸多问题，因为我没写过链接器，不太知道咋回事，所以也暂且蒙在鼓里。</p>
+<p>同时，GCC 和 LLVM 各自又把 LTO 的过程划分成了好几个阶段，并不是一趟跑完的（所以才这么慢啊）。</p>
+<h3 id="FDO-Feadback-Directed-Optimization-1"><a href="#FDO-Feadback-Directed-Optimization-1" class="headerlink" title="FDO - Feadback-Directed Optimization"></a>FDO - Feadback-Directed Optimization</h3><p>上面讲 JIT 的时候就已经提到了 FDO，我们知道 FDO 是需要依靠代码运行时的信息来决定优化方式。这种优化似乎天生是适合 JIT 的，因为 JIT 在解释执行代码的时候就能自然地拿到很多关于程序运行情况的信息。</p>
+<p>如果我们说，在 AOT 编译里面也能做 FDO 呢？</p>
+<p>以 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/profile-guided-optimizations?view=msvc-170">MSVC</a> 为例（他们会把这个操作叫 PGO），它的大概流程是：</p>
+<ol>
+<li>先用一些魔法参数编译出一个可执行文件</li>
+<li>运行这个可执行文件几次（称为 train run），它会自动收集运行信息并且写到某个文件里</li>
+<li>另一些魔法参数，使编译器参考之前收集到的信息来编译出最终的可执行文件</li>
+</ol>
+<p>LLVM 好像也有类似物，叫做 <a target="_blank" rel="noopener" href="https://github.com/google/autofdo">autofdo</a>，由 Google 开发，有几页 <a target="_blank" rel="noopener" href="https://www.llvm.org/devmtg/2013-04/novillo-slides.pdf">简单介绍</a>。但是我还没看完，懒狗程度令人感叹。</p>
+<p>之前我们提到，JIT 里面的 FDO 有很多优化，比如：</p>
+<ul>
+<li>内联高频执行的函数</li>
+<li>寄存器分配优化</li>
+<li>条件跳转优化</li>
+</ul>
+<p>相比之下， AOT 的 FDO 还能做出更多神奇的优化，比如：</p>
+<ul>
+<li>基本块优化：可以把经常执行的一些基本块放到同一个 page 里面</li>
+<li>死代码隔离：把多次 train run 都没有使用的代码放一个独立的 section 里面，如果它们没真的没被运行，就不用给它们分配 page 了！</li>
+<li>错误处理代码隔离：同死代码隔离。</li>
+</ul>
+<p>然而，在 AOT 上应用 FDO 还会有很多不可忽略的缺点：</p>
+<ul>
+<li>编译模型十分复杂</li>
+<li>大大增加编译时间</li>
+<li>如果 train run 时使用的数据不够典型，甚至可能做出负优化</li>
+</ul>
+<p>所以，目前 FDO 技术暂时还没有在 AOT 里面被广泛使用。</p>
+<h3 id="BOLT-Binary-Optimization-and-Layout-Tool"><a href="#BOLT-Binary-Optimization-and-Layout-Tool" class="headerlink" title="BOLT - Binary Optimization and Layout Tool"></a>BOLT - Binary Optimization and Layout Tool</h3><p>似乎是 LLVM 专属的，目前还没有在别的地方找到类似物。仓库在 <a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/tree/main/bolt">这里</a>。</p>
+<p>和 FDO 很像，也是基于运行时的信息来优化代码。不过和 FDO 不同之处在于，FDO 在产出可执行文件时需要根据收集到信息重新链接程序，而 BOLT 则是直接基于已有的可执行程序重建控制流等信息，接着调整整个程序布局。</p>
+<p>由于不需要重新链接，BOLT 甚至可以对没有源码的库或者可执行程序优化。</p>
+<p>非常科技。</p>
+<h2 id="吔我-AI-啦"><a href="#吔我-AI-啦" class="headerlink" title="吔我 AI 啦"></a>吔我 AI 啦</h2><p>能不能用 AI 来帮我优化代码啊妈的</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><blockquote>
+<p>快过年了，不要再讨论什么 AOT JIT 之类了。你写的各种离谱的 pass 和不知道怎么优化出来的代码回到家并不能给你带来任何实质性作用，朋友们兜里掏出一大把钱吃喝玩乐，你默默的在家里用各种晦涩难懂的语言和各种奇奇怪怪的技术优化出来的代码压根不对。亲戚朋友吃饭问你收获了什么你说我差点把图着色 RA 写出来了，亲戚们懵逼了，你还在心里默默嘲笑他们，笑他们不懂 Register Allocation，不懂 Local 和 Global 的区别，不懂 IR 除了 SSA 还能做 SoN，不懂一个 SSA 可以被你们玩出Hashed SSA，formal SSA，也笑他们根本不知道你的编译器的diagnosis都弄了个 TTY 真彩色 但实际上根本没人在意。你父母的同事都在说自己的子女一年的收获，儿子买了个房，女儿买了个车，姑娘升职加薪了，你的父母默默无言，说我的儿子整了个小电脑，天天黑框敲个烂代码天天对着笑，一天折腾那个 Lit 和 GTEST，破电脑开起来嗡嗡响，家里的电表转的是越来越快了，头上的头发越来越少了，人也越来越魔怔了</p>
+</blockquote>
+<p>编译器越来越强了，以往很多的技巧（比如著名的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Duff%27s_device">Duff’s Device</a>）正在随着编译技术的发展而成为历史。</p>
+<p>任何编译器做优化都需要足够的信息，比如，有了控制流图就可以做可达性分析，多了运行时得到的信息又可以做 FDO。</p>
+<p>而人对自己正在面对的问题，知道的信息总会是比编译器多的。所以，你要把你知道的东西或显式（比如，<code>likely()</code> 和 <code>unlikely</code>）或隐式（比如，不用向后跳的 <code>goto</code> 以免破坏可规约性）地告诉编译器，让编译器来帮你完成复杂而繁琐的优化。</p>
+<p>快进到和编译器双向奔赴然后结婚😋😋</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>一些书上不怎么讲的编译器优化方法</p><p><a href="https://jyi2ya.github.io/2023/10/01/note/lto-plo/main/">https://jyi2ya.github.io/2023/10/01/note/lto-plo/main/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>jyi2ya</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2023-10-01</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2024-01-13</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>爱发电</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/" alt="支付宝"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2023/10/01/nonsense/review-for-cpc23/main/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">CPC 2023 简明总结</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2023/10/01/note/page-buffer-cache/main/"><span class="level-item">Page/Buffer Cache 是什么？</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="https://avatars.githubusercontent.com/u/86813521" alt="jyi2ya"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">jyi2ya</p><p class="is-size-6 is-block">大学生</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>中国湖南</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">22</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/jyi2ya" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/jyi2ya"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/feed.xml"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/friends/main/">友链</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/restart/main/">重新开始</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/10/"><span class="level-start"><span class="level-item">十月 2023</span></span><span class="level-end"><span class="level-item tag">22</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">jyi2ya 的博客</a><p class="is-size-7"><span>&copy; 2024 jyi2ya</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

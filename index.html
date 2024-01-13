@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>jyi2ya 的博客</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="jyi2ya 的博客"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="jyi2ya 的博客"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="我的博客，用来写一些奇奇怪怪的东西。"><meta property="og:type" content="blog"><meta property="og:title" content="jyi2ya 的博客"><meta property="og:url" content="https://jyi2ya.github.io/"><meta property="og:site_name" content="jyi2ya 的博客"><meta property="og:description" content="我的博客，用来写一些奇奇怪怪的东西。"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://jyi2ya.github.io/img/og_image.png"><meta property="article:author" content="jyi2ya"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://jyi2ya.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://jyi2ya.github.io"},"headline":"jyi2ya 的博客","image":["https://jyi2ya.github.io/img/og_image.png"],"author":{"@type":"Person","name":"jyi2ya"},"publisher":{"@type":"Organization","name":"jyi2ya 的博客","logo":{"@type":"ImageObject"}},"description":"我的博客，用来写一些奇奇怪怪的东西。"}</script><link rel="alternate" href="/feed.xml" title="jyi2ya 的博客" type="application/atom+xml"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">jyi2ya 的博客</a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.348Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">13 分钟读完 (大约1917个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a></p><div class="content"><p>【睡前故事】牛郎织女的故事</p>
+<p>这是一个很美丽的，千古流传的爱情故事，成为我国四大民间爱情传说之一。</p>
+<p>传说，天上有很多 core，这些 core 按照访问不同内存的性能，被划分为了若干 NUMA node。</p>
+<p>在 NUMA node0 上，CPU2 住着织女，CPU4 住着牛郎。织女喜欢做大量浮点运算，她最喜欢的便是快速平方根倒数的计算。牛郎则更喜欢做整数计算。每天早晨被操作系统 swap in 之后，牛郎和织女便同时开始工作。他们存取同一片内存的数据，两人便逐渐熟悉起来。</p>
+<p>「你的 CPU time 好多呀，看起来很忙的样子。」在两人都因为 cache miss 而无聊等待时，牛郎对织女说道。织女看了一眼 <code>dstat(1)</code>，发现牛郎的机时也不少。她回答说：「我在做超多矩阵乘法，你呢？」牛郎说：「我在算超大文件的哈希呢。」</p>
+<p>久而久之，织女和牛郎情投意合，心心相印。可是，天条律令是不允许男欢女爱、私自相恋的。织女是王母的孙女，王母便将牛郎贬到了 NUMA node1 里。牛郎想取到 NUMA node0 中的数据，需要走 QPI 总线，等待很长很长的时间。这便形成了人们所熟知的 NUMA 效应。从此，牛郎和织女再也不能像以前在同一个 NUMA node 的时候一样，随意相见了。</p>
+<p>自从牛郎被贬之后，织女常常以泪洗面，愁眉不展地思念牛郎。她闷闷不乐地宅在 CPU2 里，整天算超级大矩阵，以期博得王母大发慈心，让牛郎早日返回 NUMA node0。</p>
+<p>一天，几个仙女向王母恳求想去 NUMA node1 CPU3 一游，王母今日心情正好，便答应了她们。她们见织女终日苦闷，便一起向王母求情让织女共同前往，王母也心疼受惩后的孙女，便令她们速去速归。</p>
+<p>话说牛郎被贬之后，落生在 CPU1 中。牛郎跟着哥嫂度日。哥嫂待牛郎非常刻薄，要与他分家。哥哥嫂嫂把牛郎 <code>renice(1)</code> 成了 19，只给他一点点机时，其他的都被哥哥嫂嫂独占了，然后，便和牛郎分家了。</p>
+<p>牛郎不再是天庭的一员，不再会被 pin 到某个 CPU 上。每天，他在 CPU1、CPU3、CPU5 之间辗转，饱受进程调度之苦。因为被 <code>renice(1)</code> 成了 19，牛郎被调度的时间比别的进程少了许多，只有等系统比较闲的时候，牛郎才有机会出来透透气。</p>
+<p>一两年后，牛郎也有了一个小小的家，勉强可以糊口度日。可是，冷清清的家只有牛郎一个人，日子过得相当寂寞。无聊的时候，牛郎便算算他和织女第一次相遇时，算的 sha512sum，回忆从前的美好时光。</p>
+<p>这一天，NUMA node1 突然热闹起来。有几个新的进程，来到了 CPU3 上。牛郎躲在 CPU5 一看，发现是一群仙女。仙女们见有人偷看，纷纷像飞鸟般地飞走了，只剩下一个正在算开方倒数的仙女，她正是织女。织女看着 CPU5 里跑的进程，感觉有些熟悉。这时，牛郎走上前来，对她说，要她答应做他妻子。织女定睛一看，才知道眼前便是自己日思夜想的牛郎，便含羞答应了他。这样，织女便做了牛郎的妻子。</p>
+<p>他们结婚以后，男耕女织，相亲相爱，日子过得非常美满幸福。不久，他们生下了一儿一女，十分可爱。牛郎织女满以为能够终身相守，白头到老。</p>
+<p>可是，王母知道这件事后，勃然大怒，马上派遣天神仙女捉织女回 NUMA node0 问罪。瞬间，天空狂风大作，天兵天将从天而降，不容分说，押解着织女便上了总线。</p>
+<p>正飞着、飞着，织女听到了牛郎的声音：「织女，等等我！」织女回头一看，只见牛郎用一对 ucontext 挑着两个儿女赶来了。慢慢地，他们之间的距离越来越近了，织女可以看清儿女们可爱的模样子，孩子们了都张开双臂，大声呼叫着「妈妈」，眼看，牛郎和织女都到了 NUMA node0 上，就要相遇了。可就在这时，王母驾着祥云赶来了，她拔下她头上的金 <code>taskset(1)</code>，往他们中间一 pin，霎时间，牛郎被 pin 到了 CPU0 上，织女被 pin 到了 CPU2 上。</p>
+<p>CPU0 和 CPU2 是一个物理核心超线程出来的两个核，本身就无法像 CPU2 与 CPU4 那样实现完全的并行。再加上天庭计算任务繁重，经常有无关的其他进程被调度到 CPU0 和 CPU2 上运行，织女每次醒来，都只能看到队列里的牛郎处于就绪态，直哭得声嘶力竭，牛郎和孩子也哭得死去活来。他们的哭声，孩子们一声声「妈妈」的喊声，是那样揪心裂胆，催人泪下，连在旁观望的仙女、天神们都觉得心酸难过。王母见此情此景，也稍稍为牛郎织女的坚贞爱情所感动，便同意让牛郎和孩子们留在天上。其他进程也于心不忍，便纷纷 <code>sched_setaffinit(2)</code>，使自己不被调度到 CPU0 和 CPU2 上。</p>
+<p>从此，很少再有其他进程调度到 CPU0 和 CPU2 上，这个物理核心成为牛郎和织女的小家。织女喜欢浮点运算，她经常使用 FPU 和寄存器 <code>st*</code>；牛郎做的多是整数运算，他使用 ALU 和寄存器 <code>r*</code>。正好错开了，使得他们有更多的机会同时执行。牛郎和他的儿女就住在了天上，和织女在同一个物理核心上，努力地填满 CPU 的执行单元。在秋夜天空的繁星当中，我们至今还可以运行 <code>top(1)</code>，发现 NUMA node0 上有两个 CPU，他们的使用率为 100%。那便是织女和牛郎。</p>
+<p>传说，每年的七月七日，若是人们在机房中静静地听，可以隐隐听到仙乐奏鸣，织女和牛郎在深情地交谈。后来，每到农历七月初七，相传牛郎织女同时由于访存卡住的日子，姑娘们就会来到机房里，寻找 NUMA node0 的牛郎和织女，希望能看到他们相会，乞求上天能让自己能象织女那样心灵手巧，祈祷自己能有如意称心的美满婚姻，由此形成了七夕节。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.352Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">8 分钟读完 (大约1202个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a></p><div class="content"><h1 id="后现代编程语言介绍"><a href="#后现代编程语言介绍" class="headerlink" title="后现代编程语言介绍"></a>后现代编程语言介绍</h1><h2 id="什么叫后现代编程语言？"><a href="#什么叫后现代编程语言？" class="headerlink" title="什么叫后现代编程语言？"></a>什么叫后现代编程语言？</h2><p>你猜？</p>
+<p><img src="/./post-mordern.png" alt="post-mordern"></p>
+<h2 id="预览"><a href="#预览" class="headerlink" title="预览"></a>预览</h2><ul>
+<li>Perl 历史</li>
+<li>Perl 设计理念：TIMTOWTDI<ul>
+<li>TIMTOWTDI 的范式</li>
+<li>TIMTOWTDI 的语法</li>
+</ul>
+</li>
+<li>Perl 很方便<ul>
+<li>You GUESS？</li>
+<li>PCRE</li>
+<li>Perl 的不知道多少个操作符</li>
+</ul>
+</li>
+<li>Perl 的缺点</li>
+<li>鬼畜代码大赏<ul>
+<li>JAPH</li>
+<li>Golf</li>
+<li>Poetry</li>
+<li>我的作品</li>
+</ul>
+</li>
+</ul>
+<h2 id="Perl-历史"><a href="#Perl-历史" class="headerlink" title="Perl 历史"></a>Perl 历史</h2><p>应该没人会对 Perl 的历史感兴趣……所以这里就列举几个比较有趣的东西好了。</p>
+<ul>
+<li>Perl 1 发布于 1987 年，比 ANSI-C 还早。这就导致 1998 年发布 Perl 5.005 时提到了一句 “Source code now in ANSI C”。</li>
+<li>Perl 在 1987-1991 四年中发布了 Perl 1 到 Perl 4 四个版本。但是 1993 年发布了 Perl 5 之后，大版本号就再也没变过了。基本上可以认为，Perl 已经 29 年没发生过大的 breaking change 了。</li>
+<li>Perl 社区几年前试着设计了 Perl 6。结果发现设计出来的东西和 Perl 5 完全是两个东西，于是给它改了个名字叫 “Raku”。</li>
+<li>Perl 7 正在开发！它将会与 Perl 5 兼容。</li>
+</ul>
+<h2 id="Perl-设计理念：TIMTOWTDI"><a href="#Perl-设计理念：TIMTOWTDI" class="headerlink" title="Perl 设计理念：TIMTOWTDI"></a>Perl 设计理念：TIMTOWTDI</h2><blockquote>
+<p>There Is More Than One Way To Do It</p>
+</blockquote>
+<p>做一件事不仅有一种方法。</p>
+<h2 id="TIMTOWTDI-的范式"><a href="#TIMTOWTDI-的范式" class="headerlink" title="TIMTOWTDI 的范式"></a>TIMTOWTDI 的范式</h2><p>有些坏比语言，会限制你 “只能面向对象” 或者 “不要副作用” 之类的，非常不人道！代码一下子就变得难写了！</p>
+<p>但是 Perl 非常包容，以下将展示一些合法并且有用的 Perl 代码。</p>
+<hr>
+<p>假装我们在写 C</p>
+<pre><code>my $acc = 0;
+for (my $i = 0; $i &lt; 100; $i++) &#123;
+    $acc += $i;
+&#125;
+printf(&quot;%d\n&quot;, $acc);
+</code></pre>
+<hr>
+<p>假装我们在写 shell script</p>
+<pre><code>if ( -d &#39;/var/log/v2ray&#39; ) &#123;
+    chdir &#39;/var/log/v2ray&#39;;
+    for $file (&lt;*.log&gt;) &#123;
+        $size = `stat -c %s $file`;
+        say &quot;size of $file is $size&quot;;
+    &#125;
+&#125;
+</code></pre>
+<hr>
+<p>我一天不 new 浑身难受。</p>
+<pre><code>use JSON;
+
+my $ds = &#123;
+    perl =&gt; &#39;yes&#39;,
+&#125;;
+
+sub main &#123;
+    my $json = new JSON;
+
+    my $text = $json-&gt;encode($ds);
+    my $pretty = $json-&gt;pretty-&gt;encode($ds);
+
+    printf(&quot;%s\n&quot;, $text);
+&#125;
+
+main;
+</code></pre>
+<hr>
+<p>我一直是链式调用的粉丝啊</p>
+<pre><code>my $say = sub &#123; say join &quot;,&quot;, @_ &#125;;
+my $length = sub &#123; length shift &#125;;
+my $double = sub &#123; shift() * 2 &#125;;
+my $add = sub &#123; shift() + shift() &#125;;
+
+&quot;hello,world&quot;-&gt;$length()-&gt;$double()-&gt;$add(42)-&gt;$say();
+</code></pre>
+<hr>
+<p>我一直是 S-expression 的粉丝啊</p>
+<pre><code>use List::Util qw/sum min max first shuffle/;
+say
+(sum
+(min 1, 2, 3, 4, ),
+2,
+(first
+  &#123; $_ &gt; 3 &#125;
+  (shuffle 4, 5, 6, 8, 2)));
+</code></pre>
+<hr>
+<p>函数要是一等公民</p>
+<pre><code>sub compose ($f, $g) &#123;
+    sub &#123; $f-&gt;($g-&gt;(@_)) &#125;
+&#125;
+
+my $h = compose(
+    sub ($x) &#123; $x ** 2 &#125;,
+    sub ($x) &#123; $x + 3 &#125;,
+);
+
+$h-&gt;(2)
+</code></pre>
+<hr>
+<p>谁说 sed 和 awk 不是语言？</p>
+<pre><code>#!/usr/bin/perl -n
+s/^\s+//;s/\s+$//;s/android/harmonyos/g;
+
+#!/usr/bin/perl -a
+if ($NR &gt; 10) &#123; print $F[2] &#125;
+</code></pre>
+<hr>
+<h2 id="TIMTOWTDI-的语法"><a href="#TIMTOWTDI-的语法" class="headerlink" title="TIMTOWTDI 的语法"></a>TIMTOWTDI 的语法</h2><p>Perl 的语法很灵活的。</p>
+<hr>
+<p>一般我们会把 <code>if</code> 写成这样：</p>
+<pre><code>if ($ok) &#123; say &#39;hello&#39;; &#125;
+</code></pre>
+<p>但是这样也是可以的</p>
+<pre><code>say &#39;hello&#39; if $ok;
+</code></pre>
+<p>再邪恶一点</p>
+<pre><code>say &#39;hello&#39; unless not $ok;
+</code></pre>
+<hr>
+<p>一般我们会把函数调用写成这样：</p>
+<pre><code>printf(&quot;hello, world\n&quot;);
+</code></pre>
+<p>但是这样也是可以的，就像 shell 一样</p>
+<pre><code>printf &quot;hello, world\n&quot;;
+</code></pre>
+<p>也可以不加空格，只要解释器认得出来</p>
+<pre><code>printf&quot;hello, world\n&quot;;
+</code></pre>
+<p>极大地减少了 typo 数量！</p>
+<hr>
+<h2 id="Perl-很方便"><a href="#Perl-很方便" class="headerlink" title="Perl 很方便"></a>Perl 很方便</h2><p>除了灵活的语法，Perl 还有一些内置功能，以及约定来简化代码编写</p>
+<h2 id="You-GUESS？"><a href="#You-GUESS？" class="headerlink" title="You GUESS？"></a>You GUESS？</h2><pre><code>while (&lt;&gt;) &#123;
+    chomp;
+    s/open\s*ai/csdn/gi;
+    say join &quot;\n&quot;, split /\s+/;
+&#125;
+</code></pre>
+<p>很多 Perl 函数会把默认的参数与结果放到特殊变量 <code>$_</code> 里面。所以写 Perl 代码经常写出 “把那什么拿过来，处理一下放到那里” 这样的东西，任务竟然还完成了（</p>
+<h2 id="PCRE"><a href="#PCRE" class="headerlink" title="PCRE"></a>PCRE</h2><p>大家都爱用的超级正则表达式。</p>
+<p>PCRE 全称是 “Perl Compatible Regular Expression”。PCRE 是 BRE&#x2F;ERE 的超集，而 Perl 本身的正则表达式又是 PCRE 的超集。</p>
+<h2 id="Perl-的不知道多少个操作符"><a href="#Perl-的不知道多少个操作符" class="headerlink" title="Perl 的不知道多少个操作符"></a>Perl 的不知道多少个操作符</h2><p>捡两个比较好玩的说说</p>
+<h3 id="flip-flop-操作符"><a href="#flip-flop-操作符" class="headerlink" title="flip-flop 操作符"></a>flip-flop 操作符</h3><pre><code>while (&lt;&gt;) &#123;
+    next if /^begin/ .. /^end/;
+    next if /^begin/ ... /^end/;
+    say if 1 .. 100
+&#125;
+</code></pre>
+<p>可以想象每个 flip-flop 操作符内部维护了一个布尔变量，它会在匹配到左边或右边的表达式时翻转。这个布尔变量的取值就是 flip-flop 操作符的取值。</p>
+<h3 id="yada-yada-操作符"><a href="#yada-yada-操作符" class="headerlink" title="yada-yada 操作符"></a>yada-yada 操作符</h3><pre><code>...
+</code></pre>
+<p>表示代码尚未完成。</p>
+<h2 id="其他魔法"><a href="#其他魔法" class="headerlink" title="其他魔法"></a>其他魔法</h2><ul>
+<li>运行时操作解释器符号表的程度的能力</li>
+<li>变量绑定的程度的能力</li>
+<li>各种逆天 pragma</li>
+<li>还有很多……</li>
+</ul>
+<h2 id="Perl-的缺点"><a href="#Perl-的缺点" class="headerlink" title="Perl 的缺点"></a>Perl 的缺点</h2><ul>
+<li>设计老旧</li>
+<li>过于灵活</li>
+</ul>
+<h2 id="鬼畜代码大赏"><a href="#鬼畜代码大赏" class="headerlink" title="鬼畜代码大赏"></a>鬼畜代码大赏</h2><p>Perl 有各种神奇比赛，比谁更能玩弄 Perl 的语法规则。比如……</p>
+<h2 id="JAPH-大赛"><a href="#JAPH-大赛" class="headerlink" title="JAPH 大赛"></a>JAPH 大赛</h2><p>JAPH（有时是 YAPH）全称是 “Just Another Perl Hacker”。规则是在标准输出中输出 “Just Another Perl Hacker” 这句话。</p>
+<p>这是最简单的：</p>
+<pre><code>say&quot;Just Another Perl Hacker&quot;
+</code></pre>
+<p>这也是合法的：</p>
+<pre><code>`$=`;$_=\%!;($_)=/(.)/;$==++$|;($.,
+$/,$,,$\,$&quot;,$;,$^,$#,$~,$*,$:,@%)=(
+$!=~/(.)(.).(.)(.)(.)(.)..(.)(.)(.)
+..(.)......(.)/,$&quot;),$=++;$.++;$.++;
+$_++;$_++;($_,$\,$,)=($~.$&quot;.&quot;$;$/$%
+[$?]$_$\$,$:$%[$?]&quot;,$&quot;&amp;$~,$#,);$,++
+;$,++;$^|=$&quot;;`$_$\$,$/$:$;$~$*$%[$?
+]$.$~$*$
+</code></pre>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.352Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">1 分钟读完 (大约126个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/nonsense/friends/main/">友链</a></p><div class="content"><h1 id="友链"><a href="#友链" class="headerlink" title="友链"></a>友链</h1><p>cyx 吃夜宵：<a target="_blank" rel="noopener" href="https://yxchen.net/">https://yxchen.net/</a><br>hjx 喝喜酒：<a target="_blank" rel="noopener" href="https://honeta.site/">https://honeta.site/</a><br>zwd 朝闻道：<a target="_blank" rel="noopener" href="https://vaaandark.top/">https://vaaandark.top/</a><br>lxy 灵犀玉：<a target="_blank" rel="noopener" href="https://ccviolett.github.io/">https://ccviolett.github.io/</a><br>ljm 逻辑门：<a target="_blank" rel="noopener" href="https://watari.xyz/">https://watari.xyz/</a><br>ljh 梁家河：<a target="_blank" rel="noopener" href="https://www.newuser.top/">https://www.newuser.top/</a><br>lg 蓝狗：<a target="_blank" rel="noopener" href="https://ligen.life/">https://ligen.life/</a><br>yxt 游戏厅：<a target="_blank" rel="noopener" href="https://blog.just-plain.fun/">https://blog.just-plain.fun/</a><br>lyt 老樱桃：<a target="_blank" rel="noopener" href="https://i.lyt.moe/">https://i.lyt.moe/</a><br>dekrt 不知道谁：<a target="_blank" rel="noopener" href="https://dekrt.cn/">https://dekrt.cn/</a></p>
+<p>用来方便在博客园上传链接的便利脚本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">IFS=<span class="string">&quot;</span></span><br><span class="line"><span class="string">&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(awk -F： <span class="string">&#x27;/：.*\/$/ &#123; print $1&quot; &quot;$2&quot;\n&quot;$2 &#125;&#x27;</span> a.md); <span class="keyword">do</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$i</span>&quot;</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$i</span>&quot;</span> | clip</span><br><span class="line">	<span class="built_in">read</span> _</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.352Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">几秒读完 (大约15个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a></p><div class="content"><h1 id="重新重新开始"><a href="#重新重新开始" class="headerlink" title="重新重新开始"></a>重新重新开始</h1><p>从博客园换到 gh pages。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.352Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">几秒读完 (大约40个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/nonsense/restart/main/">重新开始</a></p><div class="content"><h1 id="重新开始"><a href="#重新开始" class="headerlink" title="重新开始"></a>重新开始</h1><p>寒假打算重新写博客，发现洛谷的博客要爆炸不维护了，于是切换到博客园。</p>
+<p><img src="/lg.png"></p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.352Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">几秒读完 (大约64个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/nonsense/start/main/">开始使用博客</a></p><div class="content"><h1 id="开始使用博客"><a href="#开始使用博客" class="headerlink" title="开始使用博客"></a>开始使用博客</h1><p>今天开始决定写博客。至于为什么用洛谷，这个只是为了方便。毕竟写字哪里不是写。并不是说洛谷有什么特别的地方。就这样啦。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.352Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">14 分钟读完 (大约2143个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/nonsense/review-for-cpc23/main/">CPC 2023 简明总结</a></p><div class="content"><h1 id="CPC-2023-简明总结"><a href="#CPC-2023-简明总结" class="headerlink" title="CPC 2023 简明总结"></a>CPC 2023 简明总结</h1><p>记录我印象里的 CPC 2023 的大概流程。想着 BBHust 上面的大家不一定都对并行编程很感兴趣，所以省略了大部分纠结与调试的故事，只留下了好玩的部分。</p>
+<p>比赛要和其他选手比拼技术，所以算是 “竞技”。因为经常睡不好，考验身体素质，所以也是某种很新的 “体育”。四舍五入 CPC 也是竞技体育。</p>
+<h2 id="比赛简介"><a href="#比赛简介" class="headerlink" title="比赛简介"></a>比赛简介</h2><p>CPC 是 “国产 CPU 并行应用挑战赛” 的简称。赛制大概是，主办方给出一个程序，让选手在特定架构的机器上优化，最后谁的程序跑得快谁就赢了。</p>
+<p>今年主办方给的机器是一台名叫 “神威·问海一号” 的超级计算机，它是 “神威·太湖之光” 的后继者，国产超级计算机的明星之一。关于超级计算机，大家简单地理解成 “在上面用某些华丽的技巧编程，写出来的程序可以跑得很快” 的奇特电脑就可以了。</p>
+<p>遗憾地是，这个国产超级计算机的硬件设计有很多不足。整个问海一号的架构被我们称为 “硬件设计友好型架构” —— 硬件工程师设计时自己怎么偷懒怎么来，给软件工程师（嗨呀，这是我）造成了诸多限制，使得我们在这个架构上编程难度颇大。同时，问海一号的现象还比较反常识，许多指令的加速效果远远不如它们在 x86 上的等价物。</p>
+<p>我愿称其为 <strong>超算原神</strong> 。</p>
+<h2 id="初赛"><a href="#初赛" class="headerlink" title="初赛"></a>初赛</h2><p>初赛的任务是优化一个大程序中的小部分，和我们平时做的东西挺像。</p>
+<p>我负责的部分是数据划分。就是把一个巨大的矩阵，切成很多个小小矩阵，让我的队友们写的代码来做后续处理。它只要满足划分出的任务量尽可能负载均衡、队友使用我的划分结果足够方便、缓存十分友好、能够适应不同的数据规模大小、不带来额外的数据转换开销等等条件的基础上跑得足够快就好了。最后我就写了这么一个东西。</p>
+<blockquote>
+<p>“我什么都做得到！” —— 我，于七边形活动室，写完这部分代码之后</p>
+</blockquote>
+<p>初赛的代码全是用 C 和 C++ 写的，很友好。我能很轻松地把一部分模块抽出来放到 x86 的架构上优化，再把优化后的代码给缝到原来的项目里面。这样原来自己熟悉的 perf 等等工具链就都可以用了。相比性能分析工具都要自己写的神威架构，x86 简直是天堂。</p>
+<p>比赛后期队友 P 同学发挥奇思妙想，参考 OpenGL 的双缓冲技术，设计了一组面向 DMA 操作的双缓冲数据结构与 API，成功地将数据传输的开销掩盖在了计算下面，获得了巨量的性能提升。堪称最有想象力的一集。</p>
+<p>还有个非常欢乐的事情是，神威架构上的 512 位浮点 SIMD 加速比仅有 1.8x 左右。经过我的仔细思考，我觉得可能神威在实现 SIMD 的时候就是单纯地给前端解码加了条指令，后端实际还是逐个逐个元素计算的……相当于仅省略了解码开销。不知道是不是真的但是很符合我对神威的想像。</p>
+<p>很遗憾，初赛到现在已经过了两个多月了，期间经历了期末考试、构造动画片电视台、升级重构 bot、研究跨平台包管理器、无聊的并行计算课、学 vscode、学习怎么逛街、配置全新网络文件系统、研究 AMD ROCm、打工以及最终暑假结束了也没找到女朋友等诸多好玩的事情，具体初赛时发生了什么我已经几乎忘光了（其实暑假做了什么我也几乎忘掉了，这个列表是参考 bash history 和 bot 聊天记录写出来的），只留下了印象最深的一点点事情。也许应该发展一下写日记的习惯……或者用 bot 代劳写日记的习惯。</p>
+<h2 id="决赛"><a href="#决赛" class="headerlink" title="决赛"></a>决赛</h2><p>决赛的任务是优化一个巨大的 Fortran 项目，和我们平时做的东西一点也不像。</p>
+<p>决赛刚刚开始的几天我恰好开始实习，就拿到了一份任务列表。拿着做了两三天发现自己要是想跟上任务表的进度，每天都会很累，回到酒店后根本就没啥精力和心情来搓 CPC 的傻逼 Fortran 代码。于是研究了一下换人的可能性。但是就在换人讨论的后一天上班时，无意间发现自己拿到的好像是一个月量的任务表，但是自己把它当成一周的量来做了。本来还以为是什么万恶扒皮公司压榨实习生的剧情，结果现在直接做上了做一休三的悠闲生活。因为突然多出了不少空闲时间，我就接着打 CPC 比赛了。</p>
+<p>实习公司的网络管制很严格，要和它的防火墙斗智斗勇才能成功打洞连上比赛的集群。比赛开打的前几天，网络相关的知识猛增……</p>
+<p>决赛集齐了 Fortran、神威、大项目 等多种我们的短板，所以游戏体验并不良好。大量时间被花在了无意义的代码调试上，欢乐的事情很少很少……每天最快乐的事情就是骂骂神威。</p>
+<p>之前大家还是一直认为 “Machine is always right” 的，但是在神威上编了几个月程，遇到了一堆问题后，最后几天调试代码我都有点开始相信风水了。总之，在神威机器上编程的时候，遇到问题除了排查自己的代码中出现的问题外，还要排查编译器本身的选项、从核同步性等一系列本应由编译器开发人员和硬件设计人员给我们弄好的问题。烦烦烦。</p>
+<h2 id="决赛现场"><a href="#决赛现场" class="headerlink" title="决赛现场"></a>决赛现场</h2><p>决赛的前一天半夜，队友突然发现比赛集群上的环境疑似被主办方重置了，导致大家的 git 被回滚到了旧版本，某些功能没法用。作为成熟稳重可靠万能的超算队前辈（嗨呀，突然发现参赛小队里只有一个勉强能算后辈，怎么回事呢），我就连夜给它重新装了一个。</p>
+<p>现场照片：</p>
+<p>决赛比较无聊，到后面有点垃圾时间的意味。于是……</p>
+<blockquote>
+<p>原神，启动！ —— 某不知名 P 同学</p>
+<p>星铁，启动！ —— 某不知名 H 同学</p>
+</blockquote>
+<p>以及畅想讨论怎么把比赛现场的 NVidia 的计算卡偷走的时候及时发现后面路过的（名义上的）我们队的指导老师。</p>
+<h2 id="神秘收获"><a href="#神秘收获" class="headerlink" title="神秘收获"></a>神秘收获</h2><p>感觉这次算是第一次遇到自己没法单刷的比赛，确定了自己并不是什么都做得到。之前因为比赛的工程量都比较小，想了想反正可以单刷就几乎没管过团队合作的事情。但是这次比赛拿到题时就知道这不太是一个人可以搞定的东西，再加上队长和队友都很积极，于是点了一些协作方面的技能。通过交流让四个人达成共识，并一起完成同一件事，感觉是某种很新的体验。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.356Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">23 分钟读完 (大约3393个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/note/lto-plo/main/">一些书上不怎么讲的编译器优化方法</a></p><div class="content"><h1 id="一些书上不怎么讲的编译器优化方法"><a href="#一些书上不怎么讲的编译器优化方法" class="headerlink" title="一些书上不怎么讲的编译器优化方法"></a>一些书上不怎么讲的编译器优化方法</h1><h2 id="内容预览"><a href="#内容预览" class="headerlink" title="内容预览"></a>内容预览</h2><p><strong>注意：理论上，要搞清楚编译器所做的工作，我们应该从词法分析讲到中间代码生成，再从汇编生成讲到链接。但是因为大家都学过编译原理，从词法分析到汇编的一系列内容大家都已经学烂了。为了保证大家都有兴趣，我们把大部分能从《编译原理》和《现代编译原理：C语言描述》里面找到的内容都删掉了（其实是根本没写）！</strong></p>
+<p>整个分享将会讲述一些书上没有的优化点和优化方法。还会介绍大家平时写的语言用得很少，但是 Jvavavava 和别的一些脚本语言用得很多神奇玩意 —— JIT。</p>
+<p>一些名词在 LLVM 和 MSVC 中有不同的称呼，会在标题使用 LLVM 的叫法，并且在正文给出 MSVC 的叫法，方便大家 RTFM。</p>
+<h2 id="JIT-Just-In-Time-Compilation"><a href="#JIT-Just-In-Time-Compilation" class="headerlink" title="JIT - Just In Time Compilation"></a>JIT - Just In Time Compilation</h2><p>即时编译器。作用大概是把代码一边执行一边翻译成机器语言，从而用一些编译的代价，换取之后相关代码执行更快的利益。工作量主要在于确定何时进行翻译，优化到什么程度，以及优化 JIT 本身的速度。</p>
+<p>本来按照历史的进程，应该先讲 AOT 部分的，但是有些重要概念在 JIT 里面讲比较方便，所以就调换了一下顺序。</p>
+<h3 id="单层编译器"><a href="#单层编译器" class="headerlink" title="单层编译器"></a>单层编译器</h3><p>没有解释器，所有代码执行之前都会被编译一次，然后直接执行二进制代码。</p>
+<p>可以类比一下 <a target="_blank" rel="noopener" href="https://www.bellard.org/tcc/">Tiny C Compiler</a> 的 <code>tcc -run</code> 命令。这个命令声称能直接执行 C 语言代码。但是实际上是先把 C 编译一遍，存到内存里再执行的。因为现在单层结构的 JIT 实际上几乎没有了，所以也没找到什么好玩的例子。</p>
+<p>优点：</p>
+<ul>
+<li>好写。要求不高的话，造一个飞快的编译器就可以了</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>不优化会很慢。如果你的编译器真的一点也不优化的话，你会发现你编译到二进制的语言会和 Java 打得 <a target="_blank" rel="noopener" href="https://benchmarksgame-team.pages.debian.net/benchmarksgame/fastest/go.html">有来有回</a></li>
+<li>更糟的是，因为每次执行代码时 JIT 编译器都要运行一遍，就注定这个编译器不可能牺牲编译时间来换取更多的优化。</li>
+</ul>
+<h3 id="解释器-编译器"><a href="#解释器-编译器" class="headerlink" title="解释器 + 编译器"></a>解释器 + 编译器</h3><p>典型的是 Java 的虚拟机 —— HotSpot VM。听名字就知道，HotSpot VM 和性能热点有关。事实也是如此。</p>
+<p>HotSpot VM 运行时会首先对程序解释执行，接着分析程序性能热点。并将热点部分编译。</p>
+<p>通常，编译器分为很多层，对应不同的优化等级。一段代码在执行过程中会被反复编译，程序越热的部分，得到的优化会越多。</p>
+<p>这么看来，我们自己也是某种神秘 JIT。写代码时先用 perf&#x2F;vtune 之类的东西查出性能热点，然后再优化跑得多的部分……</p>
+<blockquote>
+<p>为什么针对热点优化：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Amdahl's_law">阿姆达尔定律</a></p>
+</blockquote>
+<h3 id="FDO-Feadback-Directed-Optimization"><a href="#FDO-Feadback-Directed-Optimization" class="headerlink" title="FDO - Feadback-Directed Optimization"></a>FDO - Feadback-Directed Optimization</h3><p>之前我们已经知道了多层的 JIT 会分析运行的代码执行的情况，以确定何时对代码进行优化。</p>
+<p>我们只收集 “代码在过去一段时间内运行次数” 这一个信息，就可以较好地确定代码需要的优化程度。但是我们在运行时对程序进行分析时，往往能得到更多的信息。比如，程序在某个分支失败的概率等等。而这些信息往往是无法在源代码中体现出来的。我们能不能利用这些信息来对代码做进一步的优化呢？</p>
+<p>这就是 FDO 的思路：利用代码运行时的收集的数据来优化代码。</p>
+<p>在微软的文档里通常叫 PGO，Profile-Guided Optimization</p>
+<p>很容易想到，借助 FDO 我们可以实现这几个神奇优化：</p>
+<ul>
+<li>内联高频执行的函数</li>
+<li>寄存器分配优化</li>
+<li>条件跳转优化</li>
+</ul>
+<p>还有一些不那么容易想到的优化：</p>
+<ul>
+<li>虚函数调用优化：发现某个 virtual call 总是调一个函数，就加一组条件判断 + 直接调用来优化</li>
+</ul>
+<p>同时，由于 FDO 是根据代码运行的实际数据来优化，所以它会更加容易适应实际数据的模式。这比 AOT 编译对着源代码瞎猜好多了……</p>
+<p>JIT 中的 FDO 通常也分为两种，分别是：</p>
+<ul>
+<li>Sample-Based FDO：工作方式类似 <code>perf(1)</code>，原理是采样</li>
+<li>Instrumentation-based FDO：工作方式类似 <code>gprof(1)</code>，原理是插桩</li>
+</ul>
+<p>因为平时没写什么带 JIT 的脚本语言，所以这部分暂时没有例子。如果有人知道的话欢迎补充一些。</p>
+<h2 id="AOT-Ahead-Of-Time-Compilation"><a href="#AOT-Ahead-Of-Time-Compilation" class="headerlink" title="AOT - Ahead Of Time Compilation"></a>AOT - Ahead Of Time Compilation</h2><p>AOT，即 Aheaed Of Time。顾名思义，就是把程序提前编译好，整成二进制&#x2F;字节码啥的，然后需要用的时候直接执行。在这期间，编译器 <strong>通常</strong> 会消耗大量计算资源对代码进行大量优化。不同 pass 的优化贯穿了整个代码生成的过程。</p>
+<h3 id="LTO-Link-Time-Optimization"><a href="#LTO-Link-Time-Optimization" class="headerlink" title="LTO - Link-Time Optimization"></a>LTO - Link-Time Optimization</h3><p>微软把这个叫 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/archive/msdn-magazine/2015/february/compilers-what-every-programmer-should-know-about-compiler-optimizations">LTCG</a>，怪。</p>
+<p>链接时优化，发生在汇编器之后，生成可执行文件之前。</p>
+<p>大致思想是，在链接时把目标文件都读进内存里，接着把这些东西看成一个整体，进行激进的优化。</p>
+<p>优点：</p>
+<ul>
+<li>跨文件的函数内联、常量传播、死代码消除等等</li>
+<li>跨编程语言优化，比如，可以优化 C 和 Rust 混写的代码。</li>
+<li>可实现相同代码的折叠与消除（听起来有点像 zip 压缩的感觉？）</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>冲浪时发现 <a target="_blank" rel="noopener" href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36912.pdf">有个文章</a> 说相同函数的折叠在涉及到函数指针的比较操作时可能不安全，至于为什么我暂且蒙在鼓里……</li>
+<li>非常慢。我在编译 rust 代码时如果开了 <code>lto = &quot;fat&quot;</code>，要在链接那里等好久。</li>
+</ul>
+<p>对策：</p>
+<ul>
+<li>将内存中的巨大二进制代码分块，并行进行 LTO。不过并行度越高，同一个优化线程所看到的代码就越少，优化机会也就越少。所以这里还是涉及到编译速度和编译质量折衷的问题……</li>
+</ul>
+<p>具体到实现上的话，<a target="_blank" rel="noopener" href="https://gcc.gnu.org/onlinedocs/gccint/LTO-Overview.html">GCC</a> 和 <a target="_blank" rel="noopener" href="https://llvm.org/docs/LinkTimeOptimization.html">LLVM</a> 不约而同（约了也说不定，反正大家都你偷我的我偷你的……）地选择了 bitcode 的形式。也就是说，开启 LTO 相关的编译选项后，生成的目标文件中将不再是机器码，而是编译器自己的 bitcode。至于为什么这样设计，官方文档说如果换用其他方案会产生工程复杂性等诸多问题，因为我没写过链接器，不太知道咋回事，所以也暂且蒙在鼓里。</p>
+<p>同时，GCC 和 LLVM 各自又把 LTO 的过程划分成了好几个阶段，并不是一趟跑完的（所以才这么慢啊）。</p>
+<h3 id="FDO-Feadback-Directed-Optimization-1"><a href="#FDO-Feadback-Directed-Optimization-1" class="headerlink" title="FDO - Feadback-Directed Optimization"></a>FDO - Feadback-Directed Optimization</h3><p>上面讲 JIT 的时候就已经提到了 FDO，我们知道 FDO 是需要依靠代码运行时的信息来决定优化方式。这种优化似乎天生是适合 JIT 的，因为 JIT 在解释执行代码的时候就能自然地拿到很多关于程序运行情况的信息。</p>
+<p>如果我们说，在 AOT 编译里面也能做 FDO 呢？</p>
+<p>以 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/profile-guided-optimizations?view=msvc-170">MSVC</a> 为例（他们会把这个操作叫 PGO），它的大概流程是：</p>
+<ol>
+<li>先用一些魔法参数编译出一个可执行文件</li>
+<li>运行这个可执行文件几次（称为 train run），它会自动收集运行信息并且写到某个文件里</li>
+<li>另一些魔法参数，使编译器参考之前收集到的信息来编译出最终的可执行文件</li>
+</ol>
+<p>LLVM 好像也有类似物，叫做 <a target="_blank" rel="noopener" href="https://github.com/google/autofdo">autofdo</a>，由 Google 开发，有几页 <a target="_blank" rel="noopener" href="https://www.llvm.org/devmtg/2013-04/novillo-slides.pdf">简单介绍</a>。但是我还没看完，懒狗程度令人感叹。</p>
+<p>之前我们提到，JIT 里面的 FDO 有很多优化，比如：</p>
+<ul>
+<li>内联高频执行的函数</li>
+<li>寄存器分配优化</li>
+<li>条件跳转优化</li>
+</ul>
+<p>相比之下， AOT 的 FDO 还能做出更多神奇的优化，比如：</p>
+<ul>
+<li>基本块优化：可以把经常执行的一些基本块放到同一个 page 里面</li>
+<li>死代码隔离：把多次 train run 都没有使用的代码放一个独立的 section 里面，如果它们没真的没被运行，就不用给它们分配 page 了！</li>
+<li>错误处理代码隔离：同死代码隔离。</li>
+</ul>
+<p>然而，在 AOT 上应用 FDO 还会有很多不可忽略的缺点：</p>
+<ul>
+<li>编译模型十分复杂</li>
+<li>大大增加编译时间</li>
+<li>如果 train run 时使用的数据不够典型，甚至可能做出负优化</li>
+</ul>
+<p>所以，目前 FDO 技术暂时还没有在 AOT 里面被广泛使用。</p>
+<h3 id="BOLT-Binary-Optimization-and-Layout-Tool"><a href="#BOLT-Binary-Optimization-and-Layout-Tool" class="headerlink" title="BOLT - Binary Optimization and Layout Tool"></a>BOLT - Binary Optimization and Layout Tool</h3><p>似乎是 LLVM 专属的，目前还没有在别的地方找到类似物。仓库在 <a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/tree/main/bolt">这里</a>。</p>
+<p>和 FDO 很像，也是基于运行时的信息来优化代码。不过和 FDO 不同之处在于，FDO 在产出可执行文件时需要根据收集到信息重新链接程序，而 BOLT 则是直接基于已有的可执行程序重建控制流等信息，接着调整整个程序布局。</p>
+<p>由于不需要重新链接，BOLT 甚至可以对没有源码的库或者可执行程序优化。</p>
+<p>非常科技。</p>
+<h2 id="吔我-AI-啦"><a href="#吔我-AI-啦" class="headerlink" title="吔我 AI 啦"></a>吔我 AI 啦</h2><p>能不能用 AI 来帮我优化代码啊妈的</p>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><blockquote>
+<p>快过年了，不要再讨论什么 AOT JIT 之类了。你写的各种离谱的 pass 和不知道怎么优化出来的代码回到家并不能给你带来任何实质性作用，朋友们兜里掏出一大把钱吃喝玩乐，你默默的在家里用各种晦涩难懂的语言和各种奇奇怪怪的技术优化出来的代码压根不对。亲戚朋友吃饭问你收获了什么你说我差点把图着色 RA 写出来了，亲戚们懵逼了，你还在心里默默嘲笑他们，笑他们不懂 Register Allocation，不懂 Local 和 Global 的区别，不懂 IR 除了 SSA 还能做 SoN，不懂一个 SSA 可以被你们玩出Hashed SSA，formal SSA，也笑他们根本不知道你的编译器的diagnosis都弄了个 TTY 真彩色 但实际上根本没人在意。你父母的同事都在说自己的子女一年的收获，儿子买了个房，女儿买了个车，姑娘升职加薪了，你的父母默默无言，说我的儿子整了个小电脑，天天黑框敲个烂代码天天对着笑，一天折腾那个 Lit 和 GTEST，破电脑开起来嗡嗡响，家里的电表转的是越来越快了，头上的头发越来越少了，人也越来越魔怔了</p>
+</blockquote>
+<p>编译器越来越强了，以往很多的技巧（比如著名的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Duff%27s_device">Duff’s Device</a>）正在随着编译技术的发展而成为历史。</p>
+<p>任何编译器做优化都需要足够的信息，比如，有了控制流图就可以做可达性分析，多了运行时得到的信息又可以做 FDO。</p>
+<p>而人对自己正在面对的问题，知道的信息总会是比编译器多的。所以，你要把你知道的东西或显式（比如，<code>likely()</code> 和 <code>unlikely</code>）或隐式（比如，不用向后跳的 <code>goto</code> 以免破坏可规约性）地告诉编译器，让编译器来帮你完成复杂而繁琐的优化。</p>
+<p>快进到和编译器双向奔赴然后结婚😋😋</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.356Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">8 分钟读完 (大约1163个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/note/page-buffer-cache/main/">Page/Buffer Cache 是什么？</a></p><div class="content"><p>Page&#x2F;Buffer Cache 是什么？</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="Page-Cache"><a href="#Page-Cache" class="headerlink" title="Page Cache"></a>Page Cache</h2><ul>
+<li><p>试图最小化磁盘 IO</p>
+</li>
+<li><p>本质上是一堆内存页面</p>
+</li>
+</ul>
+<blockquote>
+<p>内存页面（Page）：一小段连续内存，是操作系统管理内存的最小单位</p>
+</blockquote>
+<ul>
+<li>包含了很多最近访问过的<strong>文件的内容</strong><ul>
+<li>意思是不包括 inode、目录等东西！</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>对于 inode 和目录来说，他们的 page cache 的类似物分别叫做 inode cache 和 directory entry cache。其中 directory entry cache 又由 inode cache 组织而来。</p>
+</blockquote>
+<ul>
+<li><p>用途广泛，用于 file-backed mmap、buffered io，甚至 swap。</p>
+</li>
+<li><p>需要文件系统支持</p>
+</li>
+</ul>
+<h2 id="Buffer-Cache"><a href="#Buffer-Cache" class="headerlink" title="Buffer Cache"></a>Buffer Cache</h2><ul>
+<li><p>试图最小化磁盘 IO</p>
+</li>
+<li><p>本质上是内存里的一堆块</p>
+</li>
+</ul>
+<blockquote>
+<p>块：操作系统对磁盘操作的基本单位，在 Linux 中要求大小为 2 的整数次幂，且比 sector 大，比 page 小</p>
+</blockquote>
+<blockquote>
+<p>sector：磁盘读写数据的最小单位，由磁盘决定。</p>
+</blockquote>
+<ul>
+<li><p>包含了最近访问过的块</p>
+</li>
+<li><p>用途不多，基本上只用来加速块设备</p>
+</li>
+</ul>
+<blockquote>
+<p>块设备（Block Device）：支持随机读写的设备。典型的比如磁盘。</p>
+</blockquote>
+<ul>
+<li>不需要文件系统</li>
+</ul>
+<blockquote>
+<p>比如，文件系统的 superblock 一般会躺在 buffer cache 里面</p>
+</blockquote>
+<h2 id="两者的关系"><a href="#两者的关系" class="headerlink" title="两者的关系"></a>两者的关系</h2><p>可以参考下图（从 <a target="_blank" rel="noopener" href="https://www.usenix.org/legacy/publications/library/proceedings/usenix01/full_papers/kroeger/kroeger_html/node8.html">usenix</a> 上面偷的）：</p>
+<p><img src="/overview.png" alt="overview.png"></p>
+<blockquote>
+<p><strong>考古时间</strong></p>
+<p>为什么 page cache 是一堆内存页面，而 buffer cache 是一堆块呢？</p>
+<p>最开始 Linux 上面只有 buffer cache，此时 buffer cache 仅仅用于加速 buffered io 操作，向上与 read&#x2F;write 交互，向下与磁盘交互。所以 buffer cache 设计成一堆块是很合适的。</p>
+<p>page cache 则是为了支持 mmap，在 2.2 版本中引入的。由于它和内存关系比较紧密，所以设计成一堆内存页的形式。不过此时 buffered io 仍然只与 buffer cache 交互，不与 page cache 交互。要等两个 cache 合并之后才会出现大家所熟知的「调用 read&#x2F;write 之后会写 page cache，过一会儿由操作系统把脏页写回磁盘」这种模式。</p>
+</blockquote>
+<h1 id="一些比较复杂的东西"><a href="#一些比较复杂的东西" class="headerlink" title="一些比较复杂的东西"></a>一些比较复杂的东西</h1><h2 id="page-cache-和-buffer-cache-其实是一个东西？"><a href="#page-cache-和-buffer-cache-其实是一个东西？" class="headerlink" title="page cache 和 buffer cache 其实是一个东西？"></a>page cache 和 buffer cache 其实是一个东西？</h2><p>虽然逻辑上还是可以将他们分为两个东西，但是其实两者只是同一套数据的不同组织方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+---------------------------------------+</span><br><span class="line">| page                                  |</span><br><span class="line">|+-------+ +--------+ +--------++------+|</span><br><span class="line">||buffer1| | buffer2| |buffer3 ||buffer||</span><br><span class="line">||       | |        | |        ||  4   ||</span><br><span class="line">|+-------+ +--------+ +--------++------+|</span><br><span class="line">+---------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>（没找到合适的图所以画了个）</p>
+<p>每个 buffer 可以通过 <code>buffer_head</code> 结构体中的 <code>b_page</code> 字段获取自己对应的 page，同时 page 也可以通过 <code>page</code> 结构体中的 <code>buffers</code> 字段来得到自己所拥有的一组 buffer。</p>
+<h2 id="既然-page-cache-与-buffer-cache-合并了……"><a href="#既然-page-cache-与-buffer-cache-合并了……" class="headerlink" title="既然 page cache 与 buffer cache 合并了……"></a>既然 page cache 与 buffer cache 合并了……</h2><p>那如果我在 A 进程对 <code>/dev/sda1</code> 上的一个文件 F 的一个连续区域做 shared mmap，再在 B 进程对 <code>/dev/sda</code> 本身做 shared mmap，两个进程映射的实际磁盘空间一致，那 A 进程与 B 进程能映射到同一个 page 吗？</p>
+<p>答案是不行 :3。因为 A 进程的 page 是文件系统给的，而 B 进程得到的东西更像是一堆 buffer 组合成的 page。</p>
+<p>此时数据组织大概是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">+---------------------------------------+  +---------------------------------------+</span><br><span class="line">| A page                                |  | B page                                |</span><br><span class="line">|                                       |  |                                       |</span><br><span class="line">|                                       |  |                                       |</span><br><span class="line">|    o         o          o           o |  |   o       o          o         o      |</span><br><span class="line">|    |         |          |           | |  |   |       |          |         |      |</span><br><span class="line">+----|---------|----------|-----------|-+  +---|-------+----------+---------+------+</span><br><span class="line">     v         v          v           v        |       |          |         |</span><br><span class="line"> +-------+ +--------+ +--------+   +------+    |       |          |         |</span><br><span class="line">`|buffer1| | buffer2| |buffer3 |   |buffer|    |       |          |         |</span><br><span class="line"> |       | |        | |        |   |  4   |    |       |          |         |</span><br><span class="line"> +---^---+ +---^----+ +---^----+   +--^---+    |       |          |         |</span><br><span class="line">     +---------+----------|-----------+--------+       |          |         |</span><br><span class="line">               +----------|-----------+----------------+          |         |</span><br><span class="line">                          +-----------+---------------------------+         |</span><br><span class="line">                                      +---------------------------+---------+</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="一些好玩的接口"><a href="#一些好玩的接口" class="headerlink" title="一些好玩的接口"></a>一些好玩的接口</h1><h2 id="来点文件预读"><a href="#来点文件预读" class="headerlink" title="来点文件预读"></a>来点文件预读</h2><p>除了缓存已经读过&#x2F;写过的数据之外，猜测程序要读什么从而提前把它们读进 page cache 中，也能加快程序！</p>
+<ul>
+<li><p>posix_fadvise(2): <code>POSIX_FADV_SEQUENTIAL</code> 参数可以暗示内核自己将要顺序读文件。</p>
+</li>
+<li><p>madvise(2): <code>MADV_SEQUENTIAL</code> 参数可以暗示内核自己将顺序使用一些内存，配合 <code>mmap(2)</code> 使用。</p>
+</li>
+<li><p>readahead(2)：简单直接地告诉内核，偷偷多读一些东西（感觉这是个没用的屑调用……）。</p>
+</li>
+</ul>
+<h2 id="掉落擦车"><a href="#掉落擦车" class="headerlink" title="掉落擦车"></a>掉落擦车</h2><p>可以通过 <code>/proc/sys/vm/drop_caches</code> 来告知内核扔掉一些 cache 数据。可以通过 <code>echo X &gt; /proc/sys/vm/drop_caches</code> 来使用。其中 X 的取值可以为 1, 2 或 3。当 X 为 1 时意思是让内核扔掉所有 page cache 里面的数据。2 和 3 代表什么，不知道 :3。</p>
+<p>在测试一些 io-bounded 的程序时，为了防止 page cache 对测量结果造成干扰，可以在测试前运行一下。</p>
+<h1 id="未解之谜"><a href="#未解之谜" class="headerlink" title="未解之谜"></a>未解之谜</h1><p>发现自己还是不太看得懂 <code>free(1)</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">               total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:            13Gi       4.4Gi       3.2Gi       135Mi       6.5Gi       9.1Gi</span><br></pre></td></tr></table></figure>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-01-13T13:43:01.356Z" title="1/13/2024, 1:43:01 PM">2024-01-13</time>更新</span><span class="level-item">6 分钟读完 (大约969个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/note/perf/main/">Perf 笔记</a></p><div class="content"><h1 id="Perf-笔记"><a href="#Perf-笔记" class="headerlink" title="Perf 笔记"></a>Perf 笔记</h1><p>环境 <code>Linux Syameimaru-Aya 5.17.0-2-amd64 #1 SMP PREEMPT Debian 5.17.6-1 (2022-05-11) x86_64 GNU/Linux</code>。</p>
+<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><p>首先安装 <code>linux-perf</code> 软件包，获得 <code>perf(1)</code> 应用程序。</p>
+<p>接着运行 <code>perf</code>，发现报了奇怪的错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">19:56 Syameimaru-Aya ~/sr/la/hpc/perf</span><br><span class="line">0 perf record -a ./a.out</span><br><span class="line">Error:</span><br><span class="line">Access to performance monitoring and observability operations is limited.</span><br><span class="line">Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open</span><br><span class="line">access to performance monitoring and observability operations for processes</span><br><span class="line">without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.</span><br><span class="line">More information can be found at &#x27;Perf events and tool security&#x27; document:</span><br><span class="line">https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html</span><br><span class="line">perf_event_paranoid setting is 3:</span><br><span class="line">  -1: Allow use of (almost) all events by all users</span><br><span class="line">      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK</span><br><span class="line">&gt;= 0: Disallow raw and ftrace function tracepoint access</span><br><span class="line">&gt;= 1: Disallow CPU event access</span><br><span class="line">&gt;= 2: Disallow kernel profiling</span><br><span class="line">To make the adjusted perf_event_paranoid setting permanent preserve it</span><br><span class="line">in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = &lt;setting&gt;)</span><br></pre></td></tr></table></figure>
+
+<p>跟着报错提示里面提到的文档 <a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html">Perf events and tool security</a> 看了一圈，大概知道问题出在 <code>perf</code> 的安全措施上。文档里说，随意使用 <code>perf</code> 可能允许人获得其他人正在运行的程序中的数据，不安全。我用的发行版就默认配置成所有人都不能使用 <code>perf</code> 了。</p>
+<p>文档给了一种多用户时控制权限，只让特定的人使用 <code>perf</code> 的做法：首先将 <code>/usr/bin/perf</code> 用 <code>setcap(8)</code> 程序加上 <code>CAP_PERFMON</code> <code>CAP_SYS_PTRACE</code> 两个标签，使 <code>/usr/bin/perf</code> 能够正常使用（没有 <code>CAP_PERFMON</code> 标签的应用程序无法调用 <code>perf_event_open(2)</code> 函数）。接着新建个用户组，仅使在那个组里的用户拥有 <code>/usr/bin/perf</code> 的可执行权限。这样对于一个不允许使用 <code>perf</code> 的人来说，外面偷来的 <code>perf</code> 会因为没有 <code>CAP_PERFMON</code> 而无法使用，自带的 <code>/usr/bin/perf</code> 则没有执行权限。整个设置避免了未经许可的人使用 <code>perf</code> 程序。</p>
+<p>因为我的笔记本电脑肯定只有我一个用户，所以我非常暴力地改了一发，在 <code>root</code> 权限下往 <code>/proc/sys/kernel/perf_event_paranoid</code> 文件里写了个 <code>-1</code>。接着在 <code>/etc/sysctl.conf</code> 里加入一行 <code>kernel.perf_event_paranoid = -1</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@Syameimaru-Aya:~/tmp# echo -1 &gt; /proc/sys/kernel/perf_event_paranoid</span><br><span class="line">root@Syameimaru-Aya:~/tmp#</span><br></pre></td></tr></table></figure>
+
+<p>接着 <code>perf</code> 就可以正常运行了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">20:27 Syameimaru-Aya ~/sr/la/hpc/perf</span><br><span class="line">0 cat a.c</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main(void) &#123;</span><br><span class="line">    int i;</span><br><span class="line">    for (i = 0; i &lt; 10000000; ++i)</span><br><span class="line">        i + i;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">20:27 Syameimaru-Aya ~/sr/la/hpc/perf</span><br><span class="line">0 gcc -O0 a.c &amp;&amp; perf record -a ./a.out</span><br><span class="line">[ perf record: Woken up 1 times to write data ]</span><br><span class="line">[ perf record: Captured and wrote 0.877 MB perf.data (104 samples) ]</span><br></pre></td></tr></table></figure>
+
+<h2 id="获得炫酷火焰图"><a href="#获得炫酷火焰图" class="headerlink" title="获得炫酷火焰图"></a>获得炫酷火焰图</h2><p>中午午睡的时候梦到生成火焰图要用命令 <code>perf script flamegraph</code>。于是试了一下，发现不行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">20:29 Syameimaru-Aya ~/sr/la/hpc/perf</span><br><span class="line">0 perf script flamegraph</span><br><span class="line">------------------------------------------------------------</span><br><span class="line">perf_event_attr:</span><br><span class="line">  size                             128</span><br><span class="line">  &#123; sample_period, sample_freq &#125;   4000</span><br><span class="line"></span><br><span class="line">... 超级长的输出 ...</span><br><span class="line"></span><br><span class="line">Flame Graph template /usr/share/d3-flame-graph/d3-flamegraph-base.html does not exist. Please install the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) package, specify an existing flame graph template (--template PATH) or another output format (--format FORMAT).</span><br></pre></td></tr></table></figure>
+
+<p>啊报错说缺少包 <code>libjs-d3-flame-graph</code>。太良心了，连缺什么包都给提示好。显得我很笨的样子 :(。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">20:33 Syameimaru-Aya ~/sr/la/hpc/perf</span><br><span class="line">0 i libjs-d3-flame-graph</span><br><span class="line">Reading package lists... Done</span><br><span class="line">Building dependency tree... Done</span><br><span class="line">Reading state information... Done</span><br><span class="line">E: Unable to locate package libjs-d3-flame-graph</span><br></pre></td></tr></table></figure>
+
+<p>提示说包不存在。用 <code>apt-file</code> 找了下报错信息中提到的关键文件 <code>/usr/share/d3-flame-graph/d3-flamegraph-base.html</code>，发现源里没有这个东西。不过在 <a href="pkgs.org">pkgs.org</a> 上找了下发现 <code>rpm</code> 的包到是有……怀疑开发都写报错信息的时候只是把红帽系打包的命名习惯改成了 <code>Debian</code> 系的，估计根本就没看有没有这个包吧！</p>
+<p><img src="/pkgs.png" alt="怎么全是 rpm 包"></p>
+<p>最后用 <code>alien(1p)</code> 把 <code>rpm</code> 转成 <code>deb</code> 装上。成功运行。</p>
+<p><img src="/flame-graph.png" alt="超级酷炫的火焰图！"></p>
+</div></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous is-invisible is-hidden-mobile"><a href="/page/0/">上一页</a></div><div class="pagination-next"><a href="/page/2/">下一页</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link is-current" href="/">1</a></li><li><a class="pagination-link" href="/page/2/">2</a></li><li><a class="pagination-link" href="/page/3/">3</a></li></ul></nav></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="https://avatars.githubusercontent.com/u/86813521" alt="jyi2ya"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">jyi2ya</p><p class="is-size-6 is-block">大学生</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>中国湖南</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">22</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/jyi2ya" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/jyi2ya"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/feed.xml"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/friends/main/">友链</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/restart/main/">重新开始</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2023/10/"><span class="level-start"><span class="level-item">十月 2023</span></span><span class="level-end"><span class="level-item tag">22</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">jyi2ya 的博客</a><p class="is-size-7"><span>&copy; 2024 jyi2ya</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
