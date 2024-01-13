@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: jyi2ya 的博客
 subtitle: ''
-description: ''
+description: 我的博客，用来写一些奇奇怪怪的东西。
 keywords:
 author: jyi2ya
-language: zh
+language: zh-CN
 timezone: ''
 
 # URL
@@ -97,7 +97,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: one-paper
+theme: icarus
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
