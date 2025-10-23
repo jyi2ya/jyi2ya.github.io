@@ -1,229 +1,155 @@
-<!doctype html>
-<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>jyi2ya 的博客</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="jyi2ya 的博客"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="jyi2ya 的博客"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="我的博客，用来写一些奇奇怪怪的东西。"><meta property="og:type" content="blog"><meta property="og:title" content="jyi2ya 的博客"><meta property="og:url" content="https://jyi2ya.github.io/"><meta property="og:site_name" content="jyi2ya 的博客"><meta property="og:description" content="我的博客，用来写一些奇奇怪怪的东西。"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://jyi2ya.github.io/img/og_image.png"><meta property="article:author" content="jyi2ya"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://jyi2ya.github.io/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://jyi2ya.github.io"},"headline":"jyi2ya 的博客","image":["https://jyi2ya.github.io/img/og_image.png"],"author":{"@type":"Person","name":"jyi2ya"},"publisher":{"@type":"Organization","name":"jyi2ya 的博客","logo":{"@type":"ImageObject"}},"description":"我的博客，用来写一些奇奇怪怪的东西。"}</script><link rel="alternate" href="/feed.xml" title="jyi2ya 的博客" type="application/atom+xml"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
-  (function () {
-      function switchTab() {
-          if (!location.hash) {
-            return;
-          }
 
-          const id = '#' + CSS.escape(location.hash.substring(1));
-          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
-          if (!$tabMenu) {
-            return;
-          }
-
-          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
-          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
-          Array.from($tabMenuContainer.querySelectorAll('a'))
-              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
-              .forEach($content => $content.classList.add('is-hidden'));
-
-          if ($tabMenu) {
-              $tabMenu.parentElement.classList.add('is-active');
-          }
-          const $activeTab = document.querySelector(id);
-          if ($activeTab) {
-              $activeTab.classList.remove('is-hidden');
-          }
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title> | jyi2ya 的博客</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.1.1/styles/solarized-light.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="/custom.css"/>
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/icon512.png">
+    <meta name="theme-color" content="#ffffff"/>
+    
+  <meta name="generator" content="Hexo 8.0.0"></head>
+  <body>
+    <script>
+      if ('serviceWorker' in navigator && false) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js', {scope: '/'})
+            .then(function (registration) {
+              // console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(function (err) {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
       }
-      switchTab();
-      window.addEventListener('hashchange', switchTab, false);
-  })();
-  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">jyi2ya 的博客</a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-02-25T13:33:29.051Z" title="2/25/2024, 1:33:29 PM">2024-02-25</time>更新</span><span class="level-item">7 分钟读完 (大约1058个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/tutorial/wine-bottles/main/">Bottles 安装</a></p><div class="content"><h1 id="Bottles-安装"><a href="#Bottles-安装" class="headerlink" title="Bottles 安装"></a>Bottles 安装</h1><h2 id="好名字！"><a href="#好名字！" class="headerlink" title="好名字！"></a>好名字！</h2><p><a target="_blank" rel="noopener" href="https://docs.usebottles.com/">Bottles</a> 是类似 winetricks 的小软件，用于自动配置 wine、自动安装并配置软件。至于为什么有了 winetricks 还需要新的小软件，bottles 在他们官网上给出了<a target="_blank" rel="noopener" href="https://docs.usebottles.com/faq/where-is-winetricks">解释</a>：bottles 希望提供中心化的依赖处理系统，并且希望拥有比 winetricks 更强的扩展性。总之不是重复造轮子就对了。</p>
-<p>之前试着用 winetricks 一键安装 qq，结果有一个托管在 ftp.hp.org 上的文件一直下载不下来。接着我就把 winetricks 扬了。</p>
-<p>Wine bottles，酒瓶子。:D</p>
-<h2 id="安装和安装过程的问题修复"><a href="#安装和安装过程的问题修复" class="headerlink" title="安装和安装过程的问题修复"></a>安装和安装过程的问题修复</h2><p>参考<a target="_blank" rel="noopener" href="https://docs.usebottles.com/getting-started/installation">官方的安装指南</a></p>
-<h3 id="直接使用包管理器安装"><a href="#直接使用包管理器安装" class="headerlink" title="直接使用包管理器安装"></a>直接使用包管理器安装</h3><p><a target="_blank" rel="noopener" href="https://docs.usebottles.com/getting-started/installation">官方的安装指南</a>里面说，bottles 在多个发行版的源里有包。比如 fedora，就可以使用 <code>sudo dnf install bottles</code> 来安装。其他支持的发行版可以去安装指南里头看看。</p>
-<p>但是 debian 源竟然没有包，神奇……明明代码目录里有个 <code>debian/</code>，这不指明了是要人打包吗？</p>
-<h3 id="编译-deb-包，再使用包管理器安装"><a href="#编译-deb-包，再使用包管理器安装" class="headerlink" title="编译 deb 包，再使用包管理器安装"></a>编译 deb 包，再使用包管理器安装</h3><h4 id="编译-deb-包"><a href="#编译-deb-包" class="headerlink" title="编译 deb 包"></a>编译 deb 包</h4><p>因为 debian 源里面没有 bottles 的包，所以我们需要编译代码。同时为了维护依赖，便于删除，我们利用代码目录里面 <code>debian/</code> 下的东西把它打成 deb 包，再使用 <code>apt</code> 命令安装。</p>
-<p>bottles 使用 meson 和 ninja 作为构建系统。听说这两个东西很先进，打算改天去学一下。从 <a target="_blank" rel="noopener" href="https://blog.devgenius.io/how-to-build-debian-packages-from-meson-ninja-d1c28b60e709">devgenius.io</a> 上现学了怎么使用 meson&#x2F;ninja 打 deb 包：</p>
-<ol>
-<li>首先安装 <code>debhelper</code> <code>build-essentials</code> 和 <code>dh-make</code>。其中 <code>debhelper</code> 和 <code>dh-make</code> 是 debian 的软件包构建相关工具。<code>build-essentials</code> 则是软件开发的基础工具，包含 <code>make</code> 等小工具。</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install debhelper build-essentials dh-make</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>接着下载代码并且进入环境：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/bottlesdevs/Bottles</span><br><span class="line"><span class="built_in">cd</span> Bottles</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>然后运行 debian 包的自动配置脚本，指定构建系统为 meson：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dh_auto_configure --buildsystem=meson</span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>最后运行构建软件包的命令。参数的 <code>-b</code> 是指仅构建二进制的 deb 包。因为是命令是偷来的所以也不是很清楚参数有什么用……</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-buildpackage -rfakeroot -us -uc -b</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>回到上级目录，发现 deb 包出现了！</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ../ &amp;&amp; <span class="built_in">ls</span> -l</span><br></pre></td></tr></table></figure>
-
-<p>输出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">total 284</span><br><span class="line">drwxrwxr-x 1 root root    672 Mar  5 20:02 Bottles-2022.2.28-trento-2/</span><br><span class="line">-rw-r--r-- 1 root root   6872 Mar  5 20:02 com.usebottles.bottles_2022.2.28-trento-2_amd64.buildinfo</span><br><span class="line">-rw-r--r-- 1 root root   5004 Mar  5 20:02 com.usebottles.bottles_2022.2.28-trento-2_amd64.changes</span><br><span class="line">-rw-r--r-- 1 root root 269408 Mar  5 20:02 com.usebottles.bottles_2022.2.28-trento-2_amd64.deb</span><br></pre></td></tr></table></figure>
-
-<ol start="6">
-<li>安装</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt -y install ./com.usebottles.bottles.*.deb</span><br></pre></td></tr></table></figure>
-
-<ol start="7">
-<li>检查有没有 bottles 命令</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">type</span> bottles</span><br></pre></td></tr></table></figure>
-
-<p>如果出现</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bottles is /usr/bin/bottles</span><br></pre></td></tr></table></figure>
-
-<p>说明安装成功！</p>
-<h2 id="启动和启动过程的问题修复"><a href="#启动和启动过程的问题修复" class="headerlink" title="启动和启动过程的问题修复"></a>启动和启动过程的问题修复</h2><p>在我这儿 bottles 安装好后运行命令并不能直接启动，会报错：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">% [1] 20:43:10 jyi@Syameimaru-Aya ~</span><br><span class="line">0 bottles</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;/usr/bin/bottles&quot;, line 56, in &lt;module&gt;</span><br><span class="line">    from bottles import main</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/main.py&quot;, line 32, in &lt;module&gt;</span><br><span class="line">    from bottles.window import MainWindow</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/window.py&quot;, line 35, in &lt;module&gt;</span><br><span class="line">    from bottles.views.details import DetailsView</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/views/details.py&quot;, line 25, in &lt;module&gt;</span><br><span class="line">    from bottles.views.bottle_details import BottleView</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/views/bottle_details.py&quot;, line 36, in &lt;module&gt;</span><br><span class="line">    from bottles.dialogs.generic import MessageDialog</span><br><span class="line">  File &quot;/usr/share/bottles/bottles/dialogs/generic.py&quot;, line 20, in &lt;module&gt;</span><br><span class="line">    gi.require_version(&#x27;GtkSource&#x27;, &#x27;4&#x27;)</span><br><span class="line">  File &quot;/usr/lib/python3/dist-packages/gi/__init__.py&quot;, line 129, in require_version</span><br><span class="line">    raise ValueError(&#x27;Namespace %s not available for version %s&#x27; %</span><br><span class="line">ValueError: Namespace GtkSource not available for version 4</span><br></pre></td></tr></table></figure>
-
-<p>经过搜索发现这里是缺少了 <code>gir1.2-gtksource-4</code> 的库。估计是写依赖时写漏了。使用 <code>sudo apt install gir1.2-gtksource-4</code> 安装上就可以正常运行了。</p>
-<h2 id="简易使用"><a href="#简易使用" class="headerlink" title="简易使用"></a>简易使用</h2><p>安装运行之后会出现欢迎界面，点几下 “下一步” 之后 bottles 会下载相关组件。这个很慢，可能是因为服务器在国外。多等一会儿就好了。等的时候可以写写博客之类的……</p>
-<p>之后使用方式非常显然，所以就不写了（咕了）。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-02-25T13:33:29.047Z" title="2/25/2024, 1:33:29 PM">2024-02-25</time>更新</span><span class="level-item">16 分钟读完 (大约2430个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/note/csapp-lab/datalab/a/">CSAPP Data Lab 做题记录（上）</a></p><div class="content"><h1 id="CSAPP-Data-Lab-做题记录（上）"><a href="#CSAPP-Data-Lab-做题记录（上）" class="headerlink" title="CSAPP Data Lab 做题记录（上）"></a>CSAPP Data Lab 做题记录（上）</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>访问 <a target="_blank" rel="noopener" href="http://csapp.cs.cmu.edu/3e/labs.html">http://csapp.cs.cmu.edu/3e/labs.html</a> 试图下载网页上醒目的 datalab.tar，发现需要身份验证。后来发现点后面的小东西可以直接下载。读了 readme 之后知道 datalab.tar 好像是教师用的，用来生成学生的包（datalab-handout），datalab-handout 才是学生用的。</p>
-<p><img src="/datalab-webpage.png" alt="datalab 的神秘链接"></p>
-<p>读文档，知道实验是要用位运算来模拟各种整数运算，还要用整数运算模拟浮点运算。好像评测还实现了一个小工具来查是否用到了违规的操作符。</p>
-<p>看文档上说需要安装 bison 和 flex，以为检查违规小工具也需要编译，正打算看一下代码发现包里直接发了个二进制文件下来……</p>
-<p>发现评测程序是用 Perl 写的，古老。</p>
-<p>Driverlab.pm 里好像手写了一个 http 客户端？看起来是搞那个 Beat the Prof 比赛的，应该不用管它。</p>
-<p>依照手册指示，要先 make 一下把 btest 给编译好。结果遇到神奇问题：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">% 09:19:42 jyi@Syameimaru-Aya ~/s/c/d/c/d/datalab-handout</span><br><span class="line">0 make</span><br><span class="line">gcc -O -Wall -m32 -lm -o btest bits.c btest.c decl.c tests.c</span><br><span class="line">In file included from btest.c:16:</span><br><span class="line">/usr/include/stdio.h:27:10: fatal error: bits/libc-header-start.h: No such file or directory</span><br><span class="line">   27 | #include &lt;bits/libc-header-start.h&gt;</span><br><span class="line">      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">compilation terminated.</span><br><span class="line">In file included from decl.c:1:</span><br><span class="line">/usr/include/stdio.h:27:10: fatal error: bits/libc-header-start.h: No such file or directory</span><br><span class="line">   27 | #include &lt;bits/libc-header-start.h&gt;</span><br><span class="line">      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">compilation terminated.</span><br><span class="line">In file included from /usr/lib/gcc/x86_64-linux-gnu/10/include/limits.h:195,</span><br><span class="line">                 from /usr/lib/gcc/x86_64-linux-gnu/10/include/syslimits.h:7,</span><br><span class="line">                 from /usr/lib/gcc/x86_64-linux-gnu/10/include/limits.h:34,</span><br><span class="line">                 from tests.c:3:</span><br><span class="line">/usr/include/limits.h:26:10: fatal error: bits/libc-header-start.h: No such file or directory</span><br><span class="line">   26 | #include &lt;bits/libc-header-start.h&gt;</span><br><span class="line">      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">compilation terminated.</span><br><span class="line">make: *** [Makefile:11: btest] Error 1</span><br></pre></td></tr></table></figure>
-
-<p>检查了一发发现是 makefile 里指定了 <code>-m32</code> 但是我没有 32 位的库，装了个 gcc-multilib。至于为啥不用 <code>-m64</code> 编译……因为那里面说什么 “not 64-bit safe”，没太懂。</p>
-<h2 id="题目列表"><a href="#题目列表" class="headerlink" title="题目列表"></a>题目列表</h2><h3 id="bitXor"><a href="#bitXor" class="headerlink" title="bitXor"></a>bitXor</h3><p>给定两个数，返回他们的异或。</p>
-<p>首先由真值表写出把异或运算写成最小项之和的形式，就是 $X \oplus Y &#x3D; X\bar{Y} + \bar{X}Y$。然后跑跑发现零分，是因为我们没有 <code>|</code> 可以用……用德摩根定律画画柿子得到 $\bar{\bar{X\bar{Y}}\bar{\bar{X}Y}}$，避开 <code>|</code>，就能过了。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">bitXor</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> ~(~(~x &amp; y) &amp; ~(x &amp; ~y));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="tmin"><a href="#tmin" class="headerlink" title="tmin"></a>tmin</h3><p>返回最小的有符号整数。</p>
-<p>题目假设机器使用补码表示法，我们知道这个数的位模式应该长得比较像 1000…000。题目又假设了我们机器上的整数都是 32 位的，所以我们把 1 左移 31 位返回就行了。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">tmin</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span> &lt;&lt; <span class="number">31</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="isTmax"><a href="#isTmax" class="headerlink" title="isTmax"></a>isTmax</h3><p>判断给定的 x 是不是最大的有符号整数。</p>
-<p>考虑到题目假定机器采用补码表示法，最大的有符号整数 tmax 的位模式应该是 01111…111。好像把 tmin 的结果取反就是了，但是他没给 <code>&lt;&lt;</code> 操作符，题目又禁止使用超过 255 的整数，所以 tmax 应该搞不出来。</p>
-<p>倒是有一个检查加一向上溢出（假设溢出的行为和无符号整数差不多）取反后是不是和自己相等（<code>~(x + 1) == x</code>）的想法，但是有符号数溢出好像是 ub 啊。题目也没有规定溢出会采用什么方式。</p>
-<p>先这么做好了……-1 要特判一下因为 -1 取反加一后马上就溢出了。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">isTmax</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (!((~(x + <span class="number">1</span>)) ^ x)) &amp; (!!(x + <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="allOddBits"><a href="#allOddBits" class="headerlink" title="allOddBits"></a>allOddBits</h3><p>判断给定 x 的奇数二进制位上是否全为 1。</p>
-<p>……这样吗？</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">allOddBits</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (x &gt;&gt; <span class="number">1</span>) &amp; (x &gt;&gt; <span class="number">3</span>) &amp; (x &gt;&gt; <span class="number">5</span>) &amp; (x &gt;&gt; <span class="number">7</span>) &amp; (x &gt;&gt; <span class="number">9</span>) &amp;</span><br><span class="line">  (x &gt;&gt; <span class="number">11</span>) &amp; (x &gt;&gt; <span class="number">13</span>) &amp; (x &gt;&gt; <span class="number">15</span>) &amp; (x &gt;&gt; <span class="number">17</span>) &amp; (x &gt;&gt; <span class="number">19</span>) &amp;</span><br><span class="line">  (x &gt;&gt; <span class="number">21</span>) &amp; (x &gt;&gt; <span class="number">23</span>) &amp; (x &gt;&gt; <span class="number">25</span>) &amp; (x &gt;&gt; <span class="number">27</span>) &amp; (x &gt;&gt; <span class="number">29</span>) &amp;</span><br><span class="line">  (x &gt;&gt; <span class="number">31</span>) &amp; <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>测了一下发现性能分数没有拿到，最多只能使用 12 个操作符，而这里用了 33 个。考虑进行优化。因为我们可以直接使用 8 位整数，所以我们可以考虑将输入的东西每 8 位与一下，再用一个掩码检查得到的东西奇数位上是否都为 1。这样就能减少计算了。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">allOddBits</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> !((x &amp; (x &gt;&gt; <span class="number">8</span>) &amp; (x &gt;&gt; <span class="number">16</span>) &amp; (x &gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xaa</span>) ^ <span class="number">0xaa</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>只用了 9 个操作符耶！</p>
-<h3 id="negate"><a href="#negate" class="headerlink" title="negate"></a>negate</h3><p>求给定数的相反数。</p>
-<p>这个可以使用我们熟知的小结论，把 x 取反后再加一直接得到结果，非常简单。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">negate</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (~x) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="isAsciiDigit"><a href="#isAsciiDigit" class="headerlink" title="isAsciiDigit"></a>isAsciiDigit</h3><p>判断给定输入是不是 ASCII 编码中的数字。</p>
-<p>我们已经有了比较两个数字是否相等的便利算法，只要打表检查是否等于每个可能的数字，将结果或起来就是最终答案。但是这样显然是拿不到性能分的嘛。</p>
-<p>嗯……如果 x 的最高位为 1，那它是个负数，就不是 ASCII 的数字了。排除这种情况后，接下来就只要考虑正数比大小。</p>
-<p><del>发现异或的结果的最高位是两个数字第一个不同之处，找出谁是 1 谁就更大。问题就变成了如何取一个数的最高位。</del>并没有想到什么取一个数最高位的便利算法……</p>
-<p>考虑利用一下题目特性，ASCII 的 0 和 9 是 110000 和 111001，想到搞一个东西来检查 x 的前面 26 位是否全为 0，而且第 5、6 位为 1。接着再判断后四位是否符合第四位为 0，或者第 2、3 位为零……</p>
-<p>折腾一下得到这样的答案：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">isAsciiDigit</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (!((~<span class="number">0x3f</span>) &amp; x)) &amp; (!((<span class="number">0x30</span> &amp; x) ^ <span class="number">0x30</span>)) &amp;</span><br><span class="line">	  (!(<span class="number">0x8</span> &amp; x) | (!(<span class="number">0x6</span> &amp; x)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>轻松过关</p>
-<h3 id="conditional"><a href="#conditional" class="headerlink" title="conditional"></a>conditional</h3><p>实现类似三目运算符的功能。</p>
-<p>要实现 <code>x ? y : z</code> 的话，应该很容易想到 <code>(!!x) * y + (!x) * z</code> 这种的……但是我们没有乘号。可以想到使用与号替代一下，就是想办法弄一个掩码，当 x 为真时它是全 1，x 为假时它是全零这种的。感觉比较简单。</p>
-<p>代码里为了节省符号把掩码弄成当 x 为真时是全 0，x 为假时是全 1。使用方法还是差不多的吧。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">conditional</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> z)</span> &#123;</span><br><span class="line">  <span class="type">int</span> mask = !x;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">1</span>) | mask;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">2</span>) | mask;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">4</span>) | mask;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">8</span>) | mask;</span><br><span class="line">  mask = (mask &lt;&lt; <span class="number">16</span>) | mask;</span><br><span class="line">  <span class="keyword">return</span> ((~mask) &amp; y) | (mask &amp; z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>写后面的 howManyBits 的时候获得了重大技术革新，现在有一种便利操作来生成掩码了！</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">conditional</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> z)</span> &#123;</span><br><span class="line">  <span class="type">int</span> mask = (~(!x)) + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">return</span> ((~mask) &amp; y) | (mask &amp; z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果 x 是 0，则 <code>~(!x)</code> 位模式为 1111…1110，加 1 后刚好是全 1。</p>
-<p>如果 x 是 1，则 <code>~(!x)</code> 位模式为 1111…1111，加 1 向上溢出后刚好是全 0。</p>
-<h3 id="isLessOrEqual"><a href="#isLessOrEqual" class="headerlink" title="isLessOrEqual"></a>isLessOrEqual</h3><p>判断给定的两个数是否满足小于等于关系。</p>
-<p>小于等于就是不大于嘛，接下来考虑判断两个数的大于关系。</p>
-<p><del>这个好像在 isAsciiDigit 那个题里的踩过一次，所以接着思路往下想……如何取一个数的最高位。</del>发现取最高位的话怎么写都会拿不完性能分。</p>
-<p>突然想到好像两个数相减一下再判断结果是否为正数就行，原来刚刚想那么多是脑子打结了。</p>
-<p>先判断两个数是否正好为一正一负，如果是的话可以直接给结果。否则相减判断结果正负，这时两个同号的数相减必不可能溢出。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">isLessOrEqual</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> (((x &gt;&gt; <span class="number">31</span>) &amp; <span class="number">1</span>) | (!(y &gt;&gt; <span class="number">31</span>))) &amp;</span><br><span class="line">	  ((((x &gt;&gt; <span class="number">31</span>) &amp; <span class="number">1</span>) &amp; (!(y &gt;&gt; <span class="number">31</span>))) | (!((y + (~x) + <span class="number">1</span>) &gt;&gt; <span class="number">31</span>)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>拿下。</p>
-<h3 id="logicalNeg"><a href="#logicalNeg" class="headerlink" title="logicalNeg"></a>logicalNeg</h3><p>实现逻辑非，不能使用感叹号。</p>
-<p>感觉和 allOddBits 很像！只不过那个是求奇数位上全为 1，这里是求存在某一位为 1。</p>
-<p>用类似的方法实现一下就好啦。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">logicalNeg</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">16</span>);</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">8</span>);</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">4</span>);</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">2</span>);</span><br><span class="line">  x = x | (x &gt;&gt; <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span> ^ (x &amp; <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最后 return 那个奇怪的表达式其实是 <code>1 - x</code> 拆过来的。发现直接写 <code>2 + (~x)</code> 会拿不到性能分，符号刚好多一个。</p>
-<h3 id="howManyBits"><a href="#howManyBits" class="headerlink" title="howManyBits"></a>howManyBits</h3><p>求最少用多少个位可以表示出给定数字。</p>
-<p>其实就是 $\log_{2}$ 啦。</p>
-<p>先假定 x 是负数，根据补码表示法我们需要能够表示 $[ x, -x - 1 ]$ 的所有数。全部当成无符号整数之后需要表示的范围是 $[0, ((<del>x) &lt;&lt; 1) + 1]$，只要我们能够用一些位表示出最大的数，那么这些位一定可以表示出所有数。因此答案就是 $\log_{2}(((</del>x) &lt;&lt; 1) + 1)$（向上取整）。</p>
-<p>同理，如果 x 是正数，则需要能够表示 $[ -x - 1, x ]$ 的所有数，答案是 $\log_{2}((x &lt;&lt; 1) + 1)$。</p>
-<p>至于如何取对数……猜测是要使用类似 logicalNeg 和 allOddBits 那样类似分治（？）的做法来完成，先考虑分成两半的情形：如果高 16 位不为零，可以给答案加上 16，接着再把高 16 位移动到低 16 位，按照类似的方式处理低 16 位；如果高 16 位为零，则直接处理低 16 位。依次类推直到处理完只剩一位的情况。</p>
-<p>用力实现一下就好了。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">howManyBits</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">  <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">  <span class="type">int</span> h16, h8, h4, h2, h1, h0;</span><br><span class="line">  <span class="type">int</span> sign = x &gt;&gt; <span class="number">31</span>;</span><br><span class="line">  <span class="type">int</span> range = (((x &amp; (~sign)) | ((~x) &amp; sign)) &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  h16 = (~(!!(range &gt;&gt; <span class="number">16</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h16 &amp; <span class="number">16</span>);</span><br><span class="line">  range = range &gt;&gt; (h16 &amp; <span class="number">16</span>);</span><br><span class="line"></span><br><span class="line">  h8 = (~(!!((range &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h8 &amp; <span class="number">8</span>);</span><br><span class="line">  range = range &gt;&gt; (h8 &amp; <span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">  h4 = (~(!!((range &gt;&gt; <span class="number">4</span>) &amp; <span class="number">0xf</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h4 &amp; <span class="number">4</span>);</span><br><span class="line">  range = range &gt;&gt; (h4 &amp; <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">  h2 = (~(!!((range &gt;&gt; <span class="number">2</span>) &amp; <span class="number">0x3</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h2 &amp; <span class="number">2</span>);</span><br><span class="line">  range = range &gt;&gt; (h2 &amp; <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">  h1 = (~(!!((range &gt;&gt; <span class="number">1</span>) &amp; <span class="number">0x1</span>))) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h1 &amp; <span class="number">1</span>);</span><br><span class="line">  range = range &gt;&gt; (h1 &amp; <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  h0 = (~(range &amp; <span class="number">0x1</span>)) + <span class="number">1</span>;</span><br><span class="line">  ans = ans + (h0 &amp; <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>真不容易！</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2023-10-01T17:48:39.000Z" title="10/1/2023, 5:48:39 PM">2023-10-01</time>发表</span><span class="level-item"><time dateTime="2024-02-25T13:33:29.047Z" title="2/25/2024, 1:33:29 PM">2024-02-25</time>更新</span><span class="level-item">4 分钟读完 (大约652个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2023/10/01/note/csapp-lab/datalab/b/">CSAPP Data Lab 做题记录（下）</a></p><div class="content"><h1 id="CSAPP-Data-Lab-做题记录（下）"><a href="#CSAPP-Data-Lab-做题记录（下）" class="headerlink" title="CSAPP Data Lab 做题记录（下）"></a>CSAPP Data Lab 做题记录（下）</h1><p>摸了好几天，来做浮点部分……</p>
-<h2 id="题目列表"><a href="#题目列表" class="headerlink" title="题目列表"></a>题目列表</h2><h3 id="floatScale2"><a href="#floatScale2" class="headerlink" title="floatScale2"></a>floatScale2</h3><p>传入一个无符号整数，把它当作单精度浮点数，乘二后输出。</p>
-<p>很自然地想到提取出符号、阶码和尾数，接着根据是否为规格化的浮点数分情况处理，拼起来返回，比较简单。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="title function_">floatScale2</span><span class="params">(<span class="type">unsigned</span> uf)</span> &#123;</span><br><span class="line">  <span class="type">int</span> sign, expo, frac;</span><br><span class="line">  <span class="type">int</span> bias = <span class="number">127</span>;</span><br><span class="line">  sign = (uf &gt;&gt; <span class="number">31</span>) &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">1</span>) - <span class="number">1</span>);</span><br><span class="line">  expo = (uf &gt;&gt; <span class="number">23</span>) &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">8</span>) - <span class="number">1</span>);</span><br><span class="line">  frac = uf &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">23</span>) - <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">if</span> (expo == <span class="number">0xff</span>)</span><br><span class="line">	  <span class="keyword">return</span> uf;</span><br><span class="line">  <span class="keyword">if</span> (expo) &#123;</span><br><span class="line">	  ++expo;</span><br><span class="line">	  <span class="keyword">if</span> (expo == <span class="number">0xff</span>)</span><br><span class="line">		  frac = <span class="number">0</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	  frac *= <span class="number">2</span>;</span><br><span class="line">	  <span class="keyword">if</span> (frac &amp; (<span class="number">1</span> &lt;&lt; <span class="number">23</span>)) &#123;</span><br><span class="line">		  expo = <span class="number">1</span>;</span><br><span class="line">		  frac &amp;= ~(<span class="number">1</span> &lt;&lt; <span class="number">23</span>);</span><br><span class="line">	  &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (sign &lt;&lt; <span class="number">31</span>) | (expo &lt;&lt; <span class="number">23</span>) | frac;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="floatFloat2Int"><a href="#floatFloat2Int" class="headerlink" title="floatFloat2Int"></a>floatFloat2Int</h3><p>传入一个无符号整数 uf，把它当作单精度浮点数，返回它截断后的整数部分。也就是 <code>(int)uf</code>。如果出现溢出，则返回 0x80000000u（书上说这是与 Intel 兼容的微处理器指定的 “整数不确定” 值）。</p>
-<p>感觉也比较简单……弄出阶码、尾数之后，暴力移位就行了。</p>
-<p>代码里最后根据 sign 决定返回 ans 还是 -ans，而没有考虑最终结果为 INT_MIN，导致计算 ans 时溢出的问题。是因为 32 位的 float 类型无法精确表示 32 位的 INT_MIN，所以这里不用考虑 int 正负表示区间不对称的问题。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">floatFloat2Int</span><span class="params">(<span class="type">unsigned</span> uf)</span> &#123;</span><br><span class="line">  <span class="type">int</span> sign, expo;</span><br><span class="line">  <span class="type">unsigned</span> frac;</span><br><span class="line">  <span class="type">int</span> ans;</span><br><span class="line">  <span class="type">int</span> bias = <span class="number">127</span>;</span><br><span class="line">  <span class="type">int</span> error = <span class="number">0x80000000</span>u;</span><br><span class="line">  sign = (uf &gt;&gt; <span class="number">31</span>) &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">1</span>) - <span class="number">1</span>);</span><br><span class="line">  expo = (uf &gt;&gt; <span class="number">23</span>) &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">8</span>) - <span class="number">1</span>);</span><br><span class="line">  frac = uf &amp; ((<span class="number">1</span> &lt;&lt; <span class="number">23</span>) - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (expo == <span class="number">0xff</span>)</span><br><span class="line">	  <span class="keyword">return</span> error;</span><br><span class="line">  expo -= bias;</span><br><span class="line">  <span class="keyword">if</span> (expo &lt; <span class="number">0</span>)</span><br><span class="line">	  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> (expo &gt; <span class="number">31</span>)</span><br><span class="line">	  <span class="keyword">return</span> error;</span><br><span class="line">  frac |= (<span class="number">1</span> &lt;&lt; <span class="number">23</span>);</span><br><span class="line">  frac &lt;&lt;= <span class="number">8</span>;</span><br><span class="line">  frac &gt;&gt;= (<span class="number">31</span> - expo);</span><br><span class="line">  ans = frac;</span><br><span class="line">  <span class="keyword">if</span> (sign)</span><br><span class="line">	  ans = -ans;</span><br><span class="line">  <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="floatPower2"><a href="#floatPower2" class="headerlink" title="floatPower2"></a>floatPower2</h3><p>传入一个整数 $x$，返回单精度浮点数 $2^x$。如果结果太小则返回 0，太大则返回 +INF。</p>
-<p>非常简单，只要改阶码部分，尾数部分保持全零即可。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="title function_">floatPower2</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="type">int</span> bias = <span class="number">127</span>;</span><br><span class="line">    <span class="type">int</span> sign = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> expo = x + bias;</span><br><span class="line">    <span class="type">int</span> frac = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (expo &gt;= <span class="number">0xff</span>)</span><br><span class="line">	    expo = <span class="number">0xff</span>;</span><br><span class="line">    <span class="keyword">if</span> (expo &lt;= <span class="number">0</span>)</span><br><span class="line">	    expo = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (sign &lt;&lt; <span class="number">31</span>) | (expo &lt;&lt; <span class="number">23</span>) | frac;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总体来看浮点数部分比整数部分简单，没准是因为前面写整数时把各种运算练得比较熟了？</p>
-<p>做完了之后感觉自己对计算机中数字表示理解加深了<del>甚至感觉可以全用位运算来实现各种操作符</del>。</p>
-<p>还有就是觉得整数的补码表示与 IEEE754 浮点数的一些性质特别神奇，怎么说不愧是广泛使用的标准。</p>
-<p>调试时用了不少之前几乎没用过的联合体（union），应该说终于意识到这个东西怎么用了……</p>
-<h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><p><img src="/./datalab-result.png" alt="测试结果"></p>
-</div></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous"><a href="/page/2/">上一页</a></div><div class="pagination-next is-invisible is-hidden-mobile"><a href="/page/4/">下一页</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link" href="/">1</a></li><li><a class="pagination-link" href="/page/2/">2</a></li><li><a class="pagination-link is-current" href="/page/3/">3</a></li></ul></nav></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="https://avatars.githubusercontent.com/u/86813521" alt="jyi2ya"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">jyi2ya</p><p class="is-size-6 is-block">大学生</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>中国湖南</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">23</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/jyi2ya" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/jyi2ya"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/feed.xml"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-02-25T11:28:48.000Z">2024-02-25</time></p><p class="title"><a href="/2024/02/25/note/from-zerotier-to-headscale/main/">从 zerotier 迁移到 headscale</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/fun/niulang-zhinv/main/">【睡前故事】牛郎织女的故事</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/fun/perl-is-fun/main/">后现代编程语言介绍</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/friends/main/">友链</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2023-10-01T17:48:39.000Z">2023-10-01</time></p><p class="title"><a href="/2023/10/01/nonsense/rerestart/main/">重新重新开始</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2024/02/"><span class="level-start"><span class="level-item">二月 2024</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2023/10/"><span class="level-start"><span class="level-item">十月 2023</span></span><span class="level-end"><span class="level-item tag">22</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">jyi2ya 的博客</a><p class="is-size-7"><span>&copy; 2024 jyi2ya</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
-            article: {
-                highlight: {
-                    clipboard: true,
-                    fold: 'unfolded'
-                }
-            }
-        };</script><script src="/js/column.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
-      window.cookieconsent.initialise({
-        type: "info",
-        theme: "edgeless",
-        static: false,
-        position: "bottom-left",
-        content: {
-          message: "此网站使用Cookie来改善您的体验。",
-          dismiss: "知道了！",
-          allow: "允许使用Cookie",
-          deny: "拒绝",
-          link: "了解更多",
-          policy: "Cookie政策",
-          href: "https://www.cookiesandyou.com/",
-        },
-        palette: {
-          popup: {
-            background: "#edeff5",
-            text: "#838391"
-          },
-          button: {
-            background: "#4b81e8"
-          },
-        },
+    </script>
+  <div id="page-container">
+    <nav class="navbar nav-shadow" role="navigation" aria-label="main navigation">
+  <div class="container">
+      <div class="navbar-brand">
+          <a class="navbar-item" href="/">
+              <img src="/icon192.png" height="50">
+          </a>
+          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+             data-target="mainNavbar">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+          </a>
+      </div>
+      <div id="mainNavbar" class="navbar-menu">
+          <div class="navbar-start">
+              <a class="navbar-item" href="/"> jyi2ya 的博客 </a>
+              <a class="navbar-item" href="/archives"> Archives </a>
+              <a class="navbar-item" href="/about"> About </a>
+          </div>
+      </div>
+  </div>
+</nav>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+  if ($navbarBurgers.length > 0) {
+    $navbarBurgers.forEach( el => {
+      el.addEventListener('click', () => {
+        const target = el.dataset.target;
+        const $target = document.getElementById(target);
+        el.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
       });
-    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
-            if (typeof $.fn.lightGallery === 'function') {
-                $('.article').lightGallery({ selector: '.gallery-item' });
-            }
-            if (typeof $.fn.justifiedGallery === 'function') {
-                if ($('.justified-gallery > p > .gallery-item').length) {
-                    $('.justified-gallery > p > .gallery-item').unwrap();
-                }
-                $('.justified-gallery').justifiedGallery();
-            }
-        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
-            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
-        });</script></body></html>
+    });
+  }
+});
+</script>
+    <div id="content-wrap">
+        <div class="container">
+          <div class="page-card-list">
+  
+    
+          <div class="box">
+              <article class="media">
+                  <div class="media-content">
+                      <div class="content">
+                          <div class="page-card-title"><a href="/2023/10/01/tutorial/wine-bottles/main/">Bottles 安装</a></div>
+                          
+                          <a class="tag is-light" href="/archives/2023/10">2023-10-01</a>
+                          
+                            <a class="tag is-light disqus-comment-count" data-disqus-identifier="cuid2gupHO2sJ-XAeESEIisPg" href="/2023/10/01/tutorial/wine-bottles/main/#comment">0 Comments</a>       
+                          
+                          <div class="page-card-text">
+                              No description
+                          </div>
+                      </div>
+                  </div>
+              </article>
+          </div>
+  
+          <div class="box">
+              <article class="media">
+                  <div class="media-content">
+                      <div class="content">
+                          <div class="page-card-title"><a href="/2023/10/01/note/csapp-lab/datalab/a/">CSAPP Data Lab 做题记录（上）</a></div>
+                          
+                          <a class="tag is-light" href="/archives/2023/10">2023-10-01</a>
+                          
+                            <a class="tag is-light disqus-comment-count" data-disqus-identifier="cuiduw9a1JjiH3MZ9MXsVTOnV" href="/2023/10/01/note/csapp-lab/datalab/a/#comment">0 Comments</a>       
+                          
+                          <div class="page-card-text">
+                              No description
+                          </div>
+                      </div>
+                  </div>
+              </article>
+          </div>
+  
+          <div class="box">
+              <article class="media">
+                  <div class="media-content">
+                      <div class="content">
+                          <div class="page-card-title"><a href="/2023/10/01/note/csapp-lab/datalab/b/">CSAPP Data Lab 做题记录（下）</a></div>
+                          
+                          <a class="tag is-light" href="/archives/2023/10">2023-10-01</a>
+                          
+                            <a class="tag is-light disqus-comment-count" data-disqus-identifier="cuidIA27Tz79sHId5PUudc_pV" href="/2023/10/01/note/csapp-lab/datalab/b/#comment">0 Comments</a>       
+                          
+                          <div class="page-card-text">
+                              No description
+                          </div>
+                      </div>
+                  </div>
+              </article>
+          </div>
+   
+</div>
+<nav class="pagination is-centered" role="navigation" aria-label="pagination">
+    <a class="pagination-previous shadow" href="/page/2/">Previous</a>
+    <a class="pagination-next shadow" href=".">Next Page</a>
+</nav>
+        </div>
+    </div>
+    
+<footer id="footer">
+    <div class="content has-text-centered">
+        <p>
+            © 2025 <a href="https://jyi2ya.github.io">jyi2ya</a>.
+            Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>.
+            Theme <a target="_blank" rel="noopener" href="https://github.com/songquanpeng/hexo-theme-lightx">lightx</a>.
+            
+        </p>
+    </div>
+</footer>
+  </div>
+  
+    <script id="dsq-count-scr" src="//iometa.disqus.com/count.js" async></script>
+  
+  
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+  </body>
+</html>
