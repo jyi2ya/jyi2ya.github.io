@@ -1,0 +1,5 @@
+mirrors.cernet.edu.cn
+
+本身不提供镜像，根据用户的 ip 把它自动重定向到最合适的镜像站
+
+比如我的家宽就是 cmcc.mirrors.ustc.edu.cn

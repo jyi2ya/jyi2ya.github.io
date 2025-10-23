@@ -1,0 +1,195 @@
+Mon Sep 29 10:31:02 CST 2025
+
+早上做实验
+
+上板后把数据线连接到主机，发现板子直接点亮了，弹了个 massive storage 出来，高级板子，好玩。
+
+然后发现 rnids 也自动好了，把 ip 配成 192.168.7.1 直接 192.168.7.2 就能 ping 通了。
+
+板子用的是
+
+    debian@beaglebone:~$ uname -a
+    Linux beaglebone 4.14.108-ti-r115 #1 SMP PREEMPT Mon Aug 26 01:42:24 UTC 2019 armv7l GNU/Linux
+
+    debian@beaglebone:~$ lscpu
+    Architecture:          armv7l
+    Byte Order:            Little Endian
+    CPU(s):                1
+    On-line CPU(s) list:   0
+    Thread(s) per core:    1
+    Core(s) per socket:    1
+    Socket(s):             1
+    Model:                 2
+    Model name:            ARMv7 Processor rev 2 (v7l)
+    CPU max MHz:           1000.0000
+    CPU min MHz:           300.0000
+    BogoMIPS:              995.32
+    Flags:                 half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+
+好像有点老，iot 都喜欢老硬件吗
+
+发现默认是没有网络的，是不是要在 host 上配个路由和 nat。但是 windows 怎么配，有点不会。
+
+哦，有 wlan，但是没有 nmcli。我看看有没有别的可以用的东西
+
+它给了个 COM 口的指引，感觉没用。反正有 wlan，直接用 http 通信不直接爽飞……
+
+它的 wlan 是用 connmanctl 连的，没用过，学一下
+
+问问看看有没有实验室免费 wifi 用。哦哦，有的，嘻嘻。
+
+    debian@beaglebone:~$ connmanctl
+    Error getting VPN connections: The name net.connman.vpn was not provided by any .service filesconnma
+    connmanctl> scan wifi
+    Scan completed for wifi
+    connmanctl> agent on
+    Agent registered
+    connmanctl> services
+        UR_PC                wifi_f4b89820188b_55525f5043_managed_psk
+        CSL Wi-Fi Roam       wifi_f4b89820188b_43534c2057692d466920526f616d_managed_ieee8021x
+        DIRECT-38-HP M477 LaserJet wifi_f4b89820188b_4449524543542d33382d4850204d343737204c617365724a6574_managed_psk
+        CSL                  wifi_f4b89820188b_43534c_managed_none
+        HKU                  wifi_f4b89820188b_484b55_managed_ieee8021x
+        Wi-Fi.HK via HKU     wifi_f4b89820188b_57692d46692e484b2076696120484b55_managed_none
+        eduroam              wifi_f4b89820188b_656475726f616d_managed_ieee8021x
+        HKU-IoT              wifi_f4b89820188b_484b552d496f54_managed_psk
+        Y5ZONE               wifi_f4b89820188b_59355a4f4e45_managed_none
+        imse                 wifi_f4b89820188b_696d7365_managed_psk
+        ZTE                  wifi_f4b89820188b_5a5445_managed_psk
+        koala                wifi_f4b89820188b_6b6f616c61_managed_psk
+    connmanctl> connect wifi_f4b89820188b_57692d46692e484b2076696120484b55_managed_none
+    connmanctl>
+
+感觉不如 nmcli ……画质。nmcli 可以用 ssid
+
+    debian@beaglebone:~$ ping t.cn
+    ping: t.cn: Temporary failure in name resolution
+    debian@beaglebone:~$ ip route
+    default dev wlan0 scope link
+    169.254.0.0/16 dev wlan0 proto kernel scope link src 169.254.36.70
+    192.168.6.0/30 dev usb1 proto kernel scope link src 192.168.6.2 linkdown
+    192.168.7.0/30 dev usb0 proto kernel scope link src 192.168.7.2
+
+哎，怎么不行。拉了
+
+哦，重试了一下，原来是退出早了，它的 dhcp 还没出来。
+
+耶，现在可以上网了。
+
+得想个办法把端口弹出来，总感觉 usb 网有点灵车。试着把我的 loopline 部署上去好了。
+
+嘛的，rust cross compile 有点灵车了
+
+一阵折腾终于战胜。cross 是对的，docker 是对的。交叉编译就得用 docker
+
+我超怎么 11.30 了，得加速了。研究一下实验是怎么做的
+
+    debian@beaglebone:~/LabCode/M1-L2$ gcc -O2 M1_L2_T1_Digital_Input.c -lmraa
+    debian@beaglebone:~/LabCode/M1-L2$ ./a.out
+    Can't set digital pin as output, exiting
+    debian@beaglebone:~/LabCode/M1-L2$
+
+哎怎么会事呢
+
+    debian@beaglebone:~/LabCode/M1-L2$ gcc -O2 M1_L2_T1_Digital_Input.c -lmraa
+    debian@beaglebone:~/LabCode/M1-L2$ ./a.out
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+
+又跑了一次，莫名其妙好了。嵌入式，很神奇吧
+
+但是哪个是 B3 button？?
+
+哦，原来印到板子上了。
+
+    B3 button value: 0
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 1
+    B3 button value: 0
+    B3 button value: 0
+    B3 button value: 0
+    B3 button value: 0
+    B3 button value: 0
+
+耶
+
+哪些实验是要验收的来着……哦，都要验收，但是不急。这个很简单。
+
+做一下 2a
+
+竟然要跳线，坏。接一下。
+
+接好力
+
+坏了接线的时候不小心把usb线碰掉了，我说怎么终端没反应了
+
+哎，为啥跑程序但是示波器上啥也没有
+
+原来是示波器没调好。虽然完全不懂示波器，但是对着参考图乱按也把它给按出来了。
+
+    #include "mraa_beaglebone_pinmap.h"
+    #include <signal.h>
+    int period = 1000000000 / 100; // 20 ms or 50 Hz cycle
+    float duty_cycle = 0.2; // 20 % duty cycle
+
+    char pwm_per[] ="/sys/class/pwm/pwm-0:1/period";
+    char pwm_pulse_w[] ="/sys/class/pwm/pwm-0:1/duty_cycle";
+    char pwm_enable[] ="/sys/class/pwm/pwm-0:1/enable";
+
+哎，惊世智慧。period 设置成 1e9 / n 的时候 n 刚好就是频率的 Hz 数。
+
+示波器好难玩，感觉不懂电子。硬件太神秘了
+
+怎么感觉要爆了啊，还剩不到一个小时但是示波器还没搞定。后面应该没啥更硬件的东西了吧
+
+哦喵了一眼发现后面好像都是比较软的，那没事了。一点小 c 语言……
+
+说是示波器没调好，拿不到操作分。太坏了，原来桌子上那两张纸不是 lab sheet 的简单重现吗
+
+不管了先弄点别的
+
+task 2b 是个 pwm dimmer，就是 pwm 控制灯泡亮度。感觉简单，把线接好就行了
+
+硬件 pwm 是不是因为这是 linux 是个抢占式的东西，要是没有 os 使用先进的 rust embassy async runtime 感觉软件 pwm 应该效果也差不多？
+
+也不对啊，做实验的时候 pwm period 最多也就 1 KHz，放到一个几百 MHz 的 U 上面跑怎么跑也绰绰有余啊
+
+哎，不知道 pwm 的芯片参数是什么样子的。可恶的闭源板子
+
+然后是 lcd。做实现之前以为要自己手搓 lcd 的协议，还学了一下是怎么通信的。结果发现好像直接用它的示例程序就能跑了，好好。
+
+偷示例程序是对的
+
+最后一个是要用 lcd 来展示天气，应该把之前的 lcd 按钮程序改改就好了
+
+哎，它给了个 node 的 api executor 有点抽象啊，为什么是 node，感觉不如 perl……画质
+
+想想怎么把 node 给接到 c 里头，用管道吗。它好像也不是一个 long running 的程序，疑似每隔五秒就得 fork exec 一次
+
+哎不管了先敲个 system 看看能不能糊出来，糊出来再说
+
+哦，好了。然后再调那个几把示波器就行了
+
+嘛的，原来神秘的高电平是表笔忘记接地导致的。太神秘了
+
+硬件还是太坏了

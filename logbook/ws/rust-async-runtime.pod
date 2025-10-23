@@ -1,0 +1,101 @@
+=encoding utf8
+
+=head1 看看 Rust 的各个异步运行时
+
+=head2 Wed Oct  1 20:02:38 CST 2025
+
+L<https://users.rust-lang.org/t/tokio-copy-slower-than-std-io-copy/111242>
+
+这里说 tokio 的 copy 显著慢于 std 的 copy，原因是操作系统通常不会提供异步的文件 API
+
+    Note that the stdlib also internally uses specialization to make copy generally faster for BufReader/BufWriter. On linux and android it can even use syscalls like copy_file_range and splice to avoid loading the file data in userspace at all.
+
+哦，这个好
+
+    filesize = 894MB
+    tokio write duration = 2.661018252s, speed MB/s 336.2394975276158
+    std write duration = 418.723487ms, speed MB/s 2136.826492286769
+
+测试结果
+
+    tokio write duration = 710.079182ms, speed MB/s 1260.0558679162832
+
+另一个人测的 tokio uring，不过他们可能用的不是同一种硬件。
+
+    Yeah, the lack of support for files in epoll and kqueue makes things suck pretty badly. The lack of copy_file_range is only a minor issue compared to the other reasons file IO sucks in async code.
+
+是这样的。我之前也被坑过，以为 select 在磁盘文件上也能工作。
+
+    From poking around with strace and perf I see tokio is using 2 threads to handle the op, resulting in a crazy number of futex calls and context switches. I presume using tokio-uring as mentioned in one of above comments manages to dodge this aspect.
+
+    Yep, that's correct.
+
+    Ultimately Tokio provides file IO because applications that primarily do networking sometimes also need to do some amount of file IO, and they need some way to do so without blocking the thread. It's not intended for being the primary use of your application.
+
+    I actually rewrote the docs for tokio::fs recently to make these things more clear. It's not in a published release yet, but you can see the new docs here.
+
+以及 tokio 因为需要支持 work stealing 的异步调用，需要在操作之间加锁，这也使它比同步的调用性能低了一些……
+
+哎，原来 std::fs::copy 比 std::io::copy 理应快得多。之前还没注意到……
+
+=head2 Sun Oct 12 14:00:40 CST 2025
+
+L<https://maciej.codes/2022-06-09-local-async.html>
+
+thread per core
+
+L<https://www.cloudwego.io/blog/2023/04/17/introducing-monoio-a-high-performance-rust-runtime-based-on-io-uring/>
+
+介绍 monoio，讲了 rust 的异步是怎么工作的，里面有一个异步在 hir 和 mir 中展开的例子。
+
+=head2 Tue Oct 21 21:37:05 CST 2025
+
+研究 io uring 的时候偶然发现 tokio 也能做 thread per core，需要进一步调查。
+
+L<https://docs.rs/tokio-util/latest/tokio_util/task/struct.LocalPoolHandle.html>
+
+看起来是基于 tokio LocalSet 做的 thread per core 池子。
+
+L<https://github.com/tokio-rs/tokio/issues/7558>
+
+tokio 有个实验性质的 C<LocalRuntime>，大致等于一个 C<!Send> 的 C<current_thread> runtime。
+
+L<https://github.com/tokio-rs/tokio/issues/7559>
+
+根据这个 guideline，只有在这些情况下才应该选用 C<current_thread> 风格的单线程运行时：
+
+=over
+
+=item *
+
+They need to call asynchronous code from synchronous code.
+
+=item *
+
+AND they want to store the asynchronous runtime somewhere, to avoid creating a new runtime for each async call.
+
+=item *
+
+AND the struct that holds the runtime needs to be Send.
+
+=back
+
+看来默认用 local runtime 是更广谱的。
+
+那么多用 C<LocalPoolHandle> 是对的吗……
+
+    Spawn a task onto a worker thread and pin it there so it can’t be moved off of the thread. Note that the future is not Send, but the FnOnce which creates it is.
+
+C<LocalPoolHandle> 要通过 C<spawn_pinned> 方法来传递一个 C<Send> 的闭包给 worker，这个闭包会生成一个 C<!Send> 的 Future。所以说 C<LocalPoolHandle> 还集成了 dispatcher 的功能。
+
+compio 是怎么做的。
+
+L<https://compio.rs/docs/compio/dispatcher>
+
+compio 的也差不多，传递的是 C<Send> 的闭包。但是它怎么是先在 master 线程里 C<accept> 了之后再把流给分发给 slave，为啥不直接 C<SO_REUSEPORT> 呢。
+
+    The first of the traditional approaches is to have a single listener thread that accepts all incoming connections and then passes these off to other threads for processing. The problem with this approach is that the listening thread can become a bottleneck in extreme cases. In early discussions on SO_REUSEPORT, Tom noted that he was dealing with applications that accepted 40,000 connections per second. Given that sort of number, it's unsurprising to learn that Tom works at Google.
+
+对嘛，C<SO_REUSEPORT> 是对的。估计是因为 C<SO_REUSEPORT> 的例子会加入额外的噪音不适合当作示例，才搓了个这样的例子的。
+
+不过如果都用 thread per core 了，那感觉和多进程也没啥差别了……哦，还是有差别的，地址空间是同一个，通信成本比 ipc 低一些。

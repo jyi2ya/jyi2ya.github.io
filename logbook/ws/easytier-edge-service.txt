@@ -1,0 +1,91 @@
+Fri Oct  3 15:18:53 CST 2025
+
+今天试着给 easytier 加上边缘服务功能。直接把一些服务，比如 socks proxy 和 telnet shell 做进 easytier 里
+
+在没有 tun 的情况下 easytier 会使用内置的 nat 来转发连接，在 `src/gateway/tcp_proxy.rs` 的 L623 `run_listener` 这里。
+
+但是当使用 tun 的时候它走的就是另一条。暂时还没有发现是怎么走的路由。
+
+哦，原来是在 `src/instance/virtual_nic.rs` 这里。直接用的操作系统的 tcp stack。没法直接把请求拦掉……
+
+那看来就只能做 `no_tun` 的 edge service 了。有点坏。
+
+好像也不对啊，它即使用了 nic 也要走 smoltcp 来着？？
+
+哦，原来是启动了 smoltcp，但是没走。有点幽默了。
+
+用 tun 的时候它疑似就只有三层转发了，确实 tcp 是在内核里面完成的。
+
+但是理论上来讲它的 packet 也会先过一个 peer packet pipeline，应该能走到 `tcp_proxy` 里面去。
+
+    impl<C: NatDstConnector> PeerPacketFilter for TcpProxy<C> {
+        async fn try_process_packet_from_peer(&self, mut packet: ZCPacket) -> Option<ZCPacket> {
+            if self.try_handle_peer_packet(&mut packet).await.is_some() {
+                panic!("shit");
+                if self.is_smoltcp_enabled() {
+                    let smoltcp_stack_sender = self.smoltcp_stack_sender.as_ref().unwrap();
+                    if let Err(e) = smoltcp_stack_sender.try_send(packet) {
+                        tracing::error!("send to smoltcp stack failed: {:?}", e);
+                    }
+                } else if let Err(e) = self.peer_manager.get_nic_channel().send(packet).await {
+                    tracing::error!("send to nic failed: {:?}", e);
+                }
+                return None;
+            } else {
+                Some(packet)
+            }
+        }
+    }
+
+我在 tcp proxy 中用来实现 packet pipeline 的部分打了个 panic，发现程序没 panic。说明它在 `try_handle_peer_packet` 里返回了个 None，这是啥意思呢
+
+哎 byd 感觉像天机工程
+
+    async fn try_handle_peer_packet(&self, packet: &mut ZCPacket) -> Option<()> {
+        if !self
+            .connector
+            .check_packet_from_peer_fast(&self.cidr_set, &self.global_ctx)
+        {
+            panic!("shit");
+            return None;
+        }
+
+不是这里……
+
+        if !self.connector.check_packet_from_peer(
+            &self.cidr_set,
+            &self.global_ctx,
+            &hdr,
+            &ipv4,
+            &mut real_dst_ip,
+        ) {
+            panic!("here");
+            return None;
+        }
+
+哦，是这里。找到了
+
+这里的 connector 是个泛型，然后在 Box 的时候被擦掉了。不过经过仔细的代码阅读，我发现它是一个 `gateway::tcp_proxy::NatDstConnector`。
+
+    fn check_packet_from_peer(
+        &self,
+        cidr_set: &CidrSet,
+        global_ctx: &GlobalCtx,
+        hdr: &PeerManagerHeader,
+        ipv4: &Ipv4Packet,
+        real_dst_ip: &mut Ipv4Addr,
+    ) -> bool {
+        let is_exit_node = hdr.is_exit_node();
+
+        if !(cidr_set.contains_v4(ipv4.get_destination(), real_dst_ip)
+            || is_exit_node
+            || Some(ipv4.get_destination())
+                    == global_ctx.get_ipv4().as_ref().map(Ipv4Inet::address))
+        {
+            return false;
+        }
+
+        true
+    }
+
+原来是在这里手动禁用了 tun 模式下的 tcp proxy。这下看懂了。改掉就好了

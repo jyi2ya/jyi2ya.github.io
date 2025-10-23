@@ -1,0 +1,61 @@
+学到一个技巧：如何把 osdk 运行的 qemu 命令给 dump 下来，只要 cat /proc/PID/cmdline | strings -n 1 就好了。cmdline 是按 '\0' 分割各个参数的。
+
+astrorinas 比 dragonos 完成度高了好多
+
+打算先用 uninitramfs 把 asterinas 的 initramfs 打开看看里面是什么，然后再改成自己写的安上去。它好像现在还只支持用 initramfs 在内存里跑。
+
+find . | cpio --quiet -H newc -o | gzip -9 -n > /boot/imagefile.img
+
+记一下创建 initramfs 的命令，十年八年才用一回的……
+
+为什么直接用 busybox linuxrc 当 init 程序会让 asterinas 的内核爆掉呢，怪
+
+哎，实在是没搞懂，算了先不搞懂了……
+
+asterinas 好像不让用 shell 脚本当 init？那我怎么 switch root，迷惑
+
+哦，原来是 initrd 的路径写错了（
+
+哎，必须写成 /usr/bin/busybox -- sh -l /init 才是好的，不知道为什么呃啊，好诡异
+
+它疑似不支持 udev，导致 /dev 下面没有 sda 或者 vda 之类的
+
+但是话又说回来
+
+它好像会自动把一个硬盘挂载到 /ext2 这个目录下面，不知道是怎么做到的
+
+一个 qemu 穿进去的外部硬盘……
+
+哦，原来是在内核里硬编码的，硬编码了设备名字
+
+看看能不能 switch_root 进去……不行！busybox 的 switch root 会检测进去的 fs 和外面的 fs 是不是一个 fs，通过 st_dev 来做。然而 asterinas 内核在挂载的时候并没有区分不同的设备。
+
+那能不能用 chroot 之类的手搓一个 switch_root 出来捏
+
+    ~ # chroot ext2 /sh
+    Segmentation fault
+    ~ # chroot ext2 /busybox
+    Segmentation fault
+    ~ #
+
+遗憾地，也不行。估计 chroot 的系统调用还没做。
+
+哦！我可以手动把 /usr 那一堆东西链到 /ext2 里……？bind mount 会不会更好些？试试 bind mount 看看。我去，bind mount 是好的！
+
+byd dragonos 和 asterinas 简直卧龙凤雏，一个没网络，一个没磁盘
+
+asterinas 需要一整块磁盘都是 ext2 格式才能正常挂载，也就是说装不了 grub，只能嗯启动了……
+
+在 cli 跑的好好的，放到 pve 上面去跑就无限重启了。估计是 pve 和 cli 的参数哪里没对的上……
+
+哎我好聪明啊，我把 kvm 关掉这样它就跑的慢了，有时间看错误信息了。但是很遗憾还是没有任何错误信息
+
+搞不定了。算了写 rust 去了
+
+感觉 rust 操作系统和 rust minecraft server 一样，都是看着很好但是实际上完成度一坨的东西。。
+
+---
+
+2025-09-22
+
+把 seabios 换成 ovmf 还是不行，算了不玩了

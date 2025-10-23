@@ -1,0 +1,17 @@
+=encoding utf8
+
+=head1 module starter
+
+Thu Oct 16 14:44:19 CST 2025
+
+试吃 module starter
+
+感觉还是挺好用的，会给生成一个 Makefile.PL，地位类似 configure。运行这个之后会生成 Makefile，再 make 就会生成一个 blib。
+
+make test 之类的都很方便
+
+但是添加依赖太麻烦了，要指定版本又没有什么好用的命令行小工具可以一键添加最新版，感觉不如 carton。
+
+也许可以造个工具，读取 cpanfile.snapshot 然后生成类似物？
+
+好麻烦，想要 cargo

@@ -1,0 +1,27 @@
+Fri Oct 10 14:42:11 CST 2025
+
+最近玩 jina reader，感觉 browser driver 确实是很好的东西，可以有 javascript，可以抓取动态页面。看看 perl 有没有对应的支持。
+
+https://metacpan.org/pod/WWW::Mechanize
+
+这个看起来不错。虽然并非 browser，但是也提供了很好的 high level 的爬虫接口。
+
+https://metacpan.org/dist/WWW-Mechanize/view/lib/WWW/Mechanize/FAQ.pod#JavaScript
+
+啊哦，不支持 javascript。
+
+虽然不支持 javascript，但是它的性能理应很好很好。嘻嘻
+
+试着对付一下 hku 的图书馆系统吧。
+
+https://stackoverflow.com/questions/50701824/limit-chrome-headless-cpu-and-memory-usage
+
+> By all accounts, if at all possible, just don't run a headless browser. Headless browsers are un-predictable and hungry. Almost everything you can do with a browser (save for interpolating and running JavaScript) can be done with simple Linux tools. There are libraries those offer elegant Node API's for fetching data via HTTP requests and scraping if that's your end-goal.
+
+总觉得用完整的浏览器来做爬虫是一种 overkill。这只能算一种没办法的办法，努力学吧
+
+https://metacpan.org/pod/Selenium::Remote::Driver
+
+这个看起来还行。
+
+试了一下感觉玩不明白。算了，先把 Mechanize 搞懂。

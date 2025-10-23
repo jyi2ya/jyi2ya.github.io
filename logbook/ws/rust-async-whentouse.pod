@@ -1,0 +1,19 @@
+=encoding utf8
+
+Fri Oct 17 15:14:10 CST 2025
+
+=head1 When to use async rust
+
+调研什么时候应该使用 async rust，什么时候不应该用。
+
+L<https://github.com/jimblandy/context-switch>
+
+    A context switch takes around 0.2µs between async tasks, versus 1.7µs between kernel threads. But this advantage goes away if the context switch is due to I/O readiness: both converge to 1.7µs. The async advantage also goes away in our microbenchmark if the program is pinned to a single core. So inter-core communication is something to watch out for.
+
+    Creating a new task takes ~0.3µs for an async task, versus ~17µs for a new kernel thread.
+
+异步任务的创建和切换的时间在 200 到 300 纳秒左右。
+
+异步用来做 IO 密集型，线程用来做计算密集型。
+
+把 rayon 和 tokio 连起来？在 tokio 里 spawn blocking 之后调用 rayon 似乎是好主意。

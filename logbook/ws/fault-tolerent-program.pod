@@ -1,0 +1,11 @@
+=encoding utf8
+
+=head1 怎么写出即使有 bug 也几乎能跑的程序？
+
+很多时候 bug 懒的修。研究一下怎么写出即使不对也能跑的程序。
+
+L<https://www.tonex.com/training-courses/developing-fault-torelant-perl-applications/>
+
+这个倒是确实是我想要的，然而看起来像卖课的。
+
+好像搜 fault tolerence 搜到的都是 EE 的，看看搜 robust 能搜出什么东西不。 

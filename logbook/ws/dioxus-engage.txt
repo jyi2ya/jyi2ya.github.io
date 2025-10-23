@@ -1,0 +1,17 @@
+Tue Sep 30 21:41:21 CST 2025
+
+晚上学一点点 dioxus
+
+安装 dioxus 的 dx 时最开始用的是 cargo install，出现了 serde 库的版本问题。加上 --locked 之后好了
+
+接着又报了一些找不到文件之类的错误……
+
+    Failed to write main executable
+
+    Failed to read file: /home/jyi/dev/dioxus-servey/target/dx/dioxus-servey/debug/web/public/wasm-bindgen/dioxus-servey.js; No such file or directory (os error 2))
+
+为什么？
+
+哎，明天再研究
+
+原来是 build-std 导致的！build-std 怎么那么坏！

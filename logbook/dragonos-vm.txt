@@ -1,0 +1,145 @@
+2025-09-19 折腾一下 DragonOS
+
+DragonOS 会用 rust-toolchain.toml 来锁版本。试了之后发现其实最新的 nightly 是可以编译过的，不过要改的话得改好多地方，就用他们的 toolchain 好了。
+
+DragonOS 的 Makefile 有两个主要部分，分别是 kernel 和 user。`make all` 可以同时构建这两个部分。
+
+DragonOS 会需要把 target/ 下面的编译产物拷来拷去的，然而我的环境下把所有项目的 target/ 集中到 ~/.cargo/target 下面了。需要先运行 `for dir in $(f -iname Cargo.toml|sed 's/Cargo.toml$//'); do ( cd $dir && ln -s ~/.cargo/target ./ ); done` 来创建软链接。很坏。cargo 应该提供一些子命令来指定产物的输出路径的
+
+编译 DragonOS 需要用到他们的土制开发工具 dadk。在构建用户程序时出现了报错：
+
+    test_shm_info.c: In function ‘main’:
+    test_shm_info.c:66:31: error: passing argument 3 of ‘shmctl’ from incompatible pointer type [-Wincompatible-pointer-types]
+    66 |   if (shmctl(shmid, IPC_INFO, &shmmetainfo) == -1) { // 获取共享内存段信息
+        |                               ^~~~~~~~~~~~
+        |                               |
+        |                               struct shminfo *
+    In file included from test_shm_info.c:6:
+    /usr/include/x86_64-linux-musl/sys/shm.h:62:22: note: expected ‘struct shmid_ds *’ but argument is of type ‘struct shminfo *’
+    62 | int shmctl(int, int, struct shmid_ds *);
+        |                      ^~~~~~~~~~~~~~~~~
+    test_shm_info.c:80:31: error: passing argument 3 of ‘shmctl’ from incompatible pointer type [-Wincompatible-pointer-types]
+    80 |   if (shmctl(shmid, SHM_INFO, &shm_info) == -1) { // 获取共享内存段信息
+        |                               ^~~~~~~~~
+        |                               |
+        |                               struct shm_info *
+
+疑似指针类型不对，不知道发生了什么。可能是写的有问题
+
+看了下头文件发现：
+
+    /* Obsolete, used only for backwards compatibility */
+    struct	shminfo {
+        int shmmax;
+        int shmmin;
+        int shmmni;
+        int shmseg;
+        int shmall;
+    };
+
+原来是过期了……但是我看头文件里面明确说明当 `IPC_INFO` 的时候第三个参数会返回 shminfo 结构体，那看来是 glibc 写的有点问题。加个 `void*` 转一下应该就好了。
+
+别的还报了一堆 warning，懒得修了，希望没有事……
+
+DragonOS 所有的用户程序需要用 musl 静态编译然后扔上去跑。是因为不支持 glibc 吗，感觉有点怪。可能是配 glibc 的交叉编译麻烦吧。
+
+    Compiling mytrace-ebpf v0.1.0 (/home/jyi/dev/DragonOS/user/apps/test_tracepoint/mytrace-ebpf)
+    error: failed to run custom build command for `mytrace-ebpf v0.1.0 (/home/jyi/dev/DragonOS/user/apps/test_tracepoint/mytrace-ebpf)`
+
+    Caused by:
+    process didn't exit successfully: `/home/jyi/.cargo/target/release/build/mytrace-ebpf-5e7fa21c0aa18a1e/build-script-build` (exit status: 101)
+    --- stderr
+
+    thread 'main' (339720) panicked at mytrace-ebpf/build.rs:15:42:
+    called `Result::unwrap()` on an `Err` value: CannotFindBinaryPath
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    warning: build failed, waiting for other jobs to finish...
+    error: failed to compile `mytrace v0.1.0 (/home/jyi/dev/DragonOS/user/apps/test_tracepoint/mytrace)`, intermediate artifacts can be found at `/home/jyi/.cargo/target`.
+    To reuse those artifacts with a future compilation, set the environment variable `CARGO_TARGET_DIR` to that path.
+
+又爆了……原来是缺了 bpf-linker 导致的。这个 bpf-linker 竟然包管理器里还没有，得从 cargo 安装。https://github.com/aya-rs/bpf-linker
+
+它的 bootstrap.sh 脚本里写了装这个东西。但是之前装 napcat 的时候安装脚本到处拉屎给留下心理阴影了，就没用。
+
+    /bin/sh: 1: x86_64-linux-musl-ar: not found
+    make[5]: *** [scripts/Makefile.build:264: archival/built-in.o] Error 127
+    make[5]: *** Waiting for unfinished jobs....
+    /bin/sh: 1: x86_64-linux-musl-ar: not found
+    make[5]: *** [scripts/Makefile.build:264: archival/libarchive/built-in.o] Error 127
+    make[5]: *** Waiting for unfinished jobs....
+    /bin/sh: 1: x86_64-linux-musl-ar: not found
+
+编译 busybox，嘻嘻又爆了。这回是缺 musl 的工具链。我记得可以从 musl.cc 上面找到一些。比如这个 https://musl.cc/x86_64-linux-musl-cross.tgz。或者是直接用他们的 `tools/install_cross_gcc.sh` 也行。我要把这个脚本自己留一份以后想编译 static 的 musl 东西时也能用。
+
+哎神经病怎么给我安装了 loongarch 的 gcc 出来了，坏。看了下代码发现原来已经有 x64 的 gcc 的时候它会自动走到 else 分支然后给我下一个 loongarch 的 gcc 回来吗。
+
+    make[5]: *** [scripts/Makefile.build:197: miscutils/ubi_tools.o] Error 1
+    make[5]: *** [scripts/Makefile.build:197: networking/tc.o] Error 1
+    networking/nameif.c:78:10: fatal error: linux/sockios.h: No such file or directory
+    78 | #include <linux/sockios.h>
+        |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    make[5]: *** [scripts/Makefile.build:197: networking/libiproute/rtm_map.o] Error 1
+    make[4]: *** [Makefile:744: networking/libiproute] Error 2
+    make[5]: *** [scripts/Makefile.build:197: networking/nameif.o] Error 1
+    In file included from networking/libiproute/utils.h:5,
+                    from networking/slattach.c:41:
+    networking/libiproute/libnetlink.h:5:10: fatal error: linux/types.h: No such file or directory
+        5 | #include <linux/types.h>
+        |          ^~~~~~~~~~~~~~~
+
+哦，缺 Linux headers。`export C_INCLUDE_PATH="$C_INCLUDE_PATH:/opt/x86_64-linux-musl-cross-gcc-9.4.0/x86_64-linux-musl/include"` 就调理好了。
+
+编译完所有东西之后，就是创建磁盘镜像。这个 dadk 的东西会辅助创建磁盘镜像，看了一下代码发现原来是调用一堆小工具比如 fdisk 和 mkfs 之类的。
+
+因为创建磁盘镜像需要 mount，在 lxc 里面不好搞。所以移到 WSL 里做。
+
+难绷的是这个 dadk 缺工具也一声不吭，直接无脑地用 anyhow 把错误向上抛，最后在十万八千里的地方 panic 一个 `No such file or directory (os error 2)` 错误，闹麻了。对着代码看了半天才发现原来是没有 mkfs.fat，需要安装一个 dosfstools。哎
+
+因为网络带宽有限，所以先创建一个 512 MB 的镜像试试水，反正到时候也可以 resize2fs，哦不对我草好像 DragonOS 不支持 ext2，那就是 fat。fat 可以 resize 吗，我不道啊。
+
+创建好的镜像大小压缩成 xz 是 36 MB，还行。可以通过网络嗖嗖
+
+哎，应该搞一个自己的镜像脚本出来的。不用它那个
+
+然后是试着在 qemu 里面启动一下。我去，直接就启动好了！大成功
+
+    [ DEBUG ] (src/driver/tty/tty_job_control.rs:83)         tty_check_change: orphaned pgrp
+    read char failed: I/O error (os error 5)
+    [ DEBUG ] (src/driver/tty/tty_job_control.rs:83)         tty_check_change: orphaned pgrp
+    read char failed: I/O error (os error 5)
+    [ DEBUG ] (src/driver/tty/tty_job_control.rs:83)         tty_check_change: orphaned pgrp
+    read char failed: I/O error (os error 5)
+    [ DEBUG ] (src/driver/tty/tty_job_control.rs:83)         tty_check_change: orphaned pgrp
+    read char failed: I/O error (os error 5)
+    [ DEBUG ] (src/driver/tty/tty_job_control.rs:83)         tty_check_change: orphaned pgrp
+    read char failed: I/O error (os error 5)
+    [ DEBUG ] (src/driver/tty/tty_job_control.rs:83)         tty_check_change: orphaned pgrp
+    read char failed: I/O error (os error 5)
+    [ DEBUG ] (src/driver/tty/tty_job_control.rs:83)         tty_check_change: orphaned pgrp
+    read char failed: I/O error (os error 5)
+    [ DEBUG ] (src/driver/tty/tty_job_control.rs:83)         tty_check_change: orphaned pgrp
+    read char failed: I/O error (os error 5)
+
+又试了一下不用 qemu 指定 kernel，让它自己从 grub 启动，发现报了一吨 tty 错误，不知道为什么。希望能够修好。
+
+但是我 pve 怎么指定 qemu 的 -kernel 参数呢，有点不懂不懂喵
+
+https://pve.proxmox.com/wiki/Manual:_qm.conf
+
+哦，有的有的，原来可以在 root@lighthouse:/etc/pve/qemu-server# vi 101.conf 指定 args 参数
+但是还是起不起来，不知道为什么
+
+pve 导入一个磁盘：
+
+    https://dae.me/blog/2340/how-to-add-an-existing-virtual-disk-to-proxmox/
+
+    154  qm disk import 101 ./disk-image-x86_64.img local-lvm --format raw
+
+试着把 busybox 的所有小工具全都放进去，结果 dragonos 只支持 fat，没有软链接，把磁盘塞爆了……
+
+---
+
+2025-09-21 今天继续折腾，看看能不能把网络给连上
+
+折腾了半天老是 kernel panic，感觉不太行，不玩了。转战 asterinas

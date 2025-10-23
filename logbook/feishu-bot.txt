@@ -1,0 +1,31 @@
+Fri Sep 26 14:39:23 CST 2025
+
+试吃了一下飞书机器人。飞书机器人不提供 Perl 的 SDK，得自己手搓一个。
+
+它支持通过 websocket 长连接通信，
+
+    [2025-09-26 14:39:16.04873] [872709] [info] [Hamster::Plugin::Log::call] "\bÇÆãÎ\u0003\u0010à­º°´\u0018\u0018ö\u0010 \u0001*\b\n\u0003sum\u0012\u00011*\b\n\u0003seq\u0012\u00010*\u001a\n\u0015x_frontier_arriverate\u0012\u00011*\u001a\n\ttimestamp\u0012\r1758868756001*(\n\u0018x_frontier_recieved_time\u0012\fdd2ixrrbqj3u*g\n\u000binstance_id\u0012Xy8t1eiI7nmloT\/iSjN1h8Mp1ACIixV8iKA7H51VqagSYr\/gMglrejCitdzu3QJxFlQ+FRo0P\/5SieamLzQgDiw==*2\n\nmessage_id\u0012$4c5955ec-0ac8-4a5e-95b3-4fab15b15e0a*\r\n\u0004type\u0012\u0005event*,\n\btrace_id\u0012 b365468cc8b501184e3201d0e1fcdec9*6\n\u0012:x_frontier_msg_id\u0012 msg_dd2ixrrbqie7000117y2z23aqjoo*)\n\u0019:x_frontier_msg_send_time\u0012\fdd2ixrrcpzn7*F\n\u000btraceparent\u0012700-581af622b887ee55a8ce025063088c55-a2700b01d18994d4-012\u0000:\u0000B\u0007{\"schema\":\"2.0\",\"header\":{\"event_id\":\"b365468cc8b501184e3201d0e1fcdec9\",\"token\":\"\",\"create_time\":\"1758868735559\",\"event_type\":\"im.message.receive_v1\",\"tenant_key\":\"14b40266b3da5758\",\"app_id\":\"cli_a85c952680ebd01c\"},\"event\":{\"message\":{\"chat_id\":\"oc_06aa92848c22fd09634e039c1324d05d\",\"chat_type\":\"p2p\",\"content\":\"{\\\"text\\\":\\\"ååå\\\"}\",\"create_time\":\"1758868735203\",\"message_id\":\"om_x100b4257013cd4900f3dd419ee069d7\",\"message_type\":\"text\",\"update_time\":\"1758868735203\",\"user_agent\":\"Mozilla\/5.0 (Linux; Android 12; NOH-AN00 Build\/HUAWEINOH-AN00; wv) AppleWebKit\/537.36 (KHTML, like Gecko) Version\/4.0 Chrome\/132.0.6834.152 Mobile Safari\/537.36 Lark\/7.51.7 LarkLocale\/en_US ChannelName\/Feishu ttnet SDK-Version\/7.51.13\"},\"sender\":{\"sender_id\":{\"open_id\":\"ou_4c7e204652a96c505f7069bf8e60fdca\",\"union_id\":\"on_87b24d2c9a09e9a11aa190f71f7e3b2e\",\"user_id\":null},\"sender_type\":\"user\",\"tenant_key\":\"14b40266b3da5758\"}}}J msg_dd2ixrrbqie7000117y2z23aqjooR\u0000Z msg_dd2ixrrbqie7000117y2z23aqjoo`\u0000h\u0000r\u0000"
+
+但是我 dump 出来不知道这个是什么东西……如何解码
+
+这是什么神秘的 http over websocket 吗
+
+byd 原来是 grpc over websocket，这我玩个几把啊
+
+哦，但是我有点子，我可以看看 Perl 有没有好用的 protobuf 库
+
+Perl 有个 protobuf 库，但是它的 proto 编译器竟然是自己手搓的，神人……
+
+搞了半天机器人的心跳和 ping pong，终于战胜……感觉像打游戏一样
+
+但是没有 ce 理赔就是了
+
+好吧，接入了 dpsk，算是成功
+
+---
+
+Sat Sep 27 11:31:13 CST 2025
+
+今天早上醒来给机器人发了个 ping，它回了个 pong。看来是活了一晚上了
+
+哎飞书怎么这么坏啊，下载图片的接口只能下载机器人上传的图片。那岂不是看不了我发的图了……哎

@@ -1,0 +1,27 @@
+Tue Sep 23 15:25:23 CST 2025
+
+https://github.com/rust-lang/rustc_codegen_c
+
+今天玩一下 `rustc_codegen_c`
+
+感觉不如 mrustc……画质
+
+    0 ./y rustc examples/basic_math.rs
+    [BUILD] build system
+    error: -Zbuild-std requires --target
+
+出现了怪报错。总之是和 build-std 有关，把 build-std 关掉看看。
+
+    7     fn codegen_allocator(
+    6         &self,
+    5         _tcx: TyCtxt<'_>,
+    4         _module_name: &str,
+    3         _kind: AllocatorKind,
+    2         _alloc_error_handler_kind: AllocatorKind,
+    1     ) -> Self::Module {
+    113         todo!()
+    1     }
+
+byd 这玩个鸡毛啊，内存分配器都做不出来
+
+还是去玩 mrustc 好了。

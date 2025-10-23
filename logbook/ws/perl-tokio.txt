@@ -1,0 +1,3 @@
+https://metacpan.org/pod/IO::Async
+
+这个疑似有用

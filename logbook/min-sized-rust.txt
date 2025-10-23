@@ -1,0 +1,71 @@
+研究一下怎么把 min-sized-rust 里面的东西固定成默认配置
+
+https://github.com/johnthagen/min-sized-rust
+
+前面的都还好说，往 cargo.toml 里扔一点配置就行了，到了 build-std 发现不太找得着方向了
+
+    -Z build-std=std,panic_abort
+
+比如这个 panic_abort 是哪来的？
+
+首先是偷看一下 unstable features：
+
+https://doc.rust-lang.org/cargo/reference/unstable.html
+
+看发现好像没有东西
+
+    https://github.com/rust-lang/rust/pull/55011
+
+找到了 `panic_immediate_abort` 的提交，但是文档呢？
+
+急了，好像完全没有参数列表一类的东西。得去翻 issue 了吗
+
+算了，不管了……就这样吧
+
+    rustflags = [ '-Zfmt-debug=none' ]
+
+这个东西会让 zerocopy 构建失败，为什么，好神奇。
+
+https://github.com/google/zerocopy/pull/1798
+
+哦，原来是 zerocopy 利用了 fmt::Debug 来格式化一些东西，已经修了。easytier 怎么不更新 deps，急了。我来帮它更新一下好了。
+
+哈哈，更新了也没用。hickory client 依赖 rand 依赖 zerocopy 7.35，我不可能把这么 byd 深的东西给更新掉吧
+
+哦，我可以手动 override 一个试试……手动 override 了也没用，摆了。先让 fmt-debug 开着
+
+    [profile.release]
+    strip = true
+    opt-level = 'z'
+    lto = true
+    codegen-units = 1
+    panic = 'abort'
+    # rustflags = [ '-Zfmt-debug=none' ] # older zerocopy not building with this
+
+    [unstable]
+    mtime-on-use = true
+    build-std = ['std', 'panic_abort']
+    build-std-features = ['panic_immediate_abort', 'optimize_for_size']
+    profile-rustflags = true
+
+这个配置，经过试用发现其实是不行的。因为它会给 debug build 也开上 `panic_immediate_abort`。需要找个办法只在 release 的时候 build-std
+
+https://users.rust-lang.org/t/how-set-unstable-section-only-apply-for-profile-release/127560
+
+有人提过这个问题，但是没人回答……
+
+经过一番搜索，我感觉这是不行的。所以不要 `panic_immediate_abort` 好了。
+
+一晚上的努力之后，成功把 loopline network 从 4.7 MiB 降到了 2.9 MiB！40% OFF
+
+Wed Oct  1 13:47:32 CST 2025
+
+https://github.com/rust-lang/rust/issues/146974
+
+好消息！rustc 更新了，panic immediate abort 变成一个 rustc 参数，不用担心给 release 开了之后影响 debug 了！
+
+坏消息，加上 panic immediate abort 后 build-std 还是坏的，以另一种方式坏掉了。
+
+好消息！学到了一个新的参数，virtual-function-elimination。会自动把虚表里没用的东西给扔掉。
+
+坏消息，也有 bug！https://github.com/rust-lang/rust/issues/124093

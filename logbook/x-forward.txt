@@ -1,0 +1,33 @@
+Tue Oct  7 21:05:40 CST 2025
+
+远程的 headless 小鸡没有 gui 太折磨了，画了图也看不着。研究一下怎么通过 X forward 之类的手段让远程可以跑 GUI 图片然后放到本地来。
+
+本地需要一个 X server，一般的做法是 X410。不过 Windows 已经有 wsl-g 了，如果能把 wslg 单独启动也许可以省一个 X410 吗？
+
+https://github.com/microsoft/wslg/discussions/1133
+
+有个 issue，研究研究。
+
+好吧，没什么有意思的信息。
+
+https://x410.dev/cookbook/wsl/x410-vs-wslg/
+
+哦，原来 wslg 是 wayland 啊……这个链接里也提到 wslg 只能 “Only SSH clients running in WSL2”
+
+那感觉 wslg 疑似不如 x410。我总不可能为了启动一个 gui 程序还在本地运行一个虚拟机吧……
+
+把 wslg 关掉好了。
+
+x410 我来力
+
+https://x410.dev/cookbook/built-in-ssh-x11-forwarding-in-powershell-or-windows-command-prompt/
+
+安好了，xcalc 启动
+
+哦，x410 竟然不是 floss。x410，卸载！
+
+转进 vcxsrv。
+
+vcxsrv 也和 x410 工作地一样好嘛……
+
+跑了下 glxgears，发现只有 6 fps。好吧也不是不能用，我又不拿这个转发看视频……

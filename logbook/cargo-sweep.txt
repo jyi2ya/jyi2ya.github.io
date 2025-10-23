@@ -1,0 +1,26 @@
+https://github.com/holmgr/cargo-sweep
+
+用来定期清除 cargo 的构建缓存，感觉配合 cronjob 使用非常好
+
+清除过去 30 天没用过的物品：
+
+    cargo sweep --time 30
+
+btw 它似乎是根据物品的 mtime 来识别的。然而对于构建依赖来说 mtime 只有在创建时才会变动，也就是说如果一个物品一直在被复用，由于只读不写，它仍然会在 30 天后被删掉。
+
+为了解决这个问题，可以启用 unstable 的一个配置项，mtime on use
+
+https://doc.rust-lang.org/cargo/reference/unstable.html#mtime-on-use
+
+哦，好像也没很有用。它需要指定某个项目路径才能清理，但是我想让它直接扫我的 ~/.cargo/target ……
+
+并非，是好的。有 issue 提到了：https://github.com/holmgr/cargo-sweep/issues/71
+
+只要创建一个空项目，它就可以正常扫了。虽然不是很优雅，但是它还是能正常工作……
+
+非常好。
+
+我配了个这个，每周扫两次：
+
+    # m h  dom mon dow   command
+    36 3 * * 0,3 cargo sweep -t 7 ~/var/cargo-sweep-dummy-project/

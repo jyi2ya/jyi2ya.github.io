@@ -1,0 +1,23 @@
+=encoding utf8
+
+=head1 包管理器的快照！
+
+Mon Oct 20 19:06:50 CST 2025
+
+感觉在玩的时候总会安装各种奇怪的软件，玩完之后往往又忘记删掉了。需要一个快照工具来帮忙。
+
+首先肯定是要用 Perl 来写的……看看有什么库可以读写已经安装的软件信息。
+
+L<https://askubuntu.com/questions/17823/how-to-list-all-installed-packages>
+
+这里面提到的 C<dpkg get-selections> 和 C<apt-clone> 好像都挺好的，不用重新造轮子了。
+
+坏，C<get-selections> 和 C<apt> 疑似是两个系统的，还是得和 apt 打架
+
+L<https://askubuntu.com/questions/1213029/snapshot-and-rollback-of-apt-installed-packages>
+
+这个人问了和我一样的问题。
+
+算了，自己写一个吧
+
+嘻嘻，写好了。通过调用 C<apt> 和 C<apt-mark> 实现。

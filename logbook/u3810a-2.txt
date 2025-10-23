@@ -1,0 +1,41 @@
+Mon Oct  6 10:44:55 CST 2025
+
+哎，byd 怎么中秋节还要做实验。
+
+先配一堆东西，什么板子参数之类的……这回是用串口，太坏了
+
+必须得用 putty 吗？
+
+哦，好像不用。可以 minicom
+
+    minicom -D /dev/ttyS1 -b 9600
+
+Ctrl-A E 打开回显，Ctrl-A A 自动加入 LF，Ctrl-A X 退出
+
+    Welcome to minicom 2.7
+
+    OPTIONS: I18n
+    Compiled on Apr 22 2017, 09:14:19.
+    Port /dev/ttyS1, 02:48:52
+
+    Press CTRL-A Z for help on special keys
+
+    +++OK
+    ATD3
+    0
+    ATD3 2
+    OK
+
+文明
+
+然后是连跳线，把温度传感器接到 XBee 上面？
+
+不懂这是在干啥
+
+哦，接下来是复杂的 Zigbee 操作。这下后悔上课没认真听了。
+
+哎，怎么把两个 usb 口插上三个 usb 线呢，嘛的
+
+把电源线接到自己电脑上好了。
+
+

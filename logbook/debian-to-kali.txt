@@ -1,0 +1,17 @@
+因为上课学一些怪东西，所以决定把 debian 转换成 kali
+
+https://gist.github.com/warecrash/f35d4f9a822c452b0c54bbdb47c0c9a5
+
+参考这个链接……这么短，靠谱吗？看看别的博客先
+
+好像就是这么短。不管了先试试，希望别出问题
+
+哦，apt-key 弃用了，坏
+
+    wget -qO - https://package.perforce.com/perforce.pubkey | sudo apt-key add -
+    sudo echo "deb http://package.perforce.com/apt/ubuntu focal release" > /etc/apt/sources.list.d/perforce.list
+
+    wget -qO - https://package.perforce.com/perforce.pubkey | sudo gpg --dearmor -o /usr/share/keyrings/perforce-archive-keyring.gpg
+    sudo echo "deb [signed-by=/usr/share/keyrings/perforce-archive-keyring.gpg] http://package.perforce.com/apt/ubuntu focal release" > /etc/apt/sources.list.d/perforce.list
+
+换一下命令就好了

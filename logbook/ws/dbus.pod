@@ -1,0 +1,9 @@
+=encoding utf8
+
+=head1 DBUS
+
+Mon Oct 20 16:29:01 CST 2025
+
+学一下 dbus
+
+好像不好玩，先不学了

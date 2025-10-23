@@ -1,0 +1,17 @@
+Total DISK READ:         0.00 B/s | Total DISK WRITE:      1385.91 B/s
+Current DISK READ:     419.05 M/s | Current DISK WRITE:       8.29 M/s
+TID  PRIO  USER    DISK READ>  DISK WRITE    COMMAND
+1  be/4 root        0.00 B/s    0.00 B/s systemd --system --deserialize=54
+2  be/4 root        0.00 B/s    0.00 B/s [kthreadd]
+3  be/4 root        0.00 B/s    0.00 B/s [pool_workqueue_release]
+4  be/0 root        0.00 B/s    0.00 B/s [kworker/R-rcu_gp]
+5  be/0 root        0.00 B/s    0.00 B/s [kworker/R-sync_wq]
+6  be/0 root        0.00 B/s    0.00 B/s [kworker/R-kvfree_rcu_reclaim]
+7  be/0 root        0.00 B/s    0.00 B/s [kworker/R-slub_flushwq]
+8  be/0 root        0.00 B/s    0.00 B/s [kworker/R-netns]
+11 be/0 root        0.00 B/s    0.00 B/s [kworker/0:0H-events_highpri]
+13 be/0 root        0.00 B/s    0.00 B/s [kworker/R-mm_percpu_wq]
+14 be/4 root        0.00 B/s    0.00 B/s [rcu_tasks_kthread]
+15 be/4 root        0.00 B/s    0.00 B/s [rcu_tasks_rude_kthread]
+16 be/4 root        0.00 B/s    0.00 B/s [rcu_tasks_trace_kthread]
+17 be/4 root        0.00 B/s    0.00 B/s [ksoftirqd/0]

@@ -1,0 +1,129 @@
+Sat Oct  4 09:16:18 CST 2025
+
+有个叫 jina reader 的服务，可以把任意网站变成 llm 友好的 markdown 格式。虽然是开源的，但是部署不是很方便。它依赖了一些内部的不开源的软件包。官方没有提供部署途径，有人做了个自己的 docker 版本的。
+
+docker 野蛮。看看能不能改成 systemd 的。
+
+https://github.com/intergalacticalvariable/reader
+
+这是那个 docker 项目
+
+似乎需要从 google 的源里安装 chrome stable。puppeteer 看起来不支持 chromium。它支持 firefox，看看能不能用 firefox 跑一下。
+
+哎，好想给自己环境打个快照（
+
+Docker 里用的是 node 18，debian 最新的是 node 20，不知道会不会有影响
+
+而且 puppeteer 也有点老，看起来只支持 nightly 的 firefox。希望它们有兼容吧……
+
+    jyi-00-rust-dev 09:52 ~/dev/jina-reader-deps
+    0 ./run.sh
+    node:internal/modules/cjs/loader:1215
+    throw err;
+    ^
+
+    Error: Cannot find module 'libmagic-ffi'
+    Require stack:
+    - /home/jyi/dev/jina-reader-deps/node_modules/civkit/lib/mime.js
+    - /home/jyi/dev/jina-reader-deps/node_modules/civkit/lib/fancy-file.js
+
+哎，为什么会这样呢。不懂 js，问问 ai 好了。
+
+哦，libmagic-ffi 没装。安装需要 cmake，神奇。不会是染上 cxx 了吧
+
+    [CHANGE_LOGGER_NAME] ERROR: Unknown firebase issue, just die fast. {
+    err: Error: Failed to launch the browser process!
+    Error: no DISPLAY environment variable specified
+
+
+    TROUBLESHOOTING: https://pptr.dev/troubleshooting
+
+        at Interface.onClose (/home/jyi/dev/jina-reader-deps/node_modules/@puppeteer/browsers/lib/cjs/launch.js:310:24)
+        at Interface.emit (node:events:536:35)
+        at Interface.close (node:internal/readline/interface:527:10)
+        at Socket.onend (node:internal/readline/interface:253:10)
+        at Socket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+    }
+
+坏，puppeteer 爆了。
+
+看来 firefox 没能用 headless 模式启动吗……
+
+https://www.bannerbear.com/blog/how-to-run-puppeteer-with-firefox-instead-of-chrome/
+
+学习一波
+
+哦，原来安装 puppeteer 的时候要用 `PUPPETEER_PRODUCT=firefox`
+
+还是不行，疑似会出现 NODISPLAY 的错误，必须得用 firefox nightly，不然无法启动。太坏了。
+
+https://pptr.dev/supported-browsers
+
+    0 firefox --version
+    Mozilla Firefox 140.3.1esr
+
+查了下网站，我的 firefox 是 140，那应该用 Puppeteer v24.14.0 比较好吗……手动指定一下版本号再试试。
+
+哎还是不行，太坏了。
+
+如果让它下载 firefox nightly 的话会遇到 404 错误，可能是版本太老了旧的 firefox nightly 已经无了……
+
+    src/services/puppeteer.ts:613:21 - error TS2322: Type 'Uint8Array' is not assignable to type 'Buffer'.
+
+    613                     screenshot = await page.screenshot();
+
+
+换新版本的话又会出现新错误，我也不会修啊……
+
+https://github.com/Level/level-js/pull/31/files
+
+哦，好像 new Buffer(await page.screenshot()) 就行了？不懂喵，偷一下
+
+哦！我可以把 screenshot 的类型改成 Uint8Array 试试。……不太行
+
+https://github.com/feross/typedarray-to-buffer
+
+这个可以试试。试着学一点 ts ……
+
+修好了，泪目
+
+并没有，试着用的时候会出现 target closed 的错误
+
+https://stackoverflow.com/questions/51629151/puppeteer-protocol-error-page-navigate-target-closed
+
+把 `single-process` 的参数移掉就好了，好神奇。
+
+https://hacks.mozilla.org/2017/12/using-headless-mode-in-firefox/
+
+好像还要开 ws。
+
+    *** You are running in headless mode.
+    [GFX1-]: glxtest: Unable to open a connection to the X server
+    Could not run chrome debugger! You need the following prefs to be set to true: devtools.debugger.remote-enabled, devtools.chrome.enabled
+    [GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+    ^CExiting due to channel error.
+    Exiting due to channel error.
+    Exiting due to channel error.
+    Exiting due to channel error.
+    Exiting due to channel error.
+
+有没有什么办法能给一个 headless 的 firefox 设置 prefs ……
+
+哦，原来是 puppeteer 没有正确识别出我在用 firefox 导致的。手工在 launch options 里指定一下就好了。
+
+有两个 web debugger 的协议，一个叫 cdp，一个叫 bidi。firefox 只能 bidi，兼容性有点差，不兼容 puppeteer 的 stealth 插件和 set bypass csp 选项
+
+也不支持 resource type，puppeteer block resource 也用不了。
+
+哎，算了，好像 jina 的一堆脚本也是只支持 cdp 的。看来不搞个 chrome 确实是用不了了。
+
+
+Wed Oct  8 02:04:36 CST 2025
+
+本来以为跑起来就能用的，但是发现它的并发控制和错误处理有问题。需要仔细修一下……
+
+Fri Oct 10 14:06:02 CST 2025
+
+这玩意好像会漏内存，虽然没有明显证据，但是我怀疑上次把集群主脑搞炸的就是它

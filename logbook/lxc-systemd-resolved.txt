@@ -1,0 +1,19 @@
+Sat Oct  4 12:34:23 CST 2025
+
+    touch /etc/.pve-ignore.resolv.conf
+
+首先防止 pve 覆写我们的配置
+
+然后安装 systemd-resolved
+
+    vi /etc/systemd/resolved.conf
+
+修改 resolved 的配置
+
+    ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
+将 /etc/resolv.conf 设置成由 resolved 维护
+
+    resolvectl default-route eth0 no
+
+禁用 default route，否则 dns 请求还是会走网卡从 dhcp 搞来的地址……不知道重启还有没有用

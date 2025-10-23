@@ -1,0 +1,125 @@
+=encoding utf8
+
+=head1 看看 rust io uring 能用吗
+
+=head2 Thu Oct 16 17:12:13 CST 2025
+
+试试怎么在 monoio 里用 axum
+
+L<https://github.com/tokio-rs/axum/issues/2485>
+
+    axum doesn't implement the transport layer itself and instead relies on hyper. So io-uring support needs to be implemented in hyper and then axum will get it for free.
+
+hmm 看起来只要这个叫 hyper 的支持 io uring，那么 axum 就自动能用了。
+
+hyper 是什么呢？
+
+    A protective and efficient HTTP library for all.
+
+原来是个 http 的库。
+
+那接下来搜搜有没有 hyper 的 monoio 支持就好了。
+
+L<https://github.com/bytedance/monoio/blob/master/examples/hyper_server.rs>
+
+这里倒是有个 monoio 的 hyper 的 server 实现。看里面用到了 monoio-compat 这个库，看看
+
+L<https://docs.rs/monoio-compat/latest/monoio_compat/>
+
+感觉没搞明白……
+
+L<https://github.com/tokio-rs/axum/blob/main/examples/serve-with-hyper/src/main.rs>
+
+这是 axum 使用 hyper 的例子
+
+一番缝合和复制粘贴之后，我们得到了……
+
+    error[E0277]: `Rc<monoio::driver::shared_fd::Inner>` cannot be sent between threads safely
+        --> src/main.rs:44:49
+            |
+         44 |                 .serve_connection_with_upgrades(stream_poll, hyper_service)
+            |                  ------------------------------ ^^^^^^^^^^^ `Rc<monoio::driver::shared_fd::Inner>` cannot be sent between threads safely
+            |                  |
+            |                  required by a bound introduced by this call
+            |
+            = help: within `MonoioIo<TcpStreamPoll>`, the trait `Send` is not implemented for `Rc<monoio::driver::shared_fd::Inner>`
+
+一个 C<!Send> 错误！
+
+转换策略，不用 C<server_connection_with_upgrades> 了，试试直接用 C<http1> 里面的 server
+
+    thread 'main' (474985) panicked at /home/jyi/.cargo/registry/src/mirrors.cernet.edu.cn-0d8da22710581788/monoio-0.2.4/src/time/driver/handle.rs:49:35:
+    unable to get time handle, maybe you have not enable_timer on creating runtime?
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    [101] jyi-00-rust-dev 17:55 (master) ~/dev/axum-with-monoio
+    0
+
+编译确实过了，但是运行的时候又炸了。不过这个不着急，可以修。
+
+    fn main() {
+        let rt: monoio::RuntimeBuilder<monoio::time::TimeDriver<monoio::FusionDriver>> = monoio::RuntimeBuilder::new();
+        let mut rt = rt.build().unwrap();
+        rt.block_on(serve_plain());
+    }
+
+byd 这个 runtime builder 整的有点阴间了，还是我没用对。
+
+总之跑起来了。
+
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.46s
+        Running `/home/jyi/.cargo/target/debug/axum-with-monoio`
+    io_uring_enter(3, 2, 1, IORING_ENTER_GETEVENTS, NULL, 128) = 2
+    io_uring_enter(3, 1, 0, 0, NULL, 128)   = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS|IORING_ENTER_EXT_ARG, 0x7ffe47bb7240, 24) = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS, NULL, 128) = 1
+    io_uring_enter(3, 1, 0, 0, NULL, 128)   = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS|IORING_ENTER_EXT_ARG, 0x7ffe47bb7240, 24) = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS, NULL, 128) = 1
+    io_uring_enter(3, 1, 0, 0, NULL, 128)   = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS|IORING_ENTER_EXT_ARG, 0x7ffe47bb7240, 24) = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS, NULL, 128
+
+io uring 工作也很正常
+
+L<https://github.com/bytedance/monoio/blob/master/monoio-compat/README.md>
+
+然而 monoio 自己说这个兼容层是有问题的：
+
+    For example, running h2 server based on this wrapper will fail. Inside the h2, it will try to send a data frame with poll_write, and if it get Pending, it will assume the data not be sent yet. If there is another data frame with a higher priority, it will poll_write the new frame instead. But the old data frame will be sent with our wrapper.
+
+有的库会错误地认为它不 C<poll_write>，数据就不会发出去。在用 poll 类似物的情况下这种假设是对的，因为检查 readiness 和发送数据是由 runtime 通过两次分割的系统调用完成的，不 poll 就相当于任务自动取消了。但是在 io uring 的情况下这种假设是错误的，因为检查 readiness 和发送数据的工作全被挪到了内核里，即使什么都不做，任务也会悄悄地完成。
+
+这么看来其实在以 readiness check 和 C<Future::poll> 为基础建设出来的 rust 异步里写 io uring，确实是一件很别扭的事情……
+
+同时也说明如果胆子不够大的话现有的 Rust 异步基础设施几乎都是不可以看作不能用的。同时还有一些库大量要求 Send Sync，然而 uring 的队列因为是个 spsc lock free，只支持单线程访问，天然不 Send
+
+真是任重而道远啊……
+
+=head2 Tue Oct 21 20:44:29 CST 2025
+
+虽然 io-uring 有些问题，但是它们似乎只局限于网络。对于磁盘 io 来说 uring 还是绝对的人上人的。
+
+再看看 io uring 网络性能如何。
+
+L<https://github.com/bytedance/monoio/blob/master/docs/en/benchmark.md>
+
+monoio 给出的 tokio 和 monoio 的 benchmark。
+
+1 core 的时候 tokio 是能压着 glommio 打的（glommio 设计有问题？），同时在连接数小于 120 的时候也能超过 monoio。呃呃，感觉也不是很坏。
+
+但是多核就不太行了，虽然 tokio 也能扩展但是 work stealing 确实没 thread per core 扩展得好。16c 的时候 tokio 的性能只有 1c 的 6x，而 monoio 是 14x 左右。
+
+那要是给 tokio 搞个多进程架构，然后 C<SO_REUSEADDR> 不知道会不会比多线程快……毕竟也算是 share nothing 了。
+
+L<https://users.rust-lang.org/t/can-i-use-tokio-localset-on-a-per-thread-mplement-a-share-nothing-model-akin-to-monoio-and-glommio/132857>
+
+我超，原来已经有人做过了，可以用 C<tokio::task::LocalSet> 来做 thread per core 的架构。C<actix-rt> 会这么做。
+
+爱丽丝怎么什么都懂。
+
+L<https://docs.rs/actix-rt/latest/actix_rt/>
+
+哎 C<actix_rt> 支持 io uring 啊，虽然是实验性的。
+
+之前为啥不用 actix 来着。忘了。是觉得 axum 是 tokio 做的比较好吗……
+

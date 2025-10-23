@@ -1,0 +1,80 @@
+Tue Sep 30 18:55:30 CST 2025
+
+试吃一下 cranelift ……以及别的一些快速编译的魔法
+
+wild 是一个 rust 写的链接器，比 mold 快一点。mold 和 wild 都不支持 lto，不要在 release 模式用。
+
+debug 模式可以用 cranelift + wild 的组合。我在 lead-to-rome 项目里编译的时候，老配置用了 20 秒，新配置只要 15 秒，1.25x，还是很不错的。
+
+试用 build-std 的时候 cranelift panic 掉了。研究研究发生了什么
+
+    Compiling panic_abort v0.0.0 (/home/jyi/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/panic_abort)
+    Compiling rustc-demangle v0.1.26
+    Compiling cfg-if v1.0.1
+
+    thread 'rustc' (979320) panicked at compiler/rustc_codegen_cranelift/src/abi/mod.rs:183:81:
+    called `Result::unwrap()` on an `Err` value: IncompatibleSignature("__lttf2", Signature { params: [AbiParam { value_type: types::F128, purpose: Normal, extension: None }, AbiParam { value_type: types::F128, purpose: Normal, extension: None }], returns: [AbiParam { value_type: types::I64, purpose: Normal, extension: None }], call_conv: SystemV }, Signature { params: [AbiParam { value_type: types::F128, purpose: Normal, extension: None }, AbiParam { value_type: types::F128, purpose: Normal, extension: None }], returns: [AbiParam { value_type: types::I32, purpose: Normal, extension: None }], call_conv: SystemV })
+    stack backtrace:
+    0:     0x736354783b83 - <std::sys::backtrace::BacktraceLock::print::DisplayBacktrace as core::fmt::Display>::fmt::ha5048bff3ce7cc0d
+    1:     0x736354e02058 - core::fmt::write::h1b9b6498023f8164
+    2:     0x7363547386d1 - std::io::Write::write_fmt::h58f693f1f03c69e6
+    3:     0x736354749b22 - std::sys::backtrace::BacktraceLock::print::h9fd758973537bd0f
+
+https://github.com/termux/termux-packages/issues/8452
+
+在网上搜索找到了 termux 的 issue，从链接里看 lttf2 是 libc 里面的一个符号。那换个 libc 比如 musl 会不会好呢。
+
+还是一样的问题……
+
+https://gcc.gnu.org/onlinedocs/gccint/Soft-float-library-routines.html
+
+从 gcc 的文档来看，lttf2 是软件浮点的符号，参数是两个 long double。会不会是 cranelift 对 long double 的支持有问题？
+
+https://github.com/rust-lang/rustc_codegen_cranelift/pull/1574
+
+今年五月底 cranelift 才支持的 f128，四个月前了。
+
+https://github.com/rust-lang/rustc_codegen_cranelift/blob/3e563b840e50291a55b5e567162523ffb6a35f8b/src/compiler_builtins.rs#L93
+
+哦，我好像看懂了。cranelift 代码里写的 lttf2 是返回 i32 类型，但是编译的时候不知道从哪儿读了个返回 i64 的签名进来，卡在这里了。
+
+更新一下 toolchain 试试
+
+额，还是不行
+
+哎不对啊，我整理一下
+
+                        = 好的
+                   musl = 好的
+       cranelift        = 坏的
+       cranelift + musl = 好的
+wild                    = 好的
+wild             + musl = 好的
+wild + cranelift        = 坏的
+wild + cranelift + musl = 坏的
+
+没搞懂， 往 cranelift 扔了个 issue。
+
+标准库好像能禁用 f128 和 f16，关了先凑合用一下……
+
+    build-std-features = [
+        # 'panic_immediate_abort', # debug profile doesnt work with 'panic_immediate_abort' which requires 'panic = abort'
+        'optimize_for_size',
+        'compiler-builtins-no-f16-f128', # cranelift panics without this
+    ]
+
+cargo.toml 越来越混沌了
+
+cranelift 好像也没吹的那么快……同一个项目 build-std 的时候不管用不用 cranelift 结果都是一样的。不太行
+
+先用着吧……
+
+不对！我的 wild 怎么没用上
+
+用上了 wild，好像也没有很快
+
+https://github.com/rust-lang/compiler-builtins/pull/920
+
+f128 的问题，issue 里回复说和这个有关
+
+哎，cranelift 不支持 wasm32。太坏了，跑路了

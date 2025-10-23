@@ -1,0 +1,221 @@
+2025-09-22
+
+在之前折腾了两天 dragonos 和 asterinas 后，今天发现 debian rv64 竟然扔进 qemu 可以直接跑，眼泪都要出来了
+
+打算把 qcow2 和它里面那个 ext4 都 resize 一下后直接做成虚拟机模板
+
+如何缩放虚拟机磁盘
+
+https://gist.github.com/joseluisq/2fcf26ff1b9c59fe998b4fbfcc388342
+
+先查看既有磁盘上有哪些东西
+
+    virt-filesystems --long -h --all -a olddisk.qcow2
+    Name Type VFS Label MBR Size Parent
+    /dev/sda1 filesystem ntfs System Reserved - 50M -
+    /dev/sda2 filesystem ntfs - - 39G -
+    /dev/sda3 filesystem ntfs - - 513M -
+    /dev/sda1 partition - - 07 50M /dev/sda
+    /dev/sda2 partition - - 07 39G /dev/sda
+    /dev/sda3 partition - - 27 513M /dev/sda
+    /dev/sda device - - - 60G -
+
+然后创新新的磁盘。原版的命令里有个 preallocation 的参数会搞出一个和磁盘虚拟大小一样大但是实际上文件里面都是 hole 的文件，要是在不 no hole 的文件系统上搞就比较哈人了，所以把 preallocation 给它去了
+
+    qemu-img create -f qcow2 newdisk.qcow2 50G
+
+然后把内容拷进去
+
+    virt-resize --expand /dev/sda2 olddisk.qcow2 newdisk.qcow2
+
+以及这些命令执行的时候我看 cpu 占用高的是 qemu-system-x86_64，不知道实现的原理是什么，好神奇。
+
+    [ 308.4] Expanding /dev/sda1 using the ‘resize2fs’ method
+
+    virt-resize: Resize operation completed with no errors.  Before deleting
+    the old disk, carefully check that the resized disk boots and works
+    correctly.
+
+这个 virt-resize 命令还会自动 resize2fs，好贴心。做工具的就该这样嘻嘻
+
+接下来先研究一下怎么在 pve 上跑这个镜像……
+
+pve 默认的 qemu 没有提供 riscv 支持，如果要用的话需要自己编译一个。有点畏惧了，还是不整了……
+
+哎我有点子啊，我外面放一个 alpine，里面跑嵌套虚拟化的 rv64 debian 不就好了
+
+https://wiki.alpinelinux.org/wiki/Installation
+
+alpine 的安装脚本做的还有模有样的，init 用的 openrc。感觉不如 systemd ……画质
+
+https://wiki.alpinelinux.org/wiki/KVM
+
+alpine KVM
+
+alpine 默认没有 community，qemu 在 community 源里，要手动启用一下
+
+https://wiki.alpinelinux.org/w/index.php?title=Enable_Community_Repository&redirect=no
+
+先摆了，玩点别的
+
+Wed Oct  1 14:44:39 CST 2025
+
+需要在 pve 里把 cpu 类型设置成 host，要不然在 alpine 的 /dev 下面没有 kvm
+
+https://www.qemu.org/docs/master/system/target-riscv.html
+
+riscv 一般都是开发板一类。qemu 提供的机器类型也是板子板子来的
+
+    0 qemu-system-riscv64 -machine help
+    Supported machines are:
+    amd-microblaze-v-generic AMD Microblaze-V generic platform
+    microchip-icicle-kit Microchip PolarFire SoC Icicle Kit
+    none                 empty machine
+    shakti_c             RISC-V Board compatible with Shakti SDK
+    sifive_e             RISC-V Board compatible with SiFive E SDK
+    sifive_u             RISC-V Board compatible with SiFive U SDK
+    spike                RISC-V Spike board (default)
+    virt                 RISC-V VirtIO board
+
+为了最好的性能而不是代入感（？），决定用 virt 机器来玩。
+
+https://mirrors.163.com/debian-cd/current/riscv64/iso-cd/debian-13.1.0-riscv64-netinst.iso
+
+哎麻的，这个 link 下不下来，急了。
+
+https://dl-cdn.alpinelinux.org/alpine/v3.22/releases/x86_64/alpine-virt-3.22.1-x86_64.iso
+
+我希望 alpine 启动之后可以直接在 tty1 启动 qemu，这个应该要通过 inittab 之类的东西来改吧……
+
+    /sbin/getty -n -i -l <qemu_script.sh> 38400 tty1
+
+这样就可以了
+
+    root@proxmox:~# cat /sys/module/kvm_intel/parameters/nested
+
+检查 pve 是否支持嵌套虚拟化
+
+alpine 安装了 qemu-system-riscv64 的时候，使用 kvm 加速提示 Invalid accelerator kvm，不知道为啥……
+
+哦我草，忘记了这是 cross arch 的 simulation，笨笨喵
+
+又出现了 bridge helper failed 错误。思索
+
+https://www.site-digger.com/html/weibo/2020/0112/779.html
+
+原来是要在 /etc/qemu/bridge.conf 里 allow 对应的网桥
+
+哦，又提示 /dev/net/tun no such file or directory。这个应该就是内核模块缺了。我看看 alpine 怎么启用它
+
+https://wiki.alpinelinux.org/wiki/KVM
+
+    modprobe tun
+
+临时启用
+
+又出现了 uboot firmware 没找到的错误。应该要安装对应的软件包。alpine 里面对应的是……
+
+哦原来 alpine 的 u-boot-qemu 打的包没在 x64 的源里。要去 riscv64 的源里才能搞的到。
+
+算了，拷一个上去好了。
+
+又爆出了神秘的地址冲突问题，看起来是 uboot.elf 和 opensbi 打架了。
+
+好吧，我用 -bios 参数而不是 -kernel 来加载 uboot.elf，就跑起来了……
+
+但是还是起不来，提示说什么 call environment from m mode。搞不懂，太硬件了这……
+
+https://www.cnblogs.com/tadshi/p/14785635.html
+
+偷一下这家的方法……偷了，但是没什么用
+
+我草我草我草原来是拷错文件了，qemu-riscv64 和 qemu-riscv64_smode 是两个东西哎哎哎哎哎哎
+
+搞定！
+
+哦原来 kvm 是不能跨架构跑的……想模拟 riscv64 只能用 tcg。坏
+
+Thu Oct  2 12:12:18 CST 2025
+
+性能比相像中的还要差劲
+
+    Run status group 0 (all jobs):
+    READ: bw=1442KiB/s (1477kB/s), 1442KiB/s-1442KiB/s (1477kB/s-1477kB/s), io=256MiB (268MB), run=181795-181795msec
+
+    Disk stats (read/write):
+    vdb: ios=65468/45, sectors=523744/520, merge=0/13, ticks=688015/1548, in_queue=690280, util=82.11%
+
+测试发现，原来是 qcow2 over qcow2 性能太拉了导致的
+
+重做一下吧……弄个 raw over qcow2 出来。真的
+
+但是 alpine 又不支持 “只使用磁盘的前 1 GB 来安装” 这种设定，它只能要用就用一整块磁盘。好烦。
+
+只好给虚拟机整两块磁盘了。
+
+记录一下动作手册：
+
+1. 安装 alpine
+2. 下载脚本和 uboot
+3. 安装 qemu-system-riscv64、util-linux 和 bridge-utils
+4. 修改 /etc/network/interface，添加网桥，断开宿主的网络连接
+5. 修改 /etc/inittab，开机启动 qemu
+6. 修改 /etc/qemu/bridge.conf，添加网桥白名单
+7. 修改 /etc/modules-load.d/tun.conf、/etc/modules，添加 tun module
+
+alpine 给 512 MB 是不够的，1 GB 可以
+
+Thu Oct  2 16:35:15 CST 2025
+
+改完之后发现 io 性能还是很差劲。只有 1.8 MB 每秒。思考怎么用 lxc 来省掉一层虚拟机。
+
+lxc 非特权不能用 tun，虚拟机就只能用 qemu 的 user 网络接口了。
+
+挂载 iso 也是个问题，不过可以写 bind mount……
+
+    mp0: /mnt/iso,mp=/var/lib/vz/template/iso
+
+不对，写反了
+
+    mp0: /var/lib/vz/template/iso,mp=/mnt/iso,ro=1
+
+哎，这个 alpine 的 inittab 好像不管用啊……改完重启又给我改回去了
+
+只好手工作业了
+
+    riscv64-template:/sbin# cat getty
+    is_tty1=n
+    for param in "$@"; do
+    if [ "$param" = 'tty1' ]; then
+    is_tty1=y
+    fi
+    done
+    if [ "$is_tty1" = 'y' ]; then
+    exec busybox getty -n -i -l /opt/debian-rv64/launch.sh 38400 tty1
+    else
+    exec busybox getty "$@"
+    fi
+
+有的时候感觉自己也挺有想象力的（
+
+    TASK ERROR: Template feature is not available for '/var/lib/vz/template/iso'
+
+呃呃……还没法变成模板了……
+
+那就只好把 debian iso 拷进 lxc 里面去了
+
+原来 convert to template 之后 pve 会弄一个只读的卷出来装这个 template
+
+试了试在 lxc 里装 qemu，然后用用户态的 slirp 来给 rv64 的 debian 提供网络。劲省一层 qemu，但是性能没啥大的变化
+
+https://forum.proxmox.com/threads/10x-worse-random-i-o-performance-within-windows-guest-using-host-vs-native-on-host-hardware.167728/
+
+这个帖子里说开了 x64 v3 之后性能变好了很多，但是我也不是 x86 啊……
+
+试了下使用 io thread，性能没什么变化。还是一样的差
+
+哎，只好试试 writeback 了。想着服务器应该不太会断电，问题应该不大吧……
+
+好像也没什么性能提升
+
+好奇怪，不管了。。

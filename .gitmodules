@@ -1,0 +1,3 @@
+[submodule "themes/hexo-theme-lightx"]
+	path = themes/hexo-theme-lightx
+	url = https://github.com/songquanpeng/hexo-theme-lightx
