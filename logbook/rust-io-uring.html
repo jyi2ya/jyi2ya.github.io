@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x770B;&#x770B; rust io uring &#x80FD;&#x7528;&#x5417;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Frust-io-uring" />
+
+
+
+
+
+
+<link rel="prev" href="./ws/rust-error-crates.html" title="Rust 错误处理库调查" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+<link rel="next" href="./ws/rust-on-newlib.html" title="rust-on-newlib" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x770B;&#x770B; rust io uring &#x80FD;&#x7528;&#x5417;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Frust-io-uring" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/rust-error-crates.html">Rust 错误处理库调查</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/rust-on-newlib.html">rust-on-newlib</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+
+<ul><li><a href="#看看_rust_io_uring_能用吗">看看 rust io uring 能用吗</a>
+<ul><li><a href="#Thu_Oct_16_17_12_13_CST_2025">Thu Oct 16 17:12:13 CST 2025</a></li>
+<li><a href="#Tue_Oct_21_20_44_29_CST_2025">Tue Oct 21 20:44:29 CST 2025</a>
+</li>
+</ul>
+</li>
+</ul><hr />
+<!-- INDEX END -->
+
+<h1 id="看看_rust_io_uring_能用吗">看看 rust io uring 能用吗</h1>
+<div id="看看_rust_io_uring_能用吗_CONTENT">
+
+</div>
+<h2 id="Thu_Oct_16_17_12_13_CST_2025">Thu Oct 16 17:12:13 CST 2025</h2>
+<div id="Thu_Oct_16_17_12_13_CST_2025_CONTENT">
+<p>试试怎么在 monoio 里用 axum</p>
+<p><a href="https://github.com/tokio-rs/axum/issues/2485">https://github.com/tokio-rs/axum/issues/2485</a></p>
+<pre>    axum doesn't implement the transport layer itself and instead relies on hyper. So io-uring support needs to be implemented in hyper and then axum will get it for free.
+
+</pre>
+<p>hmm 看起来只要这个叫 hyper 的支持 io uring，那么 axum 就自动能用了。</p>
+<p>hyper 是什么呢？</p>
+<pre>    A protective and efficient HTTP library for all.
+
+</pre>
+<p>原来是个 http 的库。</p>
+<p>那接下来搜搜有没有 hyper 的 monoio 支持就好了。</p>
+<p><a href="https://github.com/bytedance/monoio/blob/master/examples/hyper_server.rs">https://github.com/bytedance/monoio/blob/master/examples/hyper_server.rs</a></p>
+<p>这里倒是有个 monoio 的 hyper 的 server 实现。看里面用到了 monoio-compat 这个库，看看</p>
+<p><a href="https://docs.rs/monoio-compat/latest/monoio_compat/">https://docs.rs/monoio-compat/latest/monoio_compat/</a></p>
+<p>感觉没搞明白……</p>
+<p><a href="https://github.com/tokio-rs/axum/blob/main/examples/serve-with-hyper/src/main.rs">https://github.com/tokio-rs/axum/blob/main/examples/serve-with-hyper/src/main.rs</a></p>
+<p>这是 axum 使用 hyper 的例子</p>
+<p>一番缝合和复制粘贴之后，我们得到了……</p>
+<pre>    error[E0277]: `Rc&lt;monoio::driver::shared_fd::Inner&gt;` cannot be sent between threads safely
+        --&gt; src/main.rs:44:49
+            |
+         44 |                 .serve_connection_with_upgrades(stream_poll, hyper_service)
+            |                  ------------------------------ ^^^^^^^^^^^ `Rc&lt;monoio::driver::shared_fd::Inner&gt;` cannot be sent between threads safely
+            |                  |
+            |                  required by a bound introduced by this call
+            |
+            = help: within `MonoioIo&lt;TcpStreamPoll&gt;`, the trait `Send` is not implemented for `Rc&lt;monoio::driver::shared_fd::Inner&gt;`
+
+</pre>
+<p>一个 <code>!Send</code> 错误！</p>
+<p>转换策略，不用 <code>server_connection_with_upgrades</code> 了，试试直接用 <code>http1</code> 里面的 server</p>
+<pre>    thread 'main' (474985) panicked at /home/jyi/.cargo/registry/src/mirrors.cernet.edu.cn-0d8da22710581788/monoio-0.2.4/src/time/driver/handle.rs:49:35:
+    unable to get time handle, maybe you have not enable_timer on creating runtime?
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    [101] jyi-00-rust-dev 17:55 (master) ~/dev/axum-with-monoio
+    0
+
+</pre>
+<p>编译确实过了，但是运行的时候又炸了。不过这个不着急，可以修。</p>
+<pre>    fn main() {
+        let rt: monoio::RuntimeBuilder&lt;monoio::time::TimeDriver&lt;monoio::FusionDriver&gt;&gt; = monoio::RuntimeBuilder::new();
+        let mut rt = rt.build().unwrap();
+        rt.block_on(serve_plain());
+    }
+
+</pre>
+<p>byd 这个 runtime builder 整的有点阴间了，还是我没用对。</p>
+<p>总之跑起来了。</p>
+<pre>    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.46s
+        Running `/home/jyi/.cargo/target/debug/axum-with-monoio`
+    io_uring_enter(3, 2, 1, IORING_ENTER_GETEVENTS, NULL, 128) = 2
+    io_uring_enter(3, 1, 0, 0, NULL, 128)   = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS|IORING_ENTER_EXT_ARG, 0x7ffe47bb7240, 24) = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS, NULL, 128) = 1
+    io_uring_enter(3, 1, 0, 0, NULL, 128)   = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS|IORING_ENTER_EXT_ARG, 0x7ffe47bb7240, 24) = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS, NULL, 128) = 1
+    io_uring_enter(3, 1, 0, 0, NULL, 128)   = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS|IORING_ENTER_EXT_ARG, 0x7ffe47bb7240, 24) = 1
+    io_uring_enter(3, 1, 1, IORING_ENTER_GETEVENTS, NULL, 128
+
+</pre>
+<p>io uring 工作也很正常</p>
+<p><a href="https://github.com/bytedance/monoio/blob/master/monoio-compat/README.md">https://github.com/bytedance/monoio/blob/master/monoio-compat/README.md</a></p>
+<p>然而 monoio 自己说这个兼容层是有问题的：</p>
+<pre>    For example, running h2 server based on this wrapper will fail. Inside the h2, it will try to send a data frame with poll_write, and if it get Pending, it will assume the data not be sent yet. If there is another data frame with a higher priority, it will poll_write the new frame instead. But the old data frame will be sent with our wrapper.
+
+</pre>
+<p>有的库会错误地认为它不 <code>poll_write</code>，数据就不会发出去。在用 poll 类似物的情况下这种假设是对的，因为检查 readiness 和发送数据是由 runtime 通过两次分割的系统调用完成的，不 poll 就相当于任务自动取消了。但是在 io uring 的情况下这种假设是错误的，因为检查 readiness 和发送数据的工作全被挪到了内核里，即使什么都不做，任务也会悄悄地完成。</p>
+<p>这么看来其实在以 readiness check 和 <code>Future::poll</code> 为基础建设出来的 rust 异步里写 io uring，确实是一件很别扭的事情……</p>
+<p>同时也说明如果胆子不够大的话现有的 Rust 异步基础设施几乎都是不可以看作不能用的。同时还有一些库大量要求 Send Sync，然而 uring 的队列因为是个 spsc lock free，只支持单线程访问，天然不 Send</p>
+<p>真是任重而道远啊……</p>
+<p>是不是本身在使用 io uring 的时候，它的 Future poll 的语义来说和 AsyncRead 就是不对的。AsyncRead 有隐含的不 poll 就不动的条件吗？</p>
+
+</div>
+<h2 id="Tue_Oct_21_20_44_29_CST_2025">Tue Oct 21 20:44:29 CST 2025</h2>
+<div id="Tue_Oct_21_20_44_29_CST_2025_CONTENT">
+<p>虽然 io-uring 有些问题，但是它们似乎只局限于网络。对于磁盘 io 来说 uring 还是绝对的人上人的。</p>
+<p>再看看 io uring 网络性能如何。</p>
+<p><a href="https://github.com/bytedance/monoio/blob/master/docs/en/benchmark.md">https://github.com/bytedance/monoio/blob/master/docs/en/benchmark.md</a></p>
+<p>monoio 给出的 tokio 和 monoio 的 benchmark。</p>
+<p>1 core 的时候 tokio 是能压着 glommio 打的（glommio 设计有问题？），同时在连接数小于 120 的时候也能超过 monoio。呃呃，感觉也不是很坏。</p>
+<p>但是多核就不太行了，虽然 tokio 也能扩展但是 work stealing 确实没 thread per core 扩展得好。16c 的时候 tokio 的性能只有 1c 的 6x，而 monoio 是 14x 左右。</p>
+<p>那要是给 tokio 搞个多进程架构，然后 <code>SO_REUSEADDR</code> 不知道会不会比多线程快……毕竟也算是 share nothing 了。</p>
+<p><a href="https://users.rust-lang.org/t/can-i-use-tokio-localset-on-a-per-thread-mplement-a-share-nothing-model-akin-to-monoio-and-glommio/132857">https://users.rust-lang.org/t/can-i-use-tokio-localset-on-a-per-thread-mplement-a-share-nothing-model-akin-to-monoio-and-glommio/132857</a></p>
+<p>我超，原来已经有人做过了，可以用 <code>tokio::task::LocalSet</code> 来做 thread per core 的架构。<code>actix-rt</code> 会这么做。</p>
+<p>爱丽丝怎么什么都懂。</p>
+<p><a href="https://docs.rs/actix-rt/latest/actix_rt/">https://docs.rs/actix-rt/latest/actix_rt/</a></p>
+<p>哎 <code>actix_rt</code> 支持 io uring 啊，虽然是实验性的。</p>
+<p>之前为啥不用 actix 来着。忘了。是觉得 axum 是 tokio 做的比较好吗……</p>
+<p>Sat Nov  1 16:13:40 CST 2025</p>
+<p>io uring 能取消吗？不道啊</p>
+<p><a href="https://zhuanlan.zhihu.com/p/62682475">https://zhuanlan.zhihu.com/p/62682475</a>:</p>
+<pre>    IO 提交的做法是找到一个空闲的 SQE，根据请求设置 SQE，并将这个 SQE 的索引放到 SQ 中。SQ 是一个典型的 RingBuffer，有 head，tail 两个成员，如果 head == tail，意味着队列为空。SQE 设置完成后，需要修改 SQ 的 tail，以表示向 RingBuffer 中插入一个请求。
+
+</pre>
+<p>原来 io uring 的 cq 和 sq 保存的都是偏移量，真正的请求是在一个 sqes 数组里的。sqes 由用户管理，这样 sqes 用完了新的请求就创建不了了，还减少了每次 enqueue 的代价。有趣的设计。</p>
+<p>Sun Nov  2 17:56:04 CST 2025</p>
+<p><a href="https://sf-zhou.github.io/linux/io_uring_network_programming.html">https://sf-zhou.github.io/linux/io_uring_network_programming.html</a></p>
+<p>作者在用 rust io uring 时遇到的问题。</p>
+<pre>    一般 server 需要同时保持相当数量的 socket 连接，准备读取所有 client 可能发送过来的数据，给每个 socket 单独分配一段 buffer 是不现实的。io_uring 官方的解决方案是要求用户提供一个 buffer pool，当某个 socket 可读时，从 buffer pool 里获取一个 buffer 完成读操作再返回，当用户使用完该 buffer 后可以将其重新回收至 buffer pool。新版的 buffer pool 也是一个 ring。
+
+</pre>
+<p>为啥不能给每个 socket 单独分配一段 buffer</p>
+<pre>    The main reason is memory efficiency. If we give each socket its own dedicated buffer, we'd waste a lot of memory when dealing with thousands of connections. Many sockets might be idle most of the time, but their buffers would still occupy memory.
+
+</pre>
+<p>问了一下 bot，有道理的。</p>
+<p><a href="https://github.com/axboe/liburing/wiki/io_uring-and-networking-in-2023">https://github.com/axboe/liburing/wiki/io_uring-and-networking-in-2023</a></p>
+<p>io uring 在网络编程中的好处：batching，一次提交多个请求；multi shot，提交一次请求之后返回多次结果（accept）</p>
+<pre>    A readiness based IO model has the distinct advantage of providing an opportune moment to provide a buffer for receiving data - once a readiness notification arrives on a given socket, a suitable buffer can be picked and transfer of data can be started. This isn’t true with a completion based model, as a receive operation is submitted ahead of time.
+
+</pre>
+<p>基于可读性的 IO 可以在文件描述符就绪的时候再准备缓冲区，而 io uring 不行。io uring 必须提前准备一个 buffer pool 交给内核。</p>
+<pre>    One example of that is direct descriptors, avoid use of a shared file descriptor table between threads. Another would be the zero-copy transmit that io_uring supports. Those topics will be featured in a future installment.
+
+</pre>
+<p>哎，没讲怎么做 zero copy。</p>
+<p>io uring 真复杂吧。</p>
+<p><a href="https://boolsatellite.github.io/2024/02/05/io_uring/">https://boolsatellite.github.io/2024/02/05/io_uring/</a>:</p>
+<pre>    在io_uring中完成的任务并不是按照提交顺序返回的，有时我们需要按顺序的完成一组任务，这需要设置sqe对应的flag，为flag添加 IOSQE_IO_LINK。IOSQE_IO_LINK使得本sqe与下一提交的sqe相关联，即两个任务之间有了先后顺序，如上代码就保证了，先读后写最后关闭
+
+</pre>
+<p>哦哦，io uring 有可以保证完成顺序的机制。</p>
+<p><a href="https://www.man7.org/linux/man-pages/man2/eventfd.2.html">https://www.man7.org/linux/man-pages/man2/eventfd.2.html</a></p>
+<p>eventfd，有点像简化版本的 pipe，通过 read 和 write 来实现事件唤醒。怎么感觉和 park 有点像。哦 park 应该是用信号量实现的。</p>
+<p>那 eventfd 有什么用。</p>
+<p><a href="https://zhuanlan.zhihu.com/p/40572954">https://zhuanlan.zhihu.com/p/40572954</a></p>
+<pre>    在信号通知的场景下，相比pipe有非常大的资源和性能优势。其根本在于counter（计数器）和channel（数据信道）的区别。
+
+</pre>
+<p>这下看懂了。大概是用来中断一个 epoll 过程用的，然后比 pipe 资源消耗小。</p>
+<pre>    众所周知，文件描述符可是系统中非常宝贵的资源，linux的默认值也只有1024而已。
+
+</pre>
+<p>我超，真假。</p>
+<pre>    jyi-00-rust-dev 19:22 ~
+    0 ulimit -n
+    1024
+
+</pre>
+<p>情报是真的。</p>
+<pre>    WARNING: select() can monitor only file descriptors numbers that
+    are less than FD_SETSIZE (1024)—an unreasonably low limit for many
+    modern applications—and this limitation will not change.
+
+</pre>
+<p>但是 select man 这里又说 1024 个很少。为什么。</p>
+<pre>    0 ulimit -Hn
+    524288
+    jyi-00-rust-dev 19:26 ~
+    0 ulimit -Sn
+    1024
+
+</pre>
+<p>原来是可以调的……</p>
+<pre>    第三，对于timerfd，还有精准度和实现复杂度的巨大差异。由内核管理的timerfd底层是内核中的hrtimer（高精度时钟定时器），可以精确至纳秒（1e-9秒）级，完全胜任实时任务。而用户态要想实现一个传统的定时器，通常是基于优先队列/二叉堆，不仅实现复杂维护成本高，而且运行时效率低，通常只能到达毫秒级。
+
+</pre>
+<p>赫赫，还有个 timerfd，可以定时。之前一直以为 rust 的 runtime 是在 epoll 之前手动算好等待时间，然后利用 epoll 的超时来实现从 epoll 调用中退出来的。</p>
+<p>好玩捏。</p>
+<pre>    另外一个重要优势就是eventfd/timerfd被设计成与epoll完美结合，比如支持非阻塞的读取等。事实上，二者就是为epoll而生的（但是pipe就不是，它在Unix的史前时代就有了，那时不仅没有epoll连Linux都还没诞生）。应用程序可以在用epoll监控其他文件描述符的状态的同时，可以“顺便“”一起监控实现了eventfd的内核通知机制，何乐而不为呢？
+
+</pre>
+<p>果然是这样。</p>
+<p>io uring 里也能用上 eventfd 和 timerfd，功能差不多，可以从 <code>io_uring_enter</code> 中唤醒。</p>
+<p>Mon Nov  3 16:17:39 CST 2025</p>
+<p><a href="https://lwn.net/Articles/810414/">https://lwn.net/Articles/810414/</a>:</p>
+<pre>    This operation completes after a given period of time, as measured either in seconds or number of completed io_uring operations. It is a way of forcing a waiting application to wake up even if it would otherwise continue sleeping for more completions. 
+
+</pre>
+<p>io uring 内置的超时取消机制。</p>
+<p><a href="https://www.cnblogs.com/zhengpan0526/p/18960136">https://www.cnblogs.com/zhengpan0526/p/18960136</a></p>
+<p>io uring 简介，比较初级，但是有个 echo server 的例子，可以学学。</p>
+<p><a href="https://zhuanlan.zhihu.com/p/1921211695449224734">https://zhuanlan.zhihu.com/p/1921211695449224734</a>:</p>
+<pre>    在性能方面，在高并发场景下，io_uring 性能优势明显，能极大减少用户态到内核态的切换次数，测试显示连接数 1000 及以上时，io_uring 性能开始超越 epoll，其极限性能单 core 在 24 万 QPS 左右，而 epoll 单 core 只能达到 20 万 QPS 左右 。在连接数超过 300 时，io_uring 的用户态到内核态的切换次数基本可忽略不计 。
+
+</pre>
+<p><a href="https://lwn.net/Articles/908268/">https://lwn.net/Articles/908268/</a></p>
+<p>神经，io uring 还能用来代替 fork exec。快进到 io uring 统一系统调用接口。</p>
+<p>Fri Nov  7 16:56:22 CST 2025</p>
+<p><a href="https://github.com/axboe/liburing/issues/536">https://github.com/axboe/liburing/issues/536</a></p>
+<p>io uring 和 epoll 的对比。说是 io uring 不如 epoll 快</p>
+<pre>    Why read on a socket? recv would be more efficient, at least on the io_uring side
+    Why read on a socket?
+    Because the Linux manual says read is identical to recv in terms of socket. Didn't know io_uring has this specialty.
+
+</pre>
+<p>原来 io uring 还对 socket 做了特化处理吗。</p>
+<pre>    Another interesting thing to mention is that if I use nonblocking fd + io_uring poll + psync read/write, the performance would still be rising to epoll as well. That means my io_uring event engine is proven to be capable.
+
+</pre>
+<p>奇怪的组合，io uring 的 poll 和同步的读写。</p>
+<pre>    I can confirm that the 50% performance increase (current QPS is 660K) came from the io_uring_submit_and_wait_timeout. The timer is slow, indeed. But there is still a huge gap from 660K to epoll's 1200K. I don't think any trivial optimization would cover this gap.
+
+    Register ring fd didn't bring any benefits. This is a single thread program.
+
+</pre>
+<p>悲，优化后 io uring 还是打不过 epoll</p>
+<p><a href="https://lore.kernel.org/io-uring/ZwW7_cRr_UpbEC-X@LQ3V64L9R2/T/">https://lore.kernel.org/io-uring/ZwW7_cRr_UpbEC-X@LQ3V64L9R2/T/</a></p>
+<p>io uring 允许直接从网卡拷贝到用户空间，但是需要网卡有 tcp data split 支持。</p>
+<p><a href="https://docs.kernel.org/networking/devmem.html">https://docs.kernel.org/networking/devmem.html</a></p>
+<p>这个参数可以用 <code>ethtool -G eth1 tcp-data-split on</code> 来设置</p>
+<pre>    root@grandcentral:~# ethtool -G eth0 tcp-data-split on
+    netlink error: setting TCP data split is not supported (offset 36)
+    netlink error: Operation not supported
+    root@grandcentral:~#
+
+</pre>
+<p>坏。</p>
+<dl>
+	<dt>阿里云小鸡：不支持</dt>
+	<dt>515-m4：不支持</dt>
+	<dt>by11：不支持</dt>
+	<dt>hepnode0：不支持</dt>
+	<dt>roundhouse：不支持</dt>
+	<dt></dt>
+</dl>
+<p>怎么都不支持。急了。</p>
+<p><a href="https://github.com/alibaba/PhotonLibOS/issues/784">https://github.com/alibaba/PhotonLibOS/issues/784</a></p>
+<p>阿里的 cxx 协程库，有人问了 io uring 相关的性能问题。</p>
+<pre>    最近两年没再测过了。不光是liburing版本，内核优化也会影响结果。
+
+    最根源的原因是，在streaming模式下，psync send/recv + iouring poll 的方案，往一个有空间的网络buffer里面读写数据，就基本等于memcpy的开销，而io_uring需要不断优化缩减路径，才能让 iouring_send/iouring_recv 赶的上 psync
+
+    欢迎用新的版本测试，并向我们反馈数据。
+
+</pre>
+<p>有道理的……吗。</p>
+<p>有道理哦，网络 io 在实现上疑似就是 memcpy 然后 dma。那么网络 io 对比 epoll 和 io uring 就是让自己的核 memcpy 还是让内核线程 memcpy 的问题了。</p>
+<p>那么，work stealing 的 epoll 是负载最均衡的，thread per core 的 epoll 是 cache 最友好的，io uring 是系统调用次数最少的。</p>
+<p>这么看来 io uring 在网络 io 的场景下可能只有减少系统调用次数这一个用途。</p>
+<p>还是用 epoll 吧。</p>
+<p><a href="https://www.zhihu.com/question/342620694/answer/801958930">https://www.zhihu.com/question/342620694/answer/801958930</a></p>
+<pre>    为了修复Intel的Meltdown, Linux启用了内核页表隔离（KPTI），导致所有系统调用执行后都会切换到独立的页表上，因此内核空间只剩下部分CPU使用的结构（页表，IDT，LDT）
+
+</pre>
+<p><a href="https://www.zhihu.com/question/637486805/answer/1928401709719357019">https://www.zhihu.com/question/637486805/answer/1928401709719357019</a></p>
+<pre>    UDP 发送 sendmmsg 和 io_uring 性能是一个量级的，并没发现 io_uring 太大优势，GSO + sendmmsg 还可以更快，只是我机器网卡驱动不支持，无法测试。
+
+</pre>
+<p><a href="https://zhuanlan.zhihu.com/p/348225926">https://zhuanlan.zhihu.com/p/348225926</a></p>
+<pre>    &gt; 时间开销：page fault&gt;syscall&gt;&gt;io_uring(async)
+    &lt; 但是 io_uring 提交任务也是要 syscall 的。之前测 kernel polling（可以大量减少 syscall）似乎效果也不好（
+    &gt; 是因为context switch慢！（x86上sysenter略快于exception，但是如果开启了meltdown mitigation的话两者都需要flush tlb cache，应该差不多慢）
+
+</pre>
+<p>hmm 确实……</p>
+<p><a href="https://arthurchiao.art/blog/intro-to-io-uring-zh/#2-io_uring">https://arthurchiao.art/blog/intro-to-io-uring-zh/#2-io_uring</a></p>
+<pre>    随着设备越来越快， 中断驱动（interrupt-driven）模式效率已经低于轮询模式 （polling for completions） —— 这也是高性能领域最常见的主题之一。
+
+</pre>
+<p>嘻嘻，那我的设备暂时还没有那么快。</p>
+<p>这篇文章主要是说的数据库的……</p>
+<p><a href="https://zhuanlan.zhihu.com/p/1906698789005275491">https://zhuanlan.zhihu.com/p/1906698789005275491</a></p>
+<pre>    先说结论：多线程情况下使用 asio + io_uring 性能很不理想。
+
+</pre>
+<p>坏</p>
+<p>哦，这是 asio。它会在访问 io uring 实例的时候加锁。这下理解了。</p>
+<pre>    我这里就把之前针对单线程做的压测数据也贴出来，结论就是 io_uring 和 epoll 在单线程情况下性能差不多，io_uring 稍微好一点。但是，因为业务场景的不同，我们并没有这么使用。
+
+</pre>
+<p>Sat Nov  8 14:23:39 CST 2025</p>
+<p><a href="https://without.boats/blog/io-uring/">https://without.boats/blog/io-uring/</a></p>
+<p>rust 的 iou 库开发时的遇到的问题。</p>
+<pre>    In Rust, futures are supposed to be implicitly cancellable, by simply never polling them again. This works well with readiness-based APIs, because you can trivially ignore the fact that IO is ready for a cancelled future. But if you pass a buffer to have IO performed into it by a completion-based API, the kernel will write to or read from that buffer even if you cancel the future.
+
+</pre>
+<p>我去，经过之前的阅读我发现我完全理解这一段了。</p>
+<pre>    I would strongly encourage everyone to move to an ownership based model, because I am very confident it is the only sound way to create an API.
+
+</pre>
+<p>monoio 和 compio 都是这么干的</p>
+<pre>    The reason is simple: AsyncRead and AsyncWrite, like their sync counterparts, represent the interfae of reading and writing with a caller-managed buffer. If the only way to manage this safely with some underlying OS interface is to perform an extra copy, so be it. It works out fine, because there is another interface intended to for use with callee-managed buffers: AsyncBufRead.
+
+</pre>
+<p>作者觉得应该提供一个新的 trait 叫 asyncbufread，这个会把缓冲区的所有权给扔给运行时，IO 完成后再返回回来。</p>
+<p>有道理的。</p>
+<p><a href="https://rustmagazine.github.io/rust_magazine_2021/chapter_4/datenlord_io_uring.html">https://rustmagazine.github.io/rust_magazine_2021/chapter_4/datenlord_io_uring.html</a></p>
+<p>hmm，没什么用的文章。里面提到的问题上面都讨论完了。</p>
+<p><a href="https://tonbo.io/blog/exploring-better-async-rust-disk-io">https://tonbo.io/blog/exploring-better-async-rust-disk-io</a></p>
+<pre>    In most real-world scenarios involving sequential writes and random reads, using spawn_blocking/block_in_place together with write and pread provides sufficiently good performance.
+    To truly leverage an io_uring-based runtime, the upper layers of your application need to cooperate. Since many popular libraries (for example, Parquet) default to using Tokio as their async runtime, merely swapping out the underlying I/O API is not enough to fully exploit io_uring's potential.
+
+</pre>
+<p>研究如何在 rust 中实现更好的异步 IO。哦，原来作者是做数据库的。</p>
+<p>怎么 fusio/monoio 跑的比 fusio/tokio 还慢，随机读的时候。随机写的时候倒是快一些。</p>
+<p>但是 tokio 始终是最拉的……考虑到测的是磁盘 IO 性能也可以理解就是了。</p>
+<pre>    Also, io_uring's ring-buffer design for submitting and completing I/O events nudges async runtimes toward batch submission and batched completion-handling, which can improve throughput at the expense of latency.
+
+</pre>
+<p>批量处理的意义在于用延迟换吞吐。</p>
+<p><a href="https://www.reddit.com/r/linux/comments/qm09rf/io_uring_based_networking_in_prod_experience/">https://www.reddit.com/r/linux/comments/qm09rf/io_uring_based_networking_in_prod_experience/</a></p>
+<p>在生产环境里用 io uring 的记录。cxx 写的，不是 rust。</p>
+<pre>    Pre-io_uring these loads would roughly result in ~60% cpu utilization and 250us P99 in-process time. These results obviously may vary depending on machine and time of today. After the port, cpu utilization jumped to ~62% and in-process time P99 spikes jumped to 500us with occasional jumps of up to 1ms (pre-io-uring we had no jumps).
+
+     io_uring does NOT perform well if you do not get good density on batch sizes (more on this below).
+
+</pre>
+<p>疑似彻底失败。</p>
+<p>评论区说可以用新内核试试，但是作者还没给出结果……</p>
+<p><a href="https://blog.cloudflare.com/missing-manuals-io_uring-worker-pool/">https://blog.cloudflare.com/missing-manuals-io_uring-worker-pool/</a></p>
+<p><a href="https://arthurchiao.art/blog/intro-to-io-uring-zh/">https://arthurchiao.art/blog/intro-to-io-uring-zh/</a></p>
+<p><a href="https://icebergu.com/archives/linux-iouring">https://icebergu.com/archives/linux-iouring</a></p>
+<p><a href="https://kernel.dk/io_uring.pdf">https://kernel.dk/io_uring.pdf</a></p>
+<p><a href="https://unixism.net/loti/">https://unixism.net/loti/</a></p>
+<p>剩下的一些资料。以后有空再看吧
+</p>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/rust-error-crates.html">Rust 错误处理库调查</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/rust-on-newlib.html">rust-on-newlib</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

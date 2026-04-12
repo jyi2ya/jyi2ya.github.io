@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x770B;&#x770B; rust &#x7684;&#x5F02;&#x6B65;&#x8FD0;&#x884C;&#x65F6;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Frust-async-runtime" />
+
+
+
+
+
+
+<link rel="prev" href="./ws/rust-actor.html" title="调研 rust 的 actor 框架" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+<link rel="next" href="./ws/rust-async-structured-concurrency.html" title="rust-async-structured-concurrency" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x770B;&#x770B; rust &#x7684;&#x5F02;&#x6B65;&#x8FD0;&#x884C;&#x65F6;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Frust-async-runtime" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/rust-actor.html">调研 rust 的 actor 框架</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/rust-async-structured-concurrency.html">rust-async-structured-concurrency</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+
+<ul><li><a href="#看看_rust_的异步运行时">看看 rust 的异步运行时</a>
+<ul><li><a href="#Wed_Oct_1_20_02_38_CST_2025">Wed Oct  1 20:02:38 CST 2025</a></li>
+<li><a href="#Sun_Oct_12_14_00_40_CST_2025">Sun Oct 12 14:00:40 CST 2025</a></li>
+<li><a href="#Tue_Oct_21_21_37_05_CST_2025">Tue Oct 21 21:37:05 CST 2025</a>
+</li>
+</ul>
+</li>
+</ul><hr />
+<!-- INDEX END -->
+
+<h1 id="看看_rust_的异步运行时">看看 rust 的异步运行时</h1>
+<div id="看看_rust_的异步运行时_CONTENT">
+
+</div>
+<h2 id="Wed_Oct_1_20_02_38_CST_2025">Wed Oct  1 20:02:38 CST 2025</h2>
+<div id="Wed_Oct_1_20_02_38_CST_2025_CONTENT">
+<p><a href="https://users.rust-lang.org/t/tokio-copy-slower-than-std-io-copy/111242">https://users.rust-lang.org/t/tokio-copy-slower-than-std-io-copy/111242</a></p>
+<p>这里说 tokio 的 copy 显著慢于 std 的 copy，原因是操作系统通常不会提供异步的文件 API</p>
+<pre>    Note that the stdlib also internally uses specialization to make copy generally faster for BufReader/BufWriter. On linux and android it can even use syscalls like copy_file_range and splice to avoid loading the file data in userspace at all.
+
+</pre>
+<p>哦，这个好</p>
+<pre>    filesize = 894MB
+    tokio write duration = 2.661018252s, speed MB/s 336.2394975276158
+    std write duration = 418.723487ms, speed MB/s 2136.826492286769
+
+</pre>
+<p>测试结果</p>
+<pre>    tokio write duration = 710.079182ms, speed MB/s 1260.0558679162832
+
+</pre>
+<p>另一个人测的 tokio uring，不过他们可能用的不是同一种硬件。</p>
+<pre>    Yeah, the lack of support for files in epoll and kqueue makes things suck pretty badly. The lack of copy_file_range is only a minor issue compared to the other reasons file IO sucks in async code.
+
+</pre>
+<p>是这样的。我之前也被坑过，以为 select 在磁盘文件上也能工作。</p>
+<pre>    From poking around with strace and perf I see tokio is using 2 threads to handle the op, resulting in a crazy number of futex calls and context switches. I presume using tokio-uring as mentioned in one of above comments manages to dodge this aspect.
+
+    Yep, that's correct.
+
+    Ultimately Tokio provides file IO because applications that primarily do networking sometimes also need to do some amount of file IO, and they need some way to do so without blocking the thread. It's not intended for being the primary use of your application.
+
+    I actually rewrote the docs for tokio::fs recently to make these things more clear. It's not in a published release yet, but you can see the new docs here.
+
+</pre>
+<p>以及 tokio 因为需要支持 work stealing 的异步调用，需要在操作之间加锁，这也使它比同步的调用性能低了一些……</p>
+<p>哎，原来 std::fs::copy 比 std::io::copy 理应快得多。之前还没注意到……</p>
+
+</div>
+<h2 id="Sun_Oct_12_14_00_40_CST_2025">Sun Oct 12 14:00:40 CST 2025</h2>
+<div id="Sun_Oct_12_14_00_40_CST_2025_CONTENT">
+<p><a href="https://maciej.codes/2022-06-09-local-async.html">https://maciej.codes/2022-06-09-local-async.html</a></p>
+<p>thread per core</p>
+<p><a href="https://www.cloudwego.io/blog/2023/04/17/introducing-monoio-a-high-performance-rust-runtime-based-on-io-uring/">https://www.cloudwego.io/blog/2023/04/17/introducing-monoio-a-high-performance-rust-runtime-based-on-io-uring/</a></p>
+<p>介绍 monoio，讲了 rust 的异步是怎么工作的，里面有一个异步在 hir 和 mir 中展开的例子。</p>
+
+</div>
+<h2 id="Tue_Oct_21_21_37_05_CST_2025">Tue Oct 21 21:37:05 CST 2025</h2>
+<div id="Tue_Oct_21_21_37_05_CST_2025_CONTENT">
+<p>研究 io uring 的时候偶然发现 tokio 也能做 thread per core，需要进一步调查。</p>
+<p><a href="https://docs.rs/tokio-util/latest/tokio_util/task/struct.LocalPoolHandle.html">https://docs.rs/tokio-util/latest/tokio_util/task/struct.LocalPoolHandle.html</a></p>
+<p>看起来是基于 tokio LocalSet 做的 thread per core 池子。</p>
+<p><a href="https://github.com/tokio-rs/tokio/issues/7558">https://github.com/tokio-rs/tokio/issues/7558</a></p>
+<p>tokio 有个实验性质的 <code>LocalRuntime</code>，大致等于一个 <code>!Send</code> 的 <code>current_thread</code> runtime。</p>
+<p><a href="https://rustmagazine.github.io/rust_magazine_2021/chapter_3/rust_cpu_affinity.html">https://rustmagazine.github.io/rust_magazine_2021/chapter_3/rust_cpu_affinity.html</a></p>
+<p>thread per core 是对的。</p>
+<p><a href="https://github.com/tokio-rs/tokio/issues/7559">https://github.com/tokio-rs/tokio/issues/7559</a></p>
+<p>根据这个 guideline，只有在这些情况下才应该选用 <code>current_thread</code> 风格的单线程运行时：</p>
+<ul>
+		<li>They need to call asynchronous code from synchronous code.	</li>
+		<li>AND they want to store the asynchronous runtime somewhere, to avoid creating a new runtime for each async call.	</li>
+		<li>AND the struct that holds the runtime needs to be Send.</li>
+</ul>
+
+<p>看来默认用 local runtime 是更广谱的。</p>
+<p>那么多用 <code>LocalPoolHandle</code> 是对的吗……</p>
+<p><a href="https://docs.rs/tokio-util/0.7.16/tokio_util/task/struct.LocalPoolHandle.html#method.spawn_pinned">https://docs.rs/tokio-util/0.7.16/tokio_util/task/struct.LocalPoolHandle.html#method.spawn_pinned</a>:</p>
+<pre>    Spawn a task onto a worker thread and pin it there so it can’t be moved off of the thread. Note that the future is not Send, but the FnOnce which creates it is.
+
+</pre>
+<p><code>LocalPoolHandle</code> 要通过 <code>spawn_pinned</code> 方法来传递一个 <code>Send</code> 的闭包给 worker，这个闭包会生成一个 <code>!Send</code> 的 Future。所以说 <code>LocalPoolHandle</code> 还集成了 dispatcher 的功能。</p>
+<p>compio 是怎么做的。</p>
+<p><a href="https://compio.rs/docs/compio/dispatcher">https://compio.rs/docs/compio/dispatcher</a></p>
+<p>compio 的也差不多，传递的是 <code>Send</code> 的闭包。但是它怎么是先在 master 线程里 <code>accept</code> 了之后再把流给分发给 slave，为啥不直接 <code>SO_REUSEPORT</code> 呢。</p>
+<p><a href="https://lwn.net/Articles/542629/">https://lwn.net/Articles/542629/</a>:</p>
+<pre>    The first of the traditional approaches is to have a single listener thread that accepts all incoming connections and then passes these off to other threads for processing. The problem with this approach is that the listening thread can become a bottleneck in extreme cases. In early discussions on SO_REUSEPORT, Tom noted that he was dealing with applications that accepted 40,000 connections per second. Given that sort of number, it's unsurprising to learn that Tom works at Google.
+
+</pre>
+<p>对嘛，<code>SO_REUSEPORT</code> 是对的。估计是因为 <code>SO_REUSEPORT</code> 的例子会加入额外的噪音不适合当作示例，才搓了个这样的例子的。</p>
+<p>不过如果都用 thread per core 了，那感觉和多进程也没啥差别了……哦，还是有差别的，地址空间是同一个，通信成本比 ipc 低一些。</p>
+<p>但是好像都在说 thread per core &amp; share nothing，没有人说 thread per core &amp; shared state 和 work stealing 的方式有多大的提升。</p>
+<p>哈哈，手欠扫了一下 perl thread affinity，发现除了 duck.ai 之外无人在意。</p>
+<p><a href="https://github.com/DataDog/glommio/issues/537">https://github.com/DataDog/glommio/issues/537</a>:</p>
+<pre>    However, that goes against the architectural ideas behind TPC. As Glauber said, it is preferable to codify ownership of resources in your application such that only a single CPU can ever access them. This allows maximal locality and no expensive cross-CPU communications.
+
+</pre>
+<p>&quot;that goes against the arch ideas behind TPC&quot;，意思就是也不是不行（？</p>
+<p>按理说，如果 thread per core 也用 shared state 的话，那和 work stealing 的区别好像也不是很大了？在大规模并行的情况下还是要抢锁。</p>
+<p>并行计算好难啊</p>
+<p><a href="https://without.boats/blog/thread-per-core/">https://without.boats/blog/thread-per-core/</a></p>
+<p>决定读一下这一篇，看看能有什么新的洞见。</p>
+<pre>    Enberg’s paper shows that using channels over using mutexes can achieve lower tail latency. This is presumably because there are fewer cache misses, as each partition, which is accessed over and over again, stays in only one core’s cache.
+
+</pre>
+<p>还有这种说法？</p>
+<p><a href="https://penberg.org/papers/tpc-ancs19.pdf">https://penberg.org/papers/tpc-ancs19.pdf</a></p>
+<pre>    The main beneﬁt of this approach is that it can maximize system throughput because any CPU core can be used to serve the requests. The problem in the shared-everything approach is that data bounces between CPU caches and that thread synchronization limits multicore scalability
+
+</pre>
+<p>share everything 的架构。说是因为数据会在线程之间移动所以扩展性不好。</p>
+<pre>    hared-nothing approach. Each thread only accesses the resources assigned to it. This eliminates the need for locks because each thread is independent of the other threads.  While this requires threads to communicate with each other, Barrelﬁsh [5] and Seaster [40] have exempliﬁed scenarios where partitioning and message passing are less expensive than shared memory and locking
+
+    The main advantage of this approach is that improves CPU cache efﬁciency and eliminates thread synchronization. However, this approach can limit system throughput for skewed workloads because only one CPU core can operate on a speciﬁc part of the application data.
+
+</pre>
+<p>share nothing 的架构。说是 channel 比 shared memory &amp; lock 还快，真的假的。</p>
+<pre>    Inter-thread messaging. When a thread receives a request via a connection it manages, it ﬁrst checks if it manages the key present in the request. If it manages the key, it performs the requested operation locally and sends a response. However, if another thread manages the key, it uses message passing to forward the request to that remote thread.
+
+</pre>
+<p>哇，还有 message passing。怎么做的。</p>
+<pre>    Enberg’s paper shows that using channels over using mutexes can achieve lower tail latency. This is presumably because there are fewer cache misses, as each partition, which is accessed over and over again, stays in only one core’s cache. 
+
+</pre>
+<p>可以提升性能说是。</p>
+<pre>    Enberg’s goal is to make use of advanced kernel features and a carefully planned architecture to avoid data movement, it’s hard for me to believe this would be easier than wrapping data inside a mutex.
+
+</pre>
+<p>但是作者觉得不是很好写。</p>
+<p>感觉 message passing 有点像 io uring，mutex 有点像 epoll。</p>
+<p><a href="https://swtch.com/~rsc/talks/threads07/#(7)">https://swtch.com/~rsc/talks/threads07/#(7)</a></p>
+<p>这篇文章对比 thread 和 event 之后觉得 plan9 的混合模式更好，感觉那看起来是一种 thread per core</p>
+<p><a href="https://swtch.com/~rsc/talks/threads07/#(21)">https://swtch.com/~rsc/talks/threads07/#(21)</a>:</p>
+<pre>    Locks protect shared mutable state.
+        Specifically, they protect invariants about the state.
+        lock(x) says “I depend on the invariants protected by x.”
+        or “I'm about to break the invariants protected by x. Look away!”
+        unlock(x) says “I'm done (and if I broke the invariants, I've fixed them).”
+        Invariants always existed, just easier to break with multithreading.
+        Locks unnecessary in single-threaded program.
+
+    Message-passing moves mutable state into single-threaded loop.
+        Invariants still exist, like in single-threaded code.
+        But the server thread is itself single-threaded, easier to reason about.
+        Can inspect individual server threads for correctness.
+        No need to worry about other threads — they can't see into our state.
+
+
+
+
+</pre>
+<p>有道理的</p>
+<p>那看来这个 actor 做的工作应该尽可能少才对？否则就会成为阻塞点了。</p>
+<p>或者如果可能的话也应该让多个线程分配多个 actor？比如每个 numa 一个 actor 这样的。</p>
+<p><a href="https://codeandbitters.com/rust-channel-comparison/">https://codeandbitters.com/rust-channel-comparison/</a></p>
+<pre>    I also haven't considered implementations that aren't lock-free in the hot path. Implementations that are a Mutex&lt;VecDeque&lt;T&gt;&gt; in a trenchcoat may have acceptable performance for some workloads, but they are not directly comparable to the data structures in this table.
+
+</pre>
+<p>意思是说 std、tokio 和 crossbeam 的 channel 都是 lock-free 的？那是不是说我只要 actor 就可以白嫖 lock-free 数据结构。反正都是串行，就是不知道锁和 message passing 哪个开销大。</p>
+<p><a href="https://github.com/tokio-rs/tokio/discussions/7627">https://github.com/tokio-rs/tokio/discussions/7627</a>:</p>
+<pre>    This is because the async locking is not free, for example, the async Mutex uses the sync Mutex internally to protect the waker list. So if the lock contention is not significant, the sync Mutex is usually faster.
+
+</pre>
+<p>原来 tokio 的 mutex 内部会用 std mutex。</p>
+<p><a href="https://www.reddit.com/r/rust/comments/r75wm6/why_is_stdsyncmutex_6070x_time_slower_than_cs/">https://www.reddit.com/r/rust/comments/r75wm6/why_is_stdsyncmutex_6070x_time_slower_than_cs/</a>:</p>
+<pre>    The C++ code checks the presence of __pthread_key_create symbol and if not present, skips locking and unlocking the mutex. Only incrementing the counter is left.
+
+    That's exactly it. shared_ptr will also use non-atomic refcounts if it doesn't find the pthreads symbols, which will sink your battleship if you're doing threads by hand calling the kernel directly.
+
+</pre>
+<p>草，原来 cxx 还有这种操作。</p>
+<p>原来 mutex 只要 15 ns 差不多。</p>
+<p><a href="https://github.com/ytakano/async_bench">https://github.com/ytakano/async_bench</a></p>
+<p>或者 44 ns，反正比 200 ns 小得多。</p>
+<p>mutex 太折磨了，虽然性能好些，但是还是用 actor 好了。actor 是对的。</p>
+<p>但是这种架构看起来不适合 data parallelism，也就是每个 thread 都是对等的的情况下的 thread per core。</p>
+<p>而且多个 actor 如何均匀排布到各个 os 线程里，也是个问题……</p>
+<p>Wed Oct 29 18:38:04 CST 2025</p>
+<p><a href="https://www.reddit.com/r/rust/comments/y7r9dg/what_is_the_difference_between_tokio_and_asyncstd/">https://www.reddit.com/r/rust/comments/y7r9dg/what_is_the_difference_between_tokio_and_asyncstd/</a></p>
+<p>async std 和 tokio 的对比。虽然现在 async std 已经似了，但是仍然有比较的价值。</p>
+<pre>    There is one major difference in how they are implemented. Tokio futures and streams can only run within tokio itself due to how the executor/waker works with I/O apis like epoll/kqueue/iocp, running on the same thread. In async-std the FFI to these APIs is isolated to its own thread. This allows you to run the futures on any executor - including tokio's.
+
+</pre>
+<p>看起来是说 tokio 会每个线程都放一个 reactor，而 async std 有单独的 reactor 线程？</p>
+<p><a href="https://github.com/fundon/smol-tokio-hyper-benchmarks">https://github.com/fundon/smol-tokio-hyper-benchmarks</a></p>
+<p>smol 和 tokio 的 benchmark，感觉不是正经……因为没画图也没解释啥的。不过结果上看倒是 smol 和 tokio 性能差不多。</p>
+<p><a href="https://github.com/smol-rs/smol/issues/210">https://github.com/smol-rs/smol/issues/210</a>:</p>
+<pre>    As a general rule, there are two main bottlenecks in an async runtime: the reactor and the executor. async-std and smol use the same executor. tokio's executor is probably faster for longer term workloads (like if a network connection slowly dispatches packets of bytes over a long period of time), while smol's is better for shorter term workloads (like all the bytes being immediately available from a socket).
+
+</pre>
+<p><a href="https://zenoh.io/blog/2022-04-14-rust-async-eval/">https://zenoh.io/blog/2022-04-14-rust-async-eval/</a></p>
+<pre>    Our evaluation shows async_std and smol are quite close to the standard library and outperform it on some workloads. On the other hand, Tokio seems to reach very soon its limit ~18µs with 100 msg/s and it shows no differences between TCP and UDP. Additionally, Tokio seems to be adversely impacted by the CPU-bound (Rust) asynchronous tasks. Based on these results, we believe that we have no choice but remain on async-std. That said, it would be interesting to understand why Tokio exposes such behavior under contention and also to improve its raw performance to close the gap with async_std. As it stands, Tokio introduces 8µs additional latency in localhost and 10µs over the network.
+
+</pre>
+<p>rust async runtime 的对比，有 tokio smol 和 async-std。在这里 tokio 又比别家的差了。</p>
+<p>smol 会让编译出来的二进制变小一点吗？有没有证据……</p>
+<p>Thu Oct 30 19:34:51 CST 2025</p>
+<p><a href="https://www.reddit.com/r/rust/comments/jpcv2s/diagram_of_async_architectures/">https://www.reddit.com/r/rust/comments/jpcv2s/diagram_of_async_architectures/</a></p>
+<p>找到了经典老图，rust 各个运行时的架构对比。</p>
+<p>tokio 没有单独的 reactor thread，async-std 和 smol 都有。这也许暗示 tokio 的额外开销会少一点，但是所有 future 必须在 tokio context 下面运行，不如 smol 和 async-std 灵活。</p>
+<p><a href="https://zhuanlan.zhihu.com/p/137353103">https://zhuanlan.zhihu.com/p/137353103</a></p>
+<p>smol 的代码解析，看起来有点老了，很多地方感觉和现在的 codebase 对不上。</p>
+<p>看 smol 的代码的时候，发现里面到处都是锁。疑似有点限制可扩展性了。</p>
+<p><code>LocalExecutor</code> 里面是一个 <code>Executor</code>，然后里面是一个 <code>AtomicPtr&lt;State&gt;</code>，<code>State</code> 里面又是一堆原子变量和锁。也就是说即使用的是 LocalExecutor 还是要做锁操作？为什么要这么干，是为了和磁盘 IO 的线程池交互吗。</p>
+<pre>    use async_channel::unbounded;
+    use async_executor::Executor;
+    use easy_parallel::Parallel;
+    use futures_lite::future;
+    let ex = Executor::new();
+    let (signal, shutdown) = unbounded::&lt;()&gt;();
+    Parallel::new()
+    // Run four executor threads.
+    .each(0..4, |_| future::block_on(ex.run(shutdown.recv())))
+        // Run the main future on the current thread.
+        .finish(|| future::block_on(async {
+        println!(&quot;Hello world!&quot;);
+        drop(signal);
+    }));
+
+</pre>
+<p>我超，smol 还可以把不是它管理的野生的线程加入参与 work stealing，也就是说我可以把 rayon 的线程用来跑 smol 的 executor？</p>
+<p>有牛啊。</p>
+<p>看了下异步运行时的架构图，感觉是 only smol can do。</p>
+<pre>    Tokio's executor is not global. It uses a thread-local, so if you spawn a new thread, you can no longer access the runtime from that thread unless you explicitly enter the context.
+    This is why you cannot have multiple runtimes with async-std, but can with Tokio. Async-std only has one global runtime, but Tokio lets you have many if you wish.
+
+</pre>
+<p>Alice 如是说。</p>
+<p>哎，这么看来感觉 tokio 好像是对的。额外的 reactor 线程听起来还是比较不太合理……</p>
+<p>tokio 的 runtime 的 enter 方法实际上会做什么呢？</p>
+<p>最终会调用 <code>tokio::runtime::context::try_set_current</code>，试图把 self 塞进 thread_local 变量 <code>CONTEXT</code> 里面。也就是说 enter 的代价等于一次 thread_local 赋值操作。然后 tokio 生态里的 Future 需要和运行时交互的时候，就会从 <code>CONTEXT</code> 里面把运行时取出来。使用不同的运行时实例的本质上是 enter 的时候设置的 <code>CONTEXT</code> 不同。</p>
+<p>那么 smol 是怎么和它的 reactor 线程通信的呢……</p>
+<p><a href="https://systemxlabs.github.io/blog/smol-async-runtime/">https://systemxlabs.github.io/blog/smol-async-runtime/</a>:</p>
+<pre>    因为 epoll 的模型就是需要用户去轮询，它不会主动推送 IO 事件，所以我们需要 Driver 来驱动。Driver 是一个单独的 OS 线程，在 Reactor 初始化时一并创建。它不断循环的去尝试获取 Reactor 锁并执行其 react 方法，然后 react 方法会阻塞 Driver 线程直至有新的 timer / IO 事件产生。
+
+</pre>
+<p><a href="https://docs.rs/smol/latest/src/smol/spawn.rs.html#33-64">https://docs.rs/smol/latest/src/smol/spawn.rs.html#33-64</a></p>
+<p>这里面的 smol 代码是会在第一次调用的时候悄悄初始化一个全局的 executor，并且在这个时候创建新的线程。</p>
+<p>啊，也就是说 smol 在 smol::spawn 的时候默认是会进全局队列的吗。有点坏了兄弟。而且有个全局队列岂不是说明不同线程、库和自己的 rt 完全不隔离。感觉有点奇怪，强制单例模式了说是。</p>
+<p><a href="https://tony612.github.io/tokio-internals/">https://tony612.github.io/tokio-internals/</a></p>
+<p>这个好吃，讲 tokio 是怎么工作的。</p>
+<p><a href="https://tony612.github.io/tokio-internals/03_task_scheduler.html">https://tony612.github.io/tokio-internals/03_task_scheduler.html</a></p>
+<p>tokio 的 spawn 就比较优秀，除了有 local 和 remote queue 的区别，还有 lifo slot。</p>
+<p>tokio 是对的。</p>
+<p><a href="https://rustcc.cn/article?id=b98cd230-443a-4e3b-8366-34a49b944fe1">https://rustcc.cn/article?id=b98cd230-443a-4e3b-8366-34a49b944fe1</a>:</p>
+<pre>    smol 的意义在于，可以将网络库由同步代码变为异步代码。而对库的代码没有要求。而 async-std 之类对库代码有侵入性，比如要求加 async 关键字。从而与 sync 代码形成两套，同步和异步要分开写。smol不存在这个问题。对于网络库，未来基于 smol，可构建更加统一的网络生态。写库的人在写的时候，基本不用管异步场景了。输出接口都是无 async 关键字的（async 关键字有传染性，严重警告！）
+
+</pre>
+<p>看起来说的是 <a href="https://docs.rs/smol/latest/smol/struct.Async.html">https://docs.rs/smol/latest/smol/struct.Async.html</a> 这个事。但是性能呢，而且边界情况也会很奇怪吧。</p>
+<p>呃，还有必须要实现 AsFd 的问题。</p>
+<p>哦，他指的应该是说封装时的代码量少……</p>
+<p>确实，smol 是打不过 tokio 的。
+</p>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/rust-actor.html">调研 rust 的 actor 框架</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/rust-async-structured-concurrency.html">rust-async-structured-concurrency</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

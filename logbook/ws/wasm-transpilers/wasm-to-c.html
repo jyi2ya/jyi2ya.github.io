@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>wasm-to-c</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Fwasm-transpilers%2Fwasm-to-c" />
+
+
+
+
+
+
+<link rel="prev" href="../wasm.html" title="wasm" />
+
+<link rel="up" href="../../../logbook.html" title="logbook" />
+
+<link rel="next" href="../rust-transpilers/compile-rust-to-c.html" title="把 rust 编译到 c" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../../index.html">jyi</a>/ 
+
+<a href="../../../logbook.html">logbook</a>/ 
+
+<a href="../../../index.html">ws</a>/ 
+
+<a href="../../../index.html">wasm-transpilers</a>/ 
+
+</span>
+
+
+<span class="title">
+wasm-to-c
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Fwasm-transpilers%2Fwasm-to-c" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../wasm.html">wasm</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../rust-transpilers/compile-rust-to-c.html">把 rust 编译到 c</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Tue Jan 13 18:39:44 CST 2026</p>
+<p>经过仔细探索，似乎所有 rust 编译到 XX 语言的方案都不如直接编译到 wasm/wasi 再编译到目标语言。所以应该对 wasm 的生态做点调查。</p>
+<p><a href="https://github.com/turbolent/w2c2">https://github.com/turbolent/w2c2</a></p>
+<p>一个把 wasm 编译到 c 的东西。看了下它不支持 socket，决定放弃。</p>
+<p><a href="https://www.wingolog.org/archives/2025/10/30/wastrel-a-profligate-implementation-of-webassembly">https://www.wingolog.org/archives/2025/10/30/wastrel-a-profligate-implementation-of-webassembly</a></p>
+<p>另一个，说是完整支持 wasip1。最好试试。</p>
+<pre>    &gt;16s&lt; jyi-00-rust-dev 18:52 ~/.c/ta/wasm32-wasip1/debug
+    0 wastrel rust-hello.wasm
+    rust-hello.wasm.BTHbhf.c: In function ‘func_392’:
+    rust-hello.wasm.BTHbhf.c:15277:38: error: expected ‘;’ before ‘indirect_i32_1’
+    15277 |   indirect_i32_0 = i32_const(1055776)
+          |                                      ^
+          |                                      ;
+    15278 |   indirect_i32_1 = i32_const(1055792)
+          |   ~~~~~~~~~~~~~~
+    rust-hello.wasm.BTHbhf.c:15283:14: error: ‘tmp_0’ undeclared (first use in this function); did you mean ‘type_0’?
+    15283 |   local_5 = (tmp_0 &amp; i32_const(1));
+          |              ^~~~~
+          |              type_0
+
+</pre>
+<p>wastrel 好像有点 bug，不过看起来不是什么大问题。我试着改一下……</p>
+<pre>    diff --git a/module/wastrel/backend.scm b/module/wastrel/backend.scm
+    index b455a26..f76cc3e 100644
+    --- a/module/wastrel/backend.scm
+    +++ b/module/wastrel/backend.scm
+    @@ -701,7 +701,7 @@
+                                   (prepare-call sig (map value-expr args)))
+                 (lambda (indirect-args direct-args direct-result indirect-results)
+                   (for-each (match-lambda
+    -                          ((name . arg) (emit! &quot;~a = ~a&quot; name arg)))
+    +                          ((name . arg) (emit! &quot;~a = ~a;&quot; name arg)))
+                             indirect-args)
+                   (let ((call (make-call (value-expr operator)
+                                          (string-join direct-args &quot;, &quot;))))
+    @@ -1345,7 +1345,7 @@
+                 (match result-names
+                   ((direct-name indirect-local-name ...)
+                    (for-each (lambda (thread-local local)
+    -                           (fmt! &quot;  ~a = ~a\n&quot; thread-local local))
+    +                           (fmt! &quot;  ~a = ~a;\n&quot; thread-local local))
+                              indirect-name indirect-local-name)
+                    (fmt! &quot;  return ~a;\n&quot; direct-name))))))
+            (fmt! &quot;}\n&quot;))))
+
+</pre>
+<p>在 deepseek 的帮助下改好了。现在能用了。llm 真好。</p>
+<pre>    0 wastrel rust-hello.wasm
+    Hello, world!
+
+</pre>
+<p>至少现在跑起来了。测试一下更复杂的程序看看。</p>
+<p>试了下 miniserve，感觉有点坏啊，ring 编译不过去。又是可恶的密码学……用 <code>no-default-features</code> 好了。</p>
+<pre>    error: Socket2 doesn't support the compile target
+       --&gt; /home/jyi/.cargo/registry/src/mirrors.cernet.edu.cn-0d8da22710581788/socket2-0.6.1/src/lib.rs:184:1
+        |
+    184 | compile_error!(&quot;Socket2 doesn't support the compile target&quot;);
+        | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+</pre>
+<p>呃，死掉了。</p>
+<p>看来网络编程还为时尚早……</p>
+<p>再试试 cli 小工具好了，比如 bat 这种单线程又只有文件 IO 的。</p>
+<pre>    error: Neither cfg(unix) nor cfg(windows) was true, aborting.
+      --&gt; /home/jyi/.cargo/registry/src/mirrors.cernet.edu.cn-0d8da22710581788/clircle-0.6.1/src/lib.rs:55:9
+       |
+    55 |         compile_error!(&quot;Neither cfg(unix) nor cfg(windows) was true, aborting.&quot;);
+       |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+</pre>
+<p>啊啊啊啊你又是谁</p>
+<p><a href="https://github.com/niklasmohrin/clircle">https://github.com/niklasmohrin/clircle</a></p>
+<pre>    Detect cyclic file handles with ease.
+
+</pre>
+<p>为什么一个高端的 cat 需要用到这种功能呢？？</p>
+<pre>    error[E0432]: unresolved import `sys::position`
+      --&gt; /home/jyi/.cargo/registry/src/mirrors.cernet.edu.cn-0d8da22710581788/crossterm-0.27.0/src/cursor.rs:52:9
+       |
+    52 | pub use sys::position;
+       |         ^^^^^^^^^^^^^ no `position` in `cursor::sys`
+       |
+    note: found an item that was configured out
+
+</pre>
+<p>这回是 crossterm 编译不过了……也对毕竟 wasm32-wasi 哪来的终端呢。</p>
+<p>我想想还有什么别的项目，又不用网络又没有终端颜色之类的需求……</p>
+<p><a href="https://github.com/jyi2ya/simple-calc">https://github.com/jyi2ya/simple-calc</a></p>
+<p>这个倒是还算正常，可以跑。</p>
+<pre>  &gt;1m 55s&lt; jyi-00-rust-dev 19:57 (master) ~/sr/util/pixpix
+  0 ./a.out assets/wh.jpg
+
+  thread 'main' (1) panicked at src/main.rs:88:41:
+  called `Result::unwrap()` on an `Err` value: IoError(Os { code: 44, kind: NotFound, message: &quot;No such file or directory&quot; })
+  Illegal instruction
+
+</pre>
+<p>哎怎么会这样呢？？</p>
+<p>我试试能不能就做一个最简单的 cat 程序……</p>
+<p>好怪哦，为什么读不出来。</p>
+<p>有点搞不懂了，可能和它的沙盒机制有关。但是我没找到可以关掉它的沙盒的方法。</p>
+<p>还是试试 w2c2 算了。</p>
+<pre>    [1] jyi-00-rust-dev 20:28 (main) ~/sr/la/w2c2/build
+    0 gcc -I ../w2c2 pixpix.c -lm
+    /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/14/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+    (.text+0x17): undefined reference to `main'
+    /usr/bin/ld: /tmp/ccsWWtDs.o: in function `f23':
+    pixpix.c:(.text+0x535): undefined reference to `trap'
+    /usr/bin/ld: /tmp/ccsWWtDs.o: in function `f76':
+    pixpix.c:(.text+0xd0c): undefined reference to `trap'
+    /usr/bin/ld: /tmp/ccsWWtDs.o: in function `f116':
+    pixpix.c:(.text+0xd48): undefined reference to `trap'
+
+</pre>
+<p>坏了，是不是有什么东西没编译上。</p>
+<pre>    jyi-00-rust-dev 20:39 (main) ~/sr/la/w2c2/build
+    0 gcc -DHAS_TIMESPEC -DHAS_UNISTD -I../wasi -I../w2c2 ../wasi/wasi.c pixpix.c main.c -lm
+    CMakeCache.txt  Makefile  cmake_install.cmake  pixpix.c  pixpix.wasm*  wasi/
+    CMakeFiles/     a.out*    main.c               pixpix.h  w2c2/
+    jyi-00-rust-dev 20:39 (main) ~/sr/la/w2c2/build
+
+</pre>
+<p>从它的 ls 示例里偷了个 main 函数拼上终于编译成功了。但是编译出来的 a.out 似乎会把所有路径前面加个 / 变成绝对路径。有点难绷……</p>
+<pre>    real    0m2.389s
+    user    0m2.290s
+    sys     0m0.095s
+
+    real    0m24.238s
+    user    0m24.147s
+    sys     0m0.088s
+
+</pre>
+<p>哦哦，跑出来了，性能是原版的 1/10！</p>
+<pre>    real    0m2.410s
+    user    0m2.332s
+    sys     0m0.074s
+
+</pre>
+<p>戳啦，原来是忘记开优化导致的。感觉性能还是挺不错的。</p>
+<p>虽然灵车但是感觉还是可以用的。</p>
+<p>Tue Jan 13 21:17:57 CST 2026</p>
+<pre>    Benchmark 1: ./a.out ~/src/util/pixpix/assets/8620.png
+      Time (mean ± σ):      2.331 s ±  0.027 s    [User: 2.254 s, System: 0.077 s]
+      Range (min … max):    2.291 s …  2.367 s    10 runs
+
+    Benchmark 2: ~/.cargo/target/release/pixpix ~/src/util/pixpix/assets/8620.png
+      Time (mean ± σ):      2.385 s ±  0.070 s    [User: 2.287 s, System: 0.098 s]
+      Range (min … max):    2.268 s …  2.550 s    10 runs
+
+    Summary
+      ./a.out ~/src/util/pixpix/assets/8620.png ran
+        1.02 ± 0.03 times faster than ~/.cargo/target/release/pixpix ~/src/util/pixpix/assets/8620.png
+
+</pre>
+<p>补一个 hyperfine，怎么比原版还快两个点。</p>
+<p>Wed Jan 14 16:00:09 CST 2026</p>
+<p>想了想 wastrel 还是比 w2c2 更好一点，毕竟只生成一个文件，也不用手动组装 main 函数。更阳间一些。</p>
+<p>还是研究研究 wastrel 怎么用好了。</p>
+<pre>    [1] jyi-00-rust-dev 16:21 ~/tmp/wast
+    0 ./a.out cat.c
+    Error: Os { code: 44, kind: NotFound, message: &quot;No such file or directory&quot; }
+
+</pre>
+<p>wastrel 编译之后为什么会提示打不开文件呢……</p>
+<p>怪了，我 <code>system(&quot;stat cat.c&quot;)</code> 又是好的。</p>
+<pre>    write(2, &quot;IT BEGINS\n&quot;, 10IT BEGINS
+    )             = 10
+    write(2, &quot;Error: &quot;, 7Error: )                  = 7
+    write(2, &quot;Os&quot;, 2Os)                       = 2
+    write(2, &quot; { &quot;, 3 { )                      = 3
+    write(2, &quot;code&quot;, 4code)                     = 4
+    write(2, &quot;: &quot;, 2: )                       = 2
+
+</pre>
+<p>好怪哦，它完全没做任何系统调用就失败了。</p>
+<pre>    0 gcc cat.c &amp;&amp; ./a.out cat.c
+    IT BEGINS
+    local_0 is 1048144 at line 16626
+    func_167
+    local_0 is 1048144 at line 16644
+    local_0 is -1 at line 16647
+    will skip open, jump to label2
+    Error: Os { code: 44, kind: NotFound, message: &quot;No such file or directory&quot; }
+
+</pre>
+<p>使用古法 printf 调试……</p>
+<p>看样子是它在打开文件的时候从内存里读了个数值，发现是 0，就直接返回了。</p>
+<pre>   jyi-00-rust-dev 17:06 (main) ~/sr/la/w2c2/build
+   0 md5sum dump.txt
+   e3a951a5de90a91ba32136af5717b3eb  dump.txt
+
+   jyi-00-rust-dev 17:07 ~/tmp/wast
+   0 md5sum dump.txt
+   e3a951a5de90a91ba32136af5717b3eb  dump.txt
+
+</pre>
+<p>把 w2c2 和 wastrel 的初始内存映像给存下来了，发现是一样的，那就是后面运行的时候出了问题？</p>
+<p>有点奇怪了。可能是 wastrel 的实现有点问题吗</p>
+<pre>    jyi-00-rust-dev 17:48 ~/tmp/wast
+    0 wasmtime --dir=. cat.wasm cat.c
+
+    [1] jyi-00-rust-dev 17:49 ~/tmp/wast
+    0 wasmtime cat.wasm ./cat.c
+    Error: Os { code: 44, kind: NotFound, message: &quot;No such file or directory&quot; }
+
+</pre>
+<p>用 wasmtime 跑了一下，发现它必须得先启用沙盒才能正常打开文件。wastrel 会不会也要沙盒才行……</p>
+<pre>    [1] jyi-00-rust-dev 17:51 ~/tmp/wast
+    0 wastrel run --expose-dir=$PWD cat.wasm cat.c
+    Error: Os { code: 44, kind: NotFound, message: &quot;No such file or directory&quot; }
+
+</pre>
+<p>好像也不太行</p>
+<pre>    jyi-00-rust-dev 17:54 ~/tmp/wast
+    0 wastrel run --expose-dir=$PWD cat.wasm $PWD/cat.c
+
+</pre>
+<p>这样就好了。</p>
+<p><a href="https://github.com/bytecodealliance/wasmtime/blob/main/docs/WASI-tutorial.md#executing-in-wasmtime">https://github.com/bytecodealliance/wasmtime/blob/main/docs/WASI-tutorial.md#executing-in-wasmtime</a></p>
+<pre>    As a brief aside, note that we used the path . above to grant the program access to the current directory. This is needed because the mapping from paths to associated capabilities is performed by libc, so it's part of the WebAssembly program, and we don't expose the actual current working directory to the WebAssembly program. So providing a full path doesn't work:
+
+</pre>
+<p>神秘，如果指定共享的是绝对路径，wasm 程序就不能用相对路径；如果共享的是相对路径，wasm 程序就不能用绝对路径。wastrel 的 expose-dir 不支持相对路径，只接受绝对路径……</p>
+<pre>    jyi-00-rust-dev 18:02 ~/tmp/wast
+    0 diff -u cat.c cat.wasm.AV9s8I.c
+    --- cat.c       2026-01-14 17:59:06.045669963 +0800
+    +++ cat.wasm.AV9s8I.c   2026-01-14 18:02:16.469412470 +0800
+    @@ -2677,7 +2677,7 @@
+                              struct access path, struct access stat_out) {
+       int lookup_flags = 0;
+       if (!(flags &amp; WASI_LOOKUP_SYMLINK_FOLLOW))
+    -    lookup_flags |= AT_SYMLINK_NOFOLLOW;
+    +    lookup_flags |= AT_SYMLINK_NOFOLLOW;
+
+       char path_buf[1024];
+       if (path.len &gt; sizeof(path_buf) - 1)
+    @@ -2701,7 +2701,7 @@
+                                    int32_t fst_flags) {
+       int lookup_flags = 0;
+       if (!(flags &amp; WASI_LOOKUP_SYMLINK_FOLLOW))
+    -    lookup_flags |= AT_SYMLINK_NOFOLLOW;
+    +    lookup_flags |= AT_SYMLINK_NOFOLLOW;
+
+       char path_buf[1024];
+       if (path.len &gt; sizeof(path_buf) - 1)
+    @@ -2921,7 +2921,7 @@
+           return WASI_ERRNO_INVAL;
+         }
+       }
+    -
+    +
+       struct timespec overall_timeout;
+       struct timespec *overall_timeout_p = NULL;
+       if (min_timeout &lt; UINT64_MAX) {
+    @@ -3404,9 +3404,11 @@
+       return wasip1_sock_shutdown(fd, how);
+     }
+     static const struct wasi_preopen wasi_preopens[] = {
+    +  {3, &quot;/home/jyi/tmp/wast&quot;},
+     };
+     static const struct wasi_preopen* wasi_preopen_for_fd(int fd) {
+       switch (fd) {
+    +  case 3: return &amp;wasi_preopens[0];
+       default: return NULL;
+       }
+     }
+    @@ -3482,7 +3484,7 @@
+
+     static inline void bind_one(const char *host, const char *guest) {
+       if (mount(host, guest, NULL, MS_BIND | MS_REC, NULL) == -1) {
+    -    fprintf(stderr, &quot;error: failed to bind mount %s: %s\n&quot;,
+    +    fprintf(stderr, &quot;error: failed to bind mount %s: %s\n&quot;,
+                 host, strerror(errno));
+         exit(1);
+       }
+    @@ -17279,7 +17281,13 @@
+       process_argc = argc;
+       process_argv = argv;
+       const char *root = prepare_sandbox();
+    +  make_empty_dir(&quot;home&quot;);
+    +  make_empty_dir(&quot;home/jyi&quot;);
+    +  make_empty_dir(&quot;home/jyi/tmp&quot;);
+    +  make_empty_dir(&quot;home/jyi/tmp/wast&quot;);
+    +  bind_one(&quot;/home/jyi/tmp/wast&quot;, &quot;home/jyi/tmp/wast&quot;);
+       make_empty_dir(&quot;tmp0&quot;);
+       pivot(root, &quot;tmp0&quot;);
+    +  prepare_preopen(3, &quot;/home/jyi/tmp/wast&quot;);
+       func_14();
+     }
+    [1] jyi-00-rust-dev 18:02 ~/tmp/wast
+    0
+
+</pre>
+<p>找了个正确的和错误的对照着看看</p>
+<p>好像还真是沙盒的问题……</p>
+<pre>    wastrel compile --no-tracepoints --expose-dir=/ -S -o cat.correct.c cat.wasm
+
+</pre>
+<p>这样就能得到正确的结果了。</p>
+<pre>    0 ./pixpix ~/src/util/pixpix/assets/8620.png
+
+    thread 'main' (1) panicked at src/main.rs:88:41:
+    called `Result::unwrap()` on an `Err` value: Decoding(DecodingError { format: Exact(Png), underlying: Some(Format(FormatError { inner: CorruptFlateStream { err: BadDistanceHuffmanTree } })) })
+    Illegal instruction
+
+</pre>
+<p>也并非正确啊，这个 illegal instruction 给我整哪来了。</p>
+<pre>    &gt;5m 34s&lt; jyi-00-rust-dev 18:46 ~/tmp/wast
+    0 ./pixpix ~/src/util/pixpix/assets/8620.png
+    =================================================================
+    ==497769==ERROR: AddressSanitizer: memcpy-param-overlap: memory ranges [0x772bbdb3d1c0,0x772bbdb3d1de) and [0x772bbdb3d1be, 0x772bbdb3d1dc) overlap
+        #0 0x772dc0ef264d in memcpy ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors_memintrinsics.inc:115
+        #1 0x5f19f844f52b in memory_copy /home/jyi/tmp/wast/pixpix.c:604
+        #2 0x5f19f844f52b in func_241 /home/jyi/tmp/wast/pixpix.c:76389
+        #3 0x5f19f8611af1 in func_739 /home/jyi/tmp/wast/pixpix.c:200067
+        #4 0x5f19f8699023 in func_804 /home/jyi/tmp/wast/pixpix.c:228561
+        #5 0x5f19f8787af8 in func_777 /home/jyi/tmp/wast/pixpix.c:211945
+        #6 0x5f19f878b162 in func_755 /home/jyi/tmp/wast/pixpix.c:203043
+        #7 0x5f19f87fa7de in func_37 /home/jyi/tmp/wast/pixpix.c:29823
+        #8 0x5f19f8866276 in func_27 /home/jyi/tmp/wast/pixpix.c:22236
+        #9 0x5f19f887dae7 in func_88 /home/jyi/tmp/wast/pixpix.c:48870
+        #10 0x5f19f887dc75 in func_18 /home/jyi/tmp/wast/pixpix.c:20024
+        #11 0x5f19f887de63 in main /home/jyi/tmp/wast/pixpix.c:268860
+        #12 0x772dc0c34ca7  (/lib/x86_64-linux-gnu/libc.so.6+0x29ca7) (BuildId: fce446c9d4ad48e2b0c90cce1a11722897805281)
+        #13 0x772dc0c34d64 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x29d64) (BuildId: fce446c9d4ad48e2b0c90cce1a11722897805281)
+        #14 0x5f19f80373e0 in _start (/home/jyi/tmp/wast/pixpix+0x63e0) (BuildId: cc02f67e84dfc357f5e416c517901d3d424d2b23)
+
+    Address 0x772bbdb3d1c0 is a wild pointer inside of access range of size 0x00000000001e.
+    Address 0x772bbdb3d1be is a wild pointer inside of access range of size 0x00000000001e.
+    SUMMARY: AddressSanitizer: memcpy-param-overlap ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors_memintrinsics.inc:115 in memcpy
+    ==497769==ABORTING
+
+</pre>
+<p>我超那我感觉这个正确性确实有问题啊，不太敢用了。还是 w2c2 好了。</p>
+<p>Wed Jan 14 19:03:59 CST 2026</p>
+<p><a href="https://github.com/turbolent/w2c2/issues/1">https://github.com/turbolent/w2c2/issues/1</a></p>
+<p>看起来 w2c2 功能性上比 wasm2c 要差一点。</p>
+<p>哦，wasm2c 可以直接用 apt 装 wabt，装完后就能得到 wasm2c 了。</p>
+<p>看了几个 example，感觉 wasm2c 用起来比 w2c2 要复杂一点。wasm2c 得手写一堆外围代码</p>
+<p>找到了一些早期文章。</p>
+<p><a href="https://github.com/vshymanskyy/wasm2native">https://github.com/vshymanskyy/wasm2native</a></p>
+<p>这个是基于 w2c2 的。</p>
+<p><a href="https://kripken.github.io/blog/wasm/2020/07/27/wasmboxc.html">https://kripken.github.io/blog/wasm/2020/07/27/wasmboxc.html</a></p>
+<p>这个是基于 wasm2c 的，我研究一下它怎么处理的 wasi。</p>
+<p><a href="https://hacks.mozilla.org/2020/02/securing-firefox-with-webassembly/">https://hacks.mozilla.org/2020/02/securing-firefox-with-webassembly/</a></p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../wasm.html">wasm</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../rust-transpilers/compile-rust-to-c.html">把 rust 编译到 c</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Wed Jan 14 19:25:18 2026</span>
+<!-- Created <span class="date dt-published">Wed Jan 14 19:25:18 2026</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

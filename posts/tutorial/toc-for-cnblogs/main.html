@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x535A;&#x5BA2;&#x56ED;&#x4E0A;&#x53EF;&#x7528;&#x7684; markdown &#x76EE;&#x5F55;&#x751F;&#x6210;&#x5668;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=posts%2Ftutorial%2Ftoc-for-cnblogs%2Fmain" />
+
+
+
+
+
+
+<link rel="prev" href="../../fun/niulang-zhinv/main.html" title="【睡前故事】牛郎织女的故事" />
+
+<link rel="up" href="../../../posts.html" title="posts" />
+
+<link rel="next" href="../../note/running-process-constantly-consume-disk-space/main.html" title="对集群上 df 和 du 命令显示结果不一致的排查记录" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../../index.html">jyi</a>/ 
+
+<a href="../../../posts.html">posts</a>/ 
+
+<a href="../../../index.html">tutorial</a>/ 
+
+<a href="../../../index.html">toc-for-cnblogs</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x535A;&#x5BA2;&#x56ED;&#x4E0A;&#x53EF;&#x7528;&#x7684; markdown &#x76EE;&#x5F55;&#x751F;&#x6210;&#x5668;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=posts%2Ftutorial%2Ftoc-for-cnblogs%2Fmain" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../../fun/niulang-zhinv/main.html">【睡前故事】牛郎织女的故事</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../../note/running-process-constantly-consume-disk-space/main.html">对集群上 df 和 du 命令显示结果不一致的排查记录</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<hr />
+
+<p>title: 博客园上可用的 markdown 目录生成器
+date: 2023-10-01 17:48:39</p>
+
+<h2>tags:</h2>
+
+<p>为 markdown 写的文章生成目录，使其在博客园上可用。</p>
+
+<h1>完整代码</h1>
+
+<pre><code class="perl">use v5.12;
+use utf8;
+use open ':utf8';
+use open ':std', ':utf8';
+
+my @subtitle_number;
+say "# 目录";
+while (&lt;&gt;) {
+    next if /^```/ ... /^```/;
+    if (/^(#+)\s*(.*?)\s*$/) {
+        my ($level, $title) = (length($1), $2);
+
+        my $indent = "  " x $level;
+
+        my $id = $title;
+        $id =~ s/[^_[:^punct:]]//g;
+        $id =~ s/&lt;span class="createlink"&gt;&lt;a href="/ikiwiki.cgi?do=create&amp;amp;from=posts%2Ftutorial%2Ftoc-for-cnblogs%2Fmain&amp;amp;page=%3Aspace%3A" rel="nofollow"&gt;?&lt;/a&gt;:space:&lt;/span&gt;/-/g;
+        $id = lc $id;
+
+        @subtitle_number = splice @subtitle_number, 0, $level;
+        $subtitle_number[$level - 1] += 1;
+        my $subtitle_number = join ".", @subtitle_number;
+
+        say "$indent+ $subtitle_number [$title](#$id)";
+    }
+}
+say "";
+</code></pre>
+
+<p>这是一个 Perl 脚本，从 stdin 或者参数中读取文章，输出一份 markdown 代码，是文章的目录。可以直接复制粘贴使用，也可以和其他工具集成使用。</p>
+
+<h1>使用示例</h1>
+
+<p>使用这样的命令：</p>
+
+<pre><code class="sh">$ perl toc.pl main.md
+</code></pre>
+
+<p>可以得到这样的结果：</p>
+
+<pre><code class="plain"># 目录
+  + 1 [完整代码](#完整代码)
+  + 2 [使用示例](#使用示例)
+  + 3 [原理](#原理)
+    + 3.1 [HTML 的链接语法](#html-的链接语法)
+    + 3.2 [markdown 列表缩进](#markdown-列表缩进)
+  + 4 [代码详解](#代码详解)
+    + 4.1 [使用「现代」Perl](#使用现代perl)
+    + 4.2 [支持 utf8 编码](#支持-utf8-编码)
+    + 4.3 [主循环](#主循环)
+      + 4.3.1 [跳过 markdown 的代码片段](#跳过-markdown-的代码片段)
+      + 4.3.2 [匹配标题](#匹配标题)
+      + 4.3.3 [设置缩进](#设置缩进)
+      + 4.3.4 [从标题名字中获得其 id](#从标题名字中获得其-id)
+      + 4.3.5 [获取标题的编号](#获取标题的编号)
+</code></pre>
+
+<h1>原理</h1>
+
+<h2>HTML 的链接语法</h2>
+
+<p>在大多数网页上，markdown 的链接语法会被编译成 HTML 的 <code>&lt;a&gt;</code> 标签。通常 <code>&lt;a&gt;</code> 标签会有 <code>href</code> 属性，内容是点击标签时跳转的目的地址。</p>
+
+<p>有些页内元素带有 <code>id</code> 属性，比如这个例子：</p>
+
+<pre><code class="html">&lt;h3 id="interactive-shell"&gt;interactive shell&lt;/h3&gt;
+</code></pre>
+
+<p>在这个例子里 <code>&lt;h3&gt;</code> 标签有 <code>id</code> 属性，值是 <code>interactive-shell</code>。这个值同样可以用作 <code>&lt;a&gt;</code> 标签的目的地址。</p>
+
+<p>当目的地址是页内元素的 <code>id</code> 时，点击 <code>&lt;a&gt;</code> 标签时便会跳转到该元素的位置。博客园给每个标题都自动分配了一个 <code>id</code>，利用这几点，就可以实现「点击目录项目跳转到对应章节」的功能。</p>
+
+<h2>markdown 列表缩进</h2>
+
+<p>在 markdown 中，列表以 <code>+</code> <code>-</code> 和 <code>*</code> 开头。如果这些符号前面有空白字符，那么这些空白字符会被当成缩进，最终会体现在列表展示结果上，缩进越多的列表项目展示时会越靠右，缩进相同的列表项目会左对齐。利用这一点，可以实现目录的层次结构。</p>
+
+<h1>代码详解</h1>
+
+<h2>使用「现代」Perl</h2>
+
+<pre><code class="perl">use v5.12;
+</code></pre>
+
+<p>Perl 是个老古董语言，为了保持兼容性，有许多好玩/有用的特性默认没有打开。不过我们可以使用 <code>use vX.YY</code> 的 pragma 来指定自己想使用的 Perl 的版本号，从而开启这些好玩的特性。</p>
+
+<h2>支持 utf8 编码</h2>
+
+<pre><code class="perl">use utf8;
+use open ':utf8';
+use open ':std', ':utf8';
+</code></pre>
+
+<p>同上，因为 Perl 是个老古董语言，所以默认全世界都用 ASCII 编码。我们要开启它对 utf8 的支持。</p>
+
+<p>这里第一行是让 Perl 用 utf8 的方式来解释这份源代码（有点像 python2 里面的 <code># -*- coding: utf-8 -*-</code> 的 pragma）。</p>
+
+<p>第二行是让 Perl 读所有文件时，读后解码 utf8；写所有文件时，写前编码 utf8。Perl 中为了方便数据处理，存在 IO Layer 的概念。layer 可以看做数据的转换器，数据在进行输入/输出时，会经过这些 layer 逐层处理。常用的 layer 有 <code>:crlf</code>（读时将 <code>CR-LF</code> 序列转换成 <code>CR</code>，写时反过来，用来对付 Windows 系统）和 <code>:encoding</code>（用来编解码文件）。还有些邪恶的 layer 可以实现自动压缩解压、base16 编码等功能。所以有时遇到输出到 stdout 和输出到文件中，内容不一致的情况，可以检查一下是不是用的 layer 不同造成的。</p>
+
+<p>第三行是在设置 stdio 的 layer。因为 stdio 在 Perl 程序运行前就已经打开了，所以需要单独设置一下。</p>
+
+<h2>主循环</h2>
+
+<p>就是那个巨大的 <code>while</code> 循环。它每次会从输入中读取一行数据并放到 <code>$_</code> 里面，直到读到文件结束。</p>
+
+<pre><code class="perl">while (&lt;&gt;) {
+</code></pre>
+
+<p>可以发现我们并没有处理命令行参数，这是因为 <code>&lt;&gt;</code> 这个操作符会替我们完成这项工作。<code>&lt;&gt;</code> 操作符的意思是，如果有命令行参数，那么就把命令行参数当做文件名打开文件，并且将文件内容作为输入；否则就把 stdin 作为输入。每调用一次 <code>&lt;&gt;</code> 操作符会读取一行，返回这一行的内容。如果没有变量来接收 <code>&lt;&gt;</code> 操作符的返回值，那么 <code>&lt;&gt;</code> 操作符会把返回值存在特殊变量 <code>$_</code> 中。</p>
+
+<h3>跳过 markdown 的代码片段</h3>
+
+<pre><code class="perl">    next if /^```/ ... /^```/;
+</code></pre>
+
+<p>这一行用来跳过 markdown 的代码片断。是一种被称为 flip-flop 的语法。上面代码的意思是，「如果在两个代码标记之间，那么执行 <code>next</code> 语句」。大概和下面的东西等价：</p>
+
+<pre><code class="perl"># 这句在循环外头
+my $in_codeblock = 0;
+
+# 这下面的在循环里头
+if ($in_codeblock) {
+    next;
+}
+
+if (/^```/ &amp;&amp; $in_codeblock == 0) {
+    $in_codeblock = 1;
+}
+
+if (/^```/ &amp;&amp; $in_codeblock == 1) {
+    $in_codeblock = 0;
+}
+</code></pre>
+
+<p>flip-flop 是一种很方便的语法，可以让人少写很多代码。最重要的是不需要对那一堆烦人的标志变量命名了。</p>
+
+<h3>匹配标题</h3>
+
+<p>用一个正则表达式来匹配标题并且获得需要的信息：</p>
+
+<pre><code class="perl">    if (/^(#+)\s*(.*?)\s*$/) {
+        my ($level, $title) = (length($1), $2);
+</code></pre>
+
+<p>这个意思是，如果遇到「开头是若干个 <code>#</code>，中间有一堆字符」这种模式，就认为匹配到标题了。<code>$level</code> 和 <code>$title</code> 分别是标题的层级和名称。因为正则表达式在 Perl 中用的特别多，所以直接做进语言里面去了，可以随手写，不需要另外调库。</p>
+
+<h3>设置缩进</h3>
+
+<pre><code class="perl">        my $indent = "  " x $level;
+</code></pre>
+
+<p><code>$level</code> 总是个整数。这里用字符串重复操作符 <code>x</code>，来获得与 <code>$level</code> 成正比的缩进长度。</p>
+
+<h3>从标题名字中获得其 id</h3>
+
+<pre><code class="perl">        my $id = $title;
+        $id =~ s/[^_[:^punct:]]//g;
+        $id =~ s/&lt;span class="createlink"&gt;&lt;a href="/ikiwiki.cgi?do=create&amp;amp;from=posts%2Ftutorial%2Ftoc-for-cnblogs%2Fmain&amp;amp;page=%3Aspace%3A" rel="nofollow"&gt;?&lt;/a&gt;:space:&lt;/span&gt;/-/g;
+        $id = lc $id;
+</code></pre>
+
+<p>博客园会根据标题名称来设置其 HTML 标签的 id。有人托梦告诉我说，id 就是标题去掉所有标点符号但是保留下划线 <code>_</code>，把空白字符换成连字符 <code>-</code>，并且把所有字母变为小写之后的结果。所以用正则表达式写了一个。</p>
+
+<h3>获取标题的编号</h3>
+
+<pre><code class="perl">        @subtitle_number = splice @subtitle_number, 0, $level;
+        $subtitle_number[$level - 1] += 1;
+        my $subtitle_number = join ".", @subtitle_number;
+</code></pre>
+
+<p>生成的目录里面会有类似 <code>X.Y.Z.W</code> 这样的标题编号。这一部分代码就用来处理标题编号的生成问题。懒得写了……</p>
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../../fun/niulang-zhinv/main.html">【睡前故事】牛郎织女的故事</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../../note/running-process-constantly-consume-disk-space/main.html">对集群上 df 和 du 命令显示结果不一致的排查记录</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Mon Jan  2 16:19:00 2023</span>
+<!-- Created <span class="date dt-published">Mon Jan  2 16:19:00 2023</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>x-forward</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fx-forward" />
+
+
+
+
+
+
+<link rel="prev" href="./ws/vibe.html" title="vibe" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+x-forward
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fx-forward" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/vibe.html">vibe</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<pre>Tue Oct  7 21:05:40 CST 2025
+
+远程的 headless 小鸡没有 gui 太折磨了，画了图也看不着。研究一下怎么通过 X forward 之类的手段让远程可以跑 GUI 图片然后放到本地来。
+
+本地需要一个 X server，一般的做法是 X410。不过 Windows 已经有 wsl-g 了，如果能把 wslg 单独启动也许可以省一个 X410 吗？
+
+https://github.com/microsoft/wslg/discussions/1133
+
+有个 issue，研究研究。
+
+好吧，没什么有意思的信息。
+
+https://x410.dev/cookbook/wsl/x410-vs-wslg/
+
+哦，原来 wslg 是 wayland 啊……这个链接里也提到 wslg 只能 “Only SSH clients running in WSL2”
+
+那感觉 wslg 疑似不如 x410。我总不可能为了启动一个 gui 程序还在本地运行一个虚拟机吧……
+
+把 wslg 关掉好了。
+
+x410 我来力
+
+https://x410.dev/cookbook/built-in-ssh-x11-forwarding-in-powershell-or-windows-command-prompt/
+
+安好了，xcalc 启动
+
+哦，x410 竟然不是 floss。x410，卸载！
+
+转进 vcxsrv。
+
+vcxsrv 也和 x410 工作地一样好嘛……
+
+跑了下 glxgears，发现只有 6 fps。好吧也不是不能用，我又不拿这个转发看视频……
+</pre>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/vibe.html">vibe</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

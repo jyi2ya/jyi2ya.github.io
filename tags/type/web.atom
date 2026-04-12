@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>pages tagged type/web</title>
+<link href="https://jyi2ya.github.io/tags/type/web.html"/>
+<link href="https://jyi2ya.github.io/tags/type/web.atom" rel="self" type="application/atom+xml"/>
+<author>
+
+<name>jyi</name>
+
+</author>
+
+
+
+
+<id>https://jyi2ya.github.io/tags/type/web.html</id>
+
+<subtitle type="html">jyi</subtitle>
+<generator uri="http://ikiwiki.info/">ikiwiki</generator>
+<updated>2026-04-11T17:09:07Z</updated>
+<entry>
+	<title>newpage</title>
+
+	<id>https://jyi2ya.github.io/plugins/ikiplugins/doc/plugins/contrib/newpage.html</id>
+
+	<link href="https://jyi2ya.github.io/plugins/ikiplugins/doc/plugins/contrib/newpage.html"/>
+
+
+
+
+
+
+	<category term="type/web" />
+
+
+	<updated>2026-04-11T17:09:07Z</updated>
+	<published>2026-04-11T17:09:07Z</published>
+
+
+	<content type="html" xml:lang="en">
+	&lt;p&gt;[[!template &lt;span class=&quot;error&quot;&gt;Error: failed to process template &amp;lt;span class=&amp;quot;createlink&amp;quot;&amp;gt;&amp;lt;a href=&amp;quot;/ikiwiki.cgi&amp;#63;do=create&amp;amp;amp;from=plugins&amp;#37;2Fikiplugins&amp;#37;2Fdoc&amp;#37;2Fplugins&amp;#37;2Fcontrib&amp;#37;2Fnewpage&amp;amp;amp;page=&amp;#37;2Ftemplates&amp;#37;2Fplugin&amp;quot; rel=&amp;quot;nofollow&amp;quot;&amp;gt;&amp;#63;&amp;lt;/a&amp;gt;plugin&amp;lt;/span&amp;gt; template plugin not found&amp;#10;&lt;/span&gt;]]&lt;/p&gt;
+
+&lt;h2&gt;NAME&lt;/h2&gt;
+
+&lt;p&gt;IkiWiki::Plugin::newpage - add a &quot;create new page&quot; form to actions&lt;/p&gt;
+
+&lt;h2&gt;SYNOPSIS&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;# activate the plugin
+add_plugins =&amp;gt; [qw{goodstuff newpage ....}],
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;DESCRIPTION&lt;/h2&gt;
+
+&lt;p&gt;This plugin adds a new action to the &quot;ACTIONS&quot; section of a page;
+a button labelled &quot;create&quot; and an input field next to it.&lt;/p&gt;
+
+&lt;p&gt;The common way of creating a new page is to edit a different page
+and add a link to the new page.  However, there are some situations
+where that is a nuisance; for example, where pages are listed using
+a [[!ikiwiki  plugins/map]] directive.  The newpage plugin enables
+one to simply type the name of the new page, click the &quot;create&quot; button,
+and one is then taken to the standard IkiWiki create-page form.&lt;/p&gt;
+
+&lt;h2&gt;DOWNLOAD&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;browse at GitHub: &lt;a href=&quot;http://github.com/rubykat/ikiplugins/blob/master/IkiWiki/Plugin/newpage.pm&quot;&gt;http://github.com/rubykat/ikiplugins/blob/master/IkiWiki/Plugin/newpage.pm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;git repo at git://github.com/rubykat/ikiplugins.git&lt;/li&gt;
+&lt;/ul&gt;
+
+
+	</content>
+
+
+
+</entry>
+
+</feed>

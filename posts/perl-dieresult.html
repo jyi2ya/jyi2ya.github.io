@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>perl-dieresult</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=posts%2Fperl-dieresult" />
+
+
+
+
+
+
+<link rel="prev" href="./event-and-stdio.html" title="不要在事件回调风格的异步框架里注册 dup 出来的文件描述符" />
+
+<link rel="up" href="../posts.html" title="posts" />
+
+<link rel="next" href="./llm-integration.html" title="如何将大模型集成到自己的程序之中" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../posts.html">posts</a>/ 
+
+</span>
+
+
+<span class="title">
+perl-dieresult
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=posts%2Fperl-dieresult" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./event-and-stdio.html">不要在事件回调风格的异步框架里注册 dup 出来的文件描述符</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./llm-integration.html">如何将大模型集成到自己的程序之中</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Wed Dec 31 23:36:49 CST 2025</p>
+<p>上个月写了个 Perl 的错误处理库，DieResult <a href="https://github.com/jyi2ya/DieResult">https://github.com/jyi2ya/DieResult</a>，它能将 Perl 异常给转换成类似 Rust Result 的东西，可以添加上下文信息之后再用 <code>unwrap</code> 重新抛出。错误链、出错误位置会形成树形的结构，非常方便调试。</p>
+<pre>    jyi-00-rust-dev 16:59 (master) ~/dev/DieResult
+    0 perl -I. example.pl
+    * main example.pl:58
+    |
+    * Application startup failed
+    | main example.pl:51
+    | Environment: development
+    |
+    * main example.pl:43
+    | Config path: /cannot_read_this
+    | Expected format: TOML
+    |
+    * Failed to load application configuration
+    | main example.pl:36
+    |
+    |-* attempt 1
+    | | main example.pl:22
+    | |
+    | * Can't open '/cannot_read_this' with mode '&lt;:utf8': 'No such file or directory' at example.pl line 12
+    |
+    |-* attempt 2
+    | | main example.pl:22
+    | |
+    | * Can't open '/cannot_read_this' with mode '&lt;:utf8': 'No such file or directory' at example.pl line 12
+    |
+    |-* attempt 3
+    | | main example.pl:22
+    | |
+    | * Can't open '/cannot_read_this' with mode '&lt;:utf8': 'No such file or directory' at example.pl line 12
+
+</pre>
+<p>类似这种风格。</p>
+<p>今天想在异步代码里用它，大失败了。</p>
+<p>这是因为 DieResult 是用 Perl 函数的 prototype 功能实现的，虽然 <code>wrap</code> 用起来和 <code>eval</code> 差不多，但是前者花括号本质上是闭包，后者则是普通的代码块。闭包里 await 一个 Future 的话，是在非 async 函数中调用 async 方法，这就会遇到经典的函数染色问题。<a href="https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/">https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/</a></p>
+<p>Perl 的 async 和 await 一般会用 Future::AsyncAwait 来做。这个库实现的 async await 是有栈的，理论上来说可以像 goroutine 那样随地挂起随时切换，但不知为何它并不允许在非 async 函数中使用 await。另一个基于 Coro 的实现，Mojo::AsyncAwait，倒是允许在非 async 函数中 await 一个 Future，不过它已经很久没有更新了，也不是 Mojolicious 中现在使用的方法，所以不用它。</p>
+<p>这么看来比较可行的解决方法就只有用 Keyword::Simple 给 Perl 加一个关键字了，在解释执行之前按照我们的意志修改语法树里与模式匹配的部分，哇没想到有一天我会在 Perl 里写过程宏。</p>
+<p>搓了一个用 Text::Balanced 提取代码块再用 Keyword::Simple 组装起来的方案，发现不好用。原因是：</p>
+<pre>    This also means your new keywords can only occur at the beginning of a statement, not embedded in an expression.
+
+</pre>
+<p>它只支持关键字在语句块开头的情况。也就是说不支持 <code>my $var = wrap { ... }</code> 这样的用法。</p>
+<p>不过好像也没更好的东西了。Keyword::Declare 底层用的也是 Keyword::Simple，会遇到一样的问题。用 <code>my $var = do { wrap { ... } }</code> 这么套着凑合用用吧。
+</p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./event-and-stdio.html">不要在事件回调风格的异步框架里注册 dup 出来的文件描述符</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./llm-integration.html">如何将大模型集成到自己的程序之中</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Thu Jan  1 02:14:05 2026</span>
+<!-- Created <span class="date dt-published">Thu Jan  1 02:14:05 2026</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

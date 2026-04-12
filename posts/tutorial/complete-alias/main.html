@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x4F7F;&#x7528; complete-alias &#x8865;&#x5168; bash &#x522B;&#x540D;&#x7684;&#x53C2;&#x6570;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=posts%2Ftutorial%2Fcomplete-alias%2Fmain" />
+
+
+
+
+
+
+<link rel="prev" href="../../note/perf/main.html" title="Perf 笔记" />
+
+<link rel="up" href="../../../posts.html" title="posts" />
+
+<link rel="next" href="../wine-bottles/main.html" title="Bottles 安装" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../../index.html">jyi</a>/ 
+
+<a href="../../../posts.html">posts</a>/ 
+
+<a href="../../../index.html">tutorial</a>/ 
+
+<a href="../../../index.html">complete-alias</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x4F7F;&#x7528; complete-alias &#x8865;&#x5168; bash &#x522B;&#x540D;&#x7684;&#x53C2;&#x6570;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=posts%2Ftutorial%2Fcomplete-alias%2Fmain" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../../note/perf/main.html">Perf 笔记</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../wine-bottles/main.html">Bottles 安装</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<hr />
+
+<p>title: 使用 complete-alias 补全 bash 别名的参数
+date: 2023-10-01 17:48:39</p>
+
+<h2>tags:</h2>
+
+<h1>使用 complete-alias 补全 bash 别名的参数</h1>
+
+<h2>命令别名</h2>
+
+<p>众所周知，bash 中有个很方便的功能，使用 <code>alias</code> 命令创建命令别名。比如：</p>
+
+<pre><code class="bash"># Git
+alias cg='cd `git rev-parse --show-toplevel || echo .`'
+alias gaA='git add -A'
+alias gad='git add'
+alias gbc='git branch'
+alias gcm='git commit'
+alias gco='git checkout'
+alias gst='git status'
+alias gcl='git clone'
+alias glg='git log --graph'
+alias gmg='git merge'
+alias gdf='git diff'
+</code></pre>
+
+<p>这样，如果我们输入 <code>gcl</code>，bash 就会认为我们输入的是 <code>git clone</code>。极大地减少了输入字母的数量。</p>
+
+<h2>命令参数补全</h2>
+
+<p>bash 还有另一个强大的功能，命令参数补全。这个命令参数补全不仅仅是补全当前目录下的文件，而是根据当前已经输入的命令和参数，猜测补全下一个参数。一般来说发行版都会提供大量写好的补全脚本，可以直接使用。</p>
+
+<p>以 Debian 为例，安装 <code>bash-completion</code> 软件包后，在 <code>~/.bashrc</code> 中加上 <code>source /etc/bash_completion</code>。接着输入命令，连续按下两下 <code>tab</code> 键就可以触发补全功能（按下 <code>tab</code> 键的地方在下面用 <code>&lt;TAB&gt;</code> 表示：</p>
+
+<pre><code class="plain">% 19:50:08 (master) ~/sr/md/bl/note/complete-alias
+0 ls --h&lt;TAB&gt;&lt;TAB&gt;
+--help                --hide-control-chars  --hyperlink
+--hide=               --human-readable
+</code></pre>
+
+<p>虽然说没有 zsh 的好用就是啦。</p>
+
+<h2>但是有一个小问题</h2>
+
+<p>bash 的命令参数补全是根据命令名来确定的，举一个简单的例子：</p>
+
+<pre><code class="bash">_id()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    if &lt;span class="createlink"&gt;&lt;a href="/ikiwiki.cgi?do=create&amp;amp;from=posts%2Ftutorial%2Fcomplete-alias%2Fmain&amp;amp;page=___36__cur___61____61___-__42___" rel="nofollow"&gt;?&lt;/a&gt; &amp;#36;cur &amp;#61;&amp;#61; -&amp;#42; &lt;/span&gt;; then
+        local opts=$(_parse_help "$1")
+        &lt;span class="createlink"&gt;&lt;a href="/ikiwiki.cgi?do=create&amp;amp;from=posts%2Ftutorial%2Fcomplete-alias%2Fmain&amp;amp;page=___36__opts_" rel="nofollow"&gt;?&lt;/a&gt; &amp;#36;opts &lt;/span&gt; || opts="-G -g -u" # POSIX fallback
+        COMPREPLY=($(compgen -W "$opts" -- "$cur"))
+    else
+        COMPREPLY=($(compgen -u "$cur"))
+    fi
+} &amp;&amp;
+    complete -F _id id
+</code></pre>
+
+<p>这是从 <code>/usr/share/bash-completion/completions/id</code> 里面摘抄的补全相关代码。可以看到，代码里先实现了 shell 函数 <code>_id</code>，再用 <code>complete -F _id id</code> 来把 <code>id</code> 命令相关的补全和 <code>_id</code> 绑定在一起。即需要补全 <code>id</code> 命令的参数时，会用某种方式调用 <code>_id</code> 函数。</p>
+
+<p>这样确实可以处理很多情况，但是对别名无效。比如我们运行 <code>alias gco='git checkout'</code>，把 <code>gco</code> 作为 <code>git checkout</code> 的别名。当我们输入 <code>gco</code> 再按 <code>tab</code> 键时，因为没有绑定 <code>gco</code> 相关的补全函数，所以 bash 不知道如何补全，只能在后面接上文件名。</p>
+
+<p>我们期待的行为应该是输入 <code>gco</code> 再按 <code>tab</code> 就和输入 <code>git checkout</code> 再按 <code>tab</code> 一样，可以补全出分支名称：</p>
+
+<pre><code class="plain">% 20:03:23 (master) ~/sr/md/bl/note/complete-alias
+0 git checkout&lt;TAB&gt;&lt;TAB&gt;
+HEAD                 linux-csharp-build   master               ORIG_HEAD
+</code></pre>
+
+<h2>小问题解决了</h2>
+
+<p>之前肯定也有人遇到过一样的问题，并且造了相关的轮子。这儿有一个好用的：<a href="https://github.com/cykerway/complete-alias">complete-alias</a>。</p>
+
+<p>我们只要把仓库里面 <code>complete_alias</code> 文件中的内容复制下来，贴到 <code>~/.bashrc</code> 尾巴上（有 1000 多行，有点野蛮。讲究的人可以把它放到某个目录里然后 <code>.bashrc</code> 里面用 <code>source</code> 命令处理？），再把最后一行 <code>#complete -F _complete_alias "${!BASH_ALIASES[@]}"</code> 前面的井号 <code>#</code> 删掉就算配置完成。重新启动 bash 即可使用。</p>
+
+<p>总而言之挺开箱即用的，配置不费劲。</p>
+
+<p>效果：</p>
+
+<pre><code class="plain">% 20:14:27 (master) ~/sr/md/bl/note/complete-alias
+0 gco&lt;TAB&gt;&lt;TAB&gt;
+HEAD                 linux-csharp-build   master               ORIG_HEAD
+</code></pre>
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../../note/perf/main.html">Perf 笔记</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../wine-bottles/main.html">Bottles 安装</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Mon Mar  7 20:32:00 2022</span>
+<!-- Created <span class="date dt-published">Mon Mar  7 20:32:00 2022</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

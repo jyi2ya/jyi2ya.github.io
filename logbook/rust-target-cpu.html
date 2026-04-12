@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>rust-target-cpu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Frust-target-cpu" />
+
+
+
+
+
+
+<link rel="prev" href="./ws/rust-on-newlib.html" title="rust-on-newlib" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+<link rel="next" href="./ws/rust-testability.html" title="rust-testability" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+rust-target-cpu
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Frust-target-cpu" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/rust-on-newlib.html">rust-on-newlib</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/rust-testability.html">rust-testability</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Thu Dec 11 16:11:47 CST 2025</p>
+<p>部署自己的程序的时候通常想让 rust 构建的时候支持更多的 CPU 特性，来白嫖更多优化。</p>
+<p>但是不同的 cpu 支持的 flags 也不一样。</p>
+<p>对比 <code>target-cpu=native</code> 和默认特性的差别：</p>
+<pre>    [1] jyi-00-rust-dev 16:15 ~
+    0 diff -u &lt;(rustc --print cfg ) &lt;(rustc --print cfg -C target-cpu=native)
+    --- /dev/fd/63  2025-12-11 16:15:34.575262875 +0800
+    +++ /dev/fd/62  2025-12-11 16:15:34.575262875 +0800
+    @@ -8,9 +8,18 @@
+     target_endian=&quot;little&quot;
+     target_env=&quot;gnu&quot;
+     target_family=&quot;unix&quot;
+    +target_feature=&quot;aes&quot;
+    +target_feature=&quot;cmpxchg16b&quot;
+     target_feature=&quot;fxsr&quot;
+    +target_feature=&quot;lahfsahf&quot;
+    +target_feature=&quot;pclmulqdq&quot;
+    +target_feature=&quot;popcnt&quot;
+     target_feature=&quot;sse&quot;
+     target_feature=&quot;sse2&quot;
+    +target_feature=&quot;sse3&quot;
+    +target_feature=&quot;sse4.1&quot;
+    +target_feature=&quot;sse4.2&quot;
+    +target_feature=&quot;ssse3&quot;
+     target_feature=&quot;x87&quot;
+     target_has_atomic
+     target_has_atomic=&quot;16&quot;
+
+</pre>
+<p>不知道 rustc 是怎么把这些特性算出来的。</p>
+<p><a href="https://github.com/rust-lang/rust/issues/80633">https://github.com/rust-lang/rust/issues/80633</a></p>
+<pre>    target-cpu=native is a best effort kind of feature and will not be able to detect 100% accurately in all instances and for all versions. As thus target-cpu=native not detecting znver3 is not an implementation bug.
+
+</pre>
+<p><a href="https://github.com/hartwork/resolve-march-native">https://github.com/hartwork/resolve-march-native</a></p>
+<pre>    $ resolve-march-native --clang --vertical
+    -march=sandybridge
+    -Xclang -target-feature -Xclang +64bit
+    -Xclang -target-feature -Xclang +aes
+    -Xclang -target-feature -Xclang +avx
+    -Xclang -target-feature -Xclang +cmov
+    -Xclang -target-feature -Xclang +crc32
+    -Xclang -target-feature -Xclang +cx16
+    -Xclang -target-feature -Xclang +cx8
+    -Xclang -target-feature -Xclang +fxsr
+    -Xclang -target-feature -Xclang +mmx
+    -Xclang -target-feature -Xclang +pclmul
+    -Xclang -target-feature -Xclang +popcnt
+    -Xclang -target-feature -Xclang +sahf
+    -Xclang -target-feature -Xclang +sse
+    -Xclang -target-feature -Xclang +sse2
+    -Xclang -target-feature -Xclang +sse3
+    -Xclang -target-feature -Xclang +sse4.1
+    -Xclang -target-feature -Xclang +sse4.2
+    -Xclang -target-feature -Xclang +ssse3
+    -Xclang -target-feature -Xclang +xsave
+    -Xclang -target-feature -Xclang +xsaveopt
+
+</pre>
+<p>找到一个看起来有用的。</p>
+<p>但是是 python 写的，看起来不太好用。</p>
+<p>还是用 rustc 吧。</p>
+<pre>    [1] jyi-00-rust-dev 16:32 ~/.r/to/nightly-x86_64-unknown-linux-gnu/bin
+    0 ldd rustc
+            linux-vdso.so.1 (0x000070d7e97dd000)
+            librustc_driver-d012d9d43742cddd.so =&gt; /home/jyi/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/./../lib/librustc_driver-d012d9d43742cddd.so (0x000070d7e1a00000)
+            libdl.so.2 =&gt; /lib/x86_64-linux-gnu/libdl.so.2 (0x000070d7e97c7000)
+            librt.so.1 =&gt; /lib/x86_64-linux-gnu/librt.so.1 (0x000070d7e97c2000)
+            libpthread.so.0 =&gt; /lib/x86_64-linux-gnu/libpthread.so.0 (0x000070d7e97bd000)
+            libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x000070d7e180a000)
+            libLLVM.so.21.1-rust-1.93.0-nightly =&gt; /home/jyi/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/./../lib/../lib/libLLVM.so.21.1-rust-1.93.0-nightly (0x000070d7d7a00000)
+            libgcc_s.so.1 =&gt; /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000070d7e978e000)
+            /lib64/ld-linux-x86-64.so.2 (0x000070d7e97df000)
+            libm.so.6 =&gt; /lib/x86_64-linux-gnu/libm.so.6 (0x000070d7e9310000)
+            libz.so.1 =&gt; /lib/x86_64-linux-gnu/libz.so.1 (0x000070d7e976e000)
+
+</pre>
+<p>哦不对，rustc 怎么依赖这么大一坨。</p>
+<p>哦，或者我如果可以知道 cpu 在 rustc 里的代号的话，就可以用本地的 rustc 来做特性检测的工作了。</p>
+<p><a href="https://unix.stackexchange.com/questions/230634/how-to-find-out-the-cpu-code-name-architecture-family">https://unix.stackexchange.com/questions/230634/how-to-find-out-the-cpu-code-name-architecture-family</a></p>
+<pre>    rivus-sweethome 16:31 /srv/rivus
+    0 cat /sys/devices/cpu/caps/pmu_name
+    skylake
+
+</pre>
+<p>好好好。</p>
+<pre>    Note that this file does not exist on AMD machines. –
+
+</pre>
+<p>坏坏坏。</p>
+<pre>    grandcentral 16:38 ~
+    0 echo | gcc -march=native -Q --help=target | grep march | head -n 1 | sed &quot;s/^.*-march=&lt;span class=&quot;createlink&quot;&gt;&lt;a href=&quot;/ikiwiki.cgi?do=create&amp;amp;from=logbook%2Frust-target-cpu&amp;amp;page=%3Aspace%3A&quot; rel=&quot;nofollow&quot;&gt;?&lt;/a&gt;:space:&lt;/span&gt;*//&quot;
+    skylake-avx512
+
+</pre>
+<p>根据上面那个问题的回答自己写了一个。好好好。</p>
+<p><a href="https://forum.proxmox.com/threads/found-significant-performance-difference-between-selecting-cpu-host-and-cpu-x86-64-v2-aes.147932/">https://forum.proxmox.com/threads/found-significant-performance-difference-between-selecting-cpu-host-and-cpu-x86-64-v2-aes.147932/</a></p>
+<p>这个说 x86-64-v2-aes 比 host 快一些。</p>
+<p><a href="https://forum.proxmox.com/threads/cpu-type-host-is-significantly-slower-than-x86-64-v2-aes.159107/">https://forum.proxmox.com/threads/cpu-type-host-is-significantly-slower-than-x86-64-v2-aes.159107/</a></p>
+<p>这个又说 host 比 x86-64-v2-aes 明显更慢？</p>
+<pre>    As I understand it, when using the &quot;host&quot; CPU type, Windows spends a lot of time applying CPU vulnerability mitigations, but when using a more specific CPU type, these mitigations are disabled.
+    First pic x86-64-v2-AES : Windows detects VM (Virtual machine = Yes) so no nested Hyper-V running (required for VBS )
+    Second pic &quot;host&quot; : Windows doesn't detect VM ( Virtualisation = Enabled ) suggest Hyper-V or WSL enabled within Windows guest and/or optionnal args used ( hidden=off or kvm=off )
+    Windows 24H2 use/active Hyper-V and so, nested Hyper-V, for its Virtualization-based Security (VBS).
+Check VBS state from msinfo32.exe , at the bottom of the first page.
+
+</pre>
+<p>原来是 Windows 检测到自己在虚拟机里的时候会配合一下……</p>
+<p><a href="https://blog.bairuo.net/2025/03/03/%e5%85%b3%e4%ba%8eproxmox%e4%b8%adcpu%e7%b1%bb%e5%9e%8b%e5%af%b9windows%e5%ae%a2%e6%88%b7%e6%9c%ba%e7%9a%84%e6%80%a7%e8%83%bd%e5%bd%b1%e5%93%8d/">https://blog.bairuo.net/2025/03/03/%e5%85%b3%e4%ba%8eproxmox%e4%b8%adcpu%e7%b1%bb%e5%9e%8b%e5%af%b9windows%e5%ae%a2%e6%88%b7%e6%9c%ba%e7%9a%84%e6%80%a7%e8%83%bd%e5%bd%b1%e5%93%8d/</a></p>
+<pre>    Proxmox/KVM中Windows性能低下的主要原因是PVE传入了不合适的CPU Flags，可能触发了Windows中不同的CPU漏洞缓解措施或其他数据路径，性能下降是二者共同造成的结果，推翻了网上常流传的主要原因是Windows 10的Hyper-V虚拟化启动（bcdedit /set hypervisorlaunchtype off）和VBS的原因
+
+</pre>
+<p><a href="https://www.reddit.com/r/archlinux/comments/1bmyl23/so_how_are_x8664_optimizations_going/">https://www.reddit.com/r/archlinux/comments/1bmyl23/so_how_are_x8664_optimizations_going/</a></p>
+<pre>    Edit: So as it turns out, if the application does benefit from SIMD extensions like SSE and AVX, e.g. FFmpeg and FFTW, they explicitly support it and check availability at runtime, so the official packages seem to be fine. Packages that don't explicitly support it don't seem to gain that much performance in practice when compiled with V3 or V4. So I think this is negligible for most systems.
+
+</pre>
+<p>这里说如果程序要用高级特性（比如 SIMD）它们会自己检测，没有明显用到这些特性的程序即使用新 CPU 为目标编译也不会有明显的改进……</p>
+<pre>    A quick reminder of the x86_64 feature levels for those who need it.
+
+    x86_64-v1 - this is what ArchLinux compiles for now. This basically amounts to a Pentium 4, with 64bit long mode and SSE2 extensions. That's it. Targeting a CPU from ~2002/3 is the current standard for desktop Linux distros.
+
+    x86_64-v2 - this adds SSE3, SSE4.1 and SSE4.2 instructions. Basically targets Nehalem and newer processors from Intel, and AMD processors from a similar time frame. Almost every x86 CPU since 2010 supports this feature level/has these instructions.
+
+    x86_64-v3 - this level adds AVX, AVX2, MOVBE, and FMA instructions. Most CPUs since Intel Haswell(2013) support this level of instructions. However, Intel has released a large number of Atom, Pentium, Celeron and other CPUs since then which do not support AVX or AVX2 and thus are unsupported by this feature level. A large number of budget laptops, including some released this year(2024) lack AVX/AVX2
+
+    x86_64-v4 - this level only adds AVX-512 instructions. while this provides the highest performance, it should be known that very few CPUs support it. Only Zen4 core CPUs have it on the AMD side. And on the Intel side, very few CPUs have it, mostly a few Rocket Lake CPUs. The vast majority of Intel chips currently have it permanently fused off. The ones that do have it only have it on some cores.
+
+    With all this in mind. the best solution for ArchLinux going forward might be to move up to v2 for now, since this would represent a fair leap forward from v1. And retain compatibility with the vast majority of hardware anyone might practically be using ArchLinux on.
+
+    In a few years it might become practical to move on to v3 once the last v2-only CPUs from Intel have been discontinued.
+
+</pre>
+<p>原来上网本的那些 cpu 有些是 x86_64-v3,-avx,-avx2 的？那感觉更像 x86-64-v2 加上些什么东西。</p>
+<pre>    Nope.
+
+    v2 gives you practically nothing in terms of performance. -&gt; waste of time &amp; resources to build repos for this.
+
+    This is also the reason cachyos doesn't offer v2 repos.
+
+    The benefits &amp; optimized code support really start with v3 (avx/avx2).
+
+</pre>
+<p>看来 v3 是个槛，因为有 avx</p>
+<p><a href="https://www.phoronix.com/review/cachyos-x86-64-v3-v4">https://www.phoronix.com/review/cachyos-x86-64-v3-v4</a></p>
+<p>具体的 benchmark</p>
+<p><a href="https://blog.centos.org/2023/08/centos-isa-sig-performance-investigation/">https://blog.centos.org/2023/08/centos-isa-sig-performance-investigation/</a></p>
+<pre>    For the latter two benchmarks, we saw a 2.2x speed up.  Mocassin seems to benefit the most from the auto-vectorization that GCC12 does.  Using GCC 11 with appropriate compiler flags produced similar results.  The md5crypt benchmark benefits from the increased parallelism and double register width that AVX introduces over SSE.  That was encouraging as it further confirms the hypothesis that workloads which lend themselves to vectorization can benefit greatly.
+
+</pre>
+<p>在天然适合向量化的代码里从 x86-64-v2 切到 x86-64-v3 能有 2.2x 的性能提升。这个应该主要是 avx 带来的。</p>
+<p><a href="https://sunnyflunk.github.io/2023/01/15/x86-64-v3-Mixed-Bag-of-Performance.html">https://sunnyflunk.github.io/2023/01/15/x86-64-v3-Mixed-Bag-of-Performance.html</a></p>
+<p>测评了多个软件，最后发现有些跑得更快，有些软件反而有性能回退。总体上来说是更快的。</p>
+<p>哦，原来 rust target cpu 和 target feature 是两个分开的选项，我说怎么跑不通。</p>
+<p>Fri Dec 12 21:19:15 CST 2025</p>
+<p><a href="https://github.com/jyi2ya/rustc-maximize-cpu-feature">https://github.com/jyi2ya/rustc-maximize-cpu-feature</a></p>
+<p>做了个小工具
+</p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/rust-on-newlib.html">rust-on-newlib</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/rust-testability.html">rust-testability</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

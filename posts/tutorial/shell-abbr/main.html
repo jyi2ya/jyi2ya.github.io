@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x4E00;&#x4E9B;&#x80FD;&#x591F;&#x8282;&#x7701;&#x6309;&#x952E;&#x6B21;&#x6570;&#x7684; bash &#x914D;&#x7F6E;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=posts%2Ftutorial%2Fshell-abbr%2Fmain" />
+
+
+
+
+
+
+<link rel="prev" href="../../note/csapp-lab/datalab/a.html" title="CSAPP Data Lab 做题记录（上）" />
+
+<link rel="up" href="../../../posts.html" title="posts" />
+
+<link rel="next" href="../canvas/main.html" title="用盲文字符来在终端画黑白图像" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../../index.html">jyi</a>/ 
+
+<a href="../../../posts.html">posts</a>/ 
+
+<a href="../../../index.html">tutorial</a>/ 
+
+<a href="../../../index.html">shell-abbr</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x4E00;&#x4E9B;&#x80FD;&#x591F;&#x8282;&#x7701;&#x6309;&#x952E;&#x6B21;&#x6570;&#x7684; bash &#x914D;&#x7F6E;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=posts%2Ftutorial%2Fshell-abbr%2Fmain" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../../note/csapp-lab/datalab/a.html">CSAPP Data Lab 做题记录（上）</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../canvas/main.html">用盲文字符来在终端画黑白图像</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<hr />
+
+<p>title: 一些能够节省按键次数的 bash 配置
+date: 2023-10-01 17:48:39</p>
+
+<h2>tags:</h2>
+
+<h1>一些能够节省按键次数的 bash 配置</h1>
+
+<p>众所周知，敲击键盘的同时，人的手指会经历一系列的磨损。长此以往，手指就会变短。为了保护手指，使用下面的 bash 配置，成为和我一样能少按键盘就少按键盘的人吧！</p>
+
+<h2>给命令起单个字符的别名</h2>
+
+<p>对于一些常用的命令，如果没有重复命令，可以给他们起单个字符的别名。</p>
+
+<pre><code class="bash">alias a='ls -A'
+alias g='grep'
+alias j='jobs -l'
+alias l='ls'
+alias o='xdg-open'
+alias r='rm'
+alias t='task' # taskwarrior: 一个 todo-list 小软件
+alias v='vi'
+alias -- -='cd -' # 这里的意思是将 - 作为 cd - 的别名
+</code></pre>
+
+<p>但是这些写法在 xargs 这里出了点小问题：</p>
+
+<pre><code class="plain">% 17:51:28 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 alias x='xargs'
+% 17:51:32 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 l|x g hello
+xargs: g: No such file or directory
+</code></pre>
+
+<p>我们的本意是想让它运行</p>
+
+<pre><code class="bash">ls | xargs grep hello
+</code></pre>
+
+<p>但由于 <code>g</code> 并不是命令，xargs 报了错。要是我们想让 <code>x</code> 被展开为 <code>xargs</code> 后，其后的 <code>g</code> 继续被展开，我们可以这样写：</p>
+
+<pre><code class="bash">alias x='xargs ' # 注意，xargs 与第二个单引号之间有一个空格
+</code></pre>
+
+<p>之后再运行</p>
+
+<pre><code class="plain">% 17:58:29 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+1 l
+a.md
+% 17:58:30 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+1 l|x g '`xargs`'
+由于 `g` 并不是命令，xargs 报了错。要是我们想让 `x` 被展开为 `xargs` 后，其后的 `g` 继续被展开，我们可以这样写：
+</code></pre>
+
+<p>就好了。这是 bash 的小特性，结尾的空格可以让下一个标识符展开（如果是别名的话）。同理，我们对 <code>sudo</code> 也做类似的事情：</p>
+
+<pre><code class="bash">alias s='sudo '
+</code></pre>
+
+<p>太方便辣！</p>
+
+<p>此外，单个 <code>%</code> 的作用和 <code>fg</code> 相同，都是让后台进程回到前台。</p>
+
+<h2>给有歧义的命令们起一样的名字</h2>
+
+<p>我日常使用 <code>find</code> 和 <code>file</code> 比较频繁，正常人在缩写他们时，都会想到用 <code>f</code> 来作为它们的别名。而如果一个用 <code>f</code> 作了别名，另一个就只能用其他奇奇怪怪的缩写。有没有办法让它们共用一个名字呢？</p>
+
+<p>由于脑机接口尚未开发完成，shell 无法通过魔法装置读取我们的思想，知道我们在运行 <code>f</code> 时究竟是想运行 <code>find</code>，还是 <code>file</code>，我们只能手动实现一个 shell 函数，根据上下文猜测输入时究竟想要什么。</p>
+
+<p>（怎么有种 Perl 猜代码块和匿名哈希的感觉）</p>
+
+<p>这是一个简单的示例，可以根据实际使用情况另作调整。</p>
+
+<pre><code class="bash"># find, file
+f()
+{
+    local i
+    local expect_find=
+
+    # 如果发现身处管道之中，stdin 里不是终端，有输入，则猜测想要
+    # 确定 stdin 中文件的类型
+    if ! [ -t 0 ]; then
+        file -
+
+    # 如果 stdin 是终端，但是没有参数，猜测是想要递归列出当前目录
+    # 下的文件，调用 find
+    elif [ -z "$1" ]; then
+        find
+    else
+
+        # 如果有参数以连字符（-）打头，则猜测是 find 的参数，
+        # 比如 -name -type 之类的。
+        # 如果参数没有以连字符打头的，则猜测是 file 的参数，参数
+        # 都是文件名
+        for i in "$@"; do
+            if [ "${i:0:1}" = '-' ]; then
+                expect_find=y
+                break
+            fi
+        done
+
+        if [ -n "$expect_find" ]; then
+            find "$@"
+        else
+            file "$@"
+        fi
+    fi
+}
+</code></pre>
+
+<p>实际使用看起来还不错。</p>
+
+<pre><code class="plain">% 18:56:38 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 f
+.
+./a.md
+% 18:56:40 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 f &lt; a.md
+/dev/stdin: UTF-8 Unicode text
+% 18:56:42 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 f -type f
+./a.md
+% 18:56:45 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 f a.md
+a.md: UTF-8 Unicode text
+</code></pre>
+
+<p>这样基本符合日常使用，无法处理的边边角角的情况打全名也不是不能接受啦。</p>
+
+<p>还有一些类似的函数：</p>
+
+<pre><code>c()
+{
+    # 复制？还是复制到剪贴板？
+    if [ -t 0 ] &amp;&amp; [ "$#" -ge 2 ]; then
+        cp "$@"
+    else
+        clip "$@"
+    fi
+}
+
+p()
+{
+    # 调用分页器（pager）？还是打印当前目录？
+    if [ -z "$1" ] &amp;&amp; [ -t 0 ]; then
+        pwd
+    else
+        less -F "$@"
+    fi
+}
+</code></pre>
+
+<h2>给小工具更多的默认行为</h2>
+
+<p>有时一些操作总是连在一起的，比如新建文件夹然后切换进去，我们可以用这样的神奇函数：</p>
+
+<pre><code class="bash">md()
+{
+    if [ -z "$2" ]; then
+        mkdir "$1" || return
+        cd "$1"
+    else
+        mkdir "$@"
+    fi
+}
+</code></pre>
+
+<p>或者我们经常将别处的文件移到当前文件夹，使用这个函数，这样我们可以省略最后那个 <code>.</code> 参数。因为奇怪的原因，只有在有且仅有一个参数时才会有这个功能。有多个参数时总会有无法解决的歧义问题。（不过这样已经足够好了）</p>
+
+<pre><code class="bash">m()
+{
+    if [ -z "$1" ]; then
+        echo too few arguments
+    elif [ -z "$2" ]; then
+        mv "$1" .
+    else
+        mv "$@"
+    fi
+}
+</code></pre>
+
+<p>当然，执行 <code>cd</code> 再执行 <code>ls</code> 应该是某种常规的操作，每年因为这项操作没有优化，无数根手指被磨短。当然可以把 <code>cd</code> 变成 <code>cd &amp;&amp; ls</code>，但是我们想到了一种更加酷炫的方法来解决这个问题，放在另一个部分说。</p>
+
+<h2>开启大量 shell 内置特性</h2>
+
+<p>bash 内置了大量方便的扩展特性，这些特性可以使用 <code>shopt -s &lt;特性名称&gt;</code> 打开。比如：<code>shopt -s autocd</code>。</p>
+
+<h3>autocd</h3>
+
+<p>自动切换目录……意思是假设当前目录下有一个名为 <code>my-doc</code> 的子目录，可以用 <code>my-doc</code> 取代 <code>cd my-doc</code>。这有一个小问题，由于补全时 bash 并不知道想输入的是目录还是指令，指令会和目录一起进入补全列表，又慢又难选。使用 <code>./my-doc</code> 会好很多。</p>
+
+<h3>checkwinsize</h3>
+
+<p>在终端窗口变化时重新设置 <code>$LINES</code> 和 <code>$COLUMNS</code></p>
+
+<h3>dotglob</h3>
+
+<p>匹配隐藏文件，这个按个人需求而定？我是觉得这个选项很酷所以打开了。</p>
+
+<h3>extglob</h3>
+
+<p>扩展的匹配，完全没用！真的好难用，试图给通配符加上一些正则表达式的扩展，还没有 <code>find</code> <code>sed</code> <code>grep</code> <code>xargs</code> 香。</p>
+
+<h3>failglob</h3>
+
+<p>没有匹配时报错而不是将模式作为参数传递给程序。非常有用，能避免一堆奇奇怪怪问题。比如：</p>
+
+<p>开启前：</p>
+
+<pre><code class="plain">% 19:21:49 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 touch *.c # 我要摸摸所有 c 文件
+% 19:21:49 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 ls
+ a.md  '*.c' # 啊不好了，他给我新建了一个 ./*.c
+</code></pre>
+
+<p>开启后：</p>
+
+<pre><code class="plain">% 19:23:23 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 touch *.c
+-bash: no match: *.c # 没有找到！
+% [1] 19:23:28 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 ls
+a.md
+</code></pre>
+
+<h3>globstar</h3>
+
+<p>让 <code>**</code> 通配符支持递归进子文件夹的匹配，比如 my/**/file 可以匹配 my/magic/powerful/fancy/file ，可以用来部分代替 <code>find</code>。</p>
+
+<h2>全自动的 ls</h2>
+
+<p>有时我们希望当前目录下文件发生改变，或工作目录发生改变时，自动 <code>ls</code> 一下展示目录现状。</p>
+
+<p>我们很容易写出这样的函数：</p>
+
+<pre><code class="bash"># 第一次运行，保存工作目录和当前目录内容（的哈希值）
+LAST_LS=$(command ls | sum)
+LAST_PWD="$PWD"
+
+_prompt_smart_ls()
+{
+    local this_ls
+    this_ls=$(command ls | sum)
+    if [ "$LAST_LS" != "$this_ls" ] || [ "$LAST_PWD" != "$PWD" ]; then
+        LAST_LS="$this_ls"
+        LAST_PWD="$PWD"
+        ls
+        return
+    fi
+}
+</code></pre>
+
+<p>之后，每调用一次 <code>_prompt_smart_ls</code>，它都会检查工作目录和当前目录内容，如果发现有不一样的地方，就 <code>ls</code> 一次。我们只要想办法每执行一次指令，就调用一次这个函数就行了。</p>
+
+<p>（当然也可以用其他的检查方式，比如使用神奇的守护进程监视文件系统变化，再和 shell 通信，但是其他方法好像都没有每执行完一次指令就检查一次简单有效）</p>
+
+<p>怎么做到每执行一次命令，就调用一次函数呢？</p>
+
+<pre><code class="bash">PROMPT_COMMAND='_prompt_smart_ls'
+</code></pre>
+
+<p>使用 bash 魔法变量，bash 会在执行每条命令后自动执行 <code>PROMPT_COMMAND</code> 这个变量里所存的命令。</p>
+
+<p>最后效果：</p>
+
+<pre><code class="plain">% 20:17:09 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 touch test
+a.md  test
+% 20:17:12 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 rm test
+a.md
+% 20:17:13 jyi@Syameimaru-Aya ~/s/m/b/n/shell-abbr
+0 cd /
+bin/   dev/  home/  lib/    lost+found/  mnt/  proc/  run/   srv/  tmp/  var/
+boot/  etc/  init*  lib64/  media/       opt/  root/  sbin/  sys/  usr/
+</code></pre>
+
+<p>太炫酷了！</p>
+
+<h2>更多的 cd</h2>
+
+<p>我们知道设置了 <code>autocd</code> 之后，输入 <code>..</code> 会自动切换到上级目录……我们可以做得更多！</p>
+
+<pre><code class="bash">alias ...='cd ../..'
+alias ....='cd ../../../'
+</code></pre>
+
+<h2>使用外部工具！</h2>
+
+<p>仔细想了想，发现平时使用 <code>z.sh</code> 按访问频率自动跳转时，有时会跳转到自己不希望的位置，如果能够选择跳转到哪里就好了。</p>
+
+<p>我们还需要可见的界面！这个想法是从 zsh 的补全里偷来的，感觉可以上下左右选择非常厉害。</p>
+
+<p>所以使用 <code>fzf</code> 配合 <code>z.sh</code>，做出非常友好的跳转方式：</p>
+
+<pre><code class="bash">fz()
+{
+    local dir
+    dir="$(z | sed 's/^[0-9. \t]*//' |fzf -1 -0 --no-sort --tac +m)" &amp;&amp; \
+        cd "$dir" || return 1
+}
+</code></pre>
+
+<h2>正确的重新加载配置的方法</h2>
+
+<p>修改了 <code>.bashrc</code> 文件，想要试用一番！怎么加载配置文件呢？</p>
+
+<p><code>source ~/.bashrc</code>：不好，前任配置文件中残留的 alias 尸体、环境变量可能会影响使用，尤其是写错了的情况下……</p>
+
+<p><code>bash</code>：不好，退出的时候也要连按许多 exit 或者 Ctrl-D</p>
+
+<p><code>bash; exit</code>：比上一个好，但是会影响 <code>$SHLVL</code> 变量，可能会对一些奇特脚本（比如 debian 11 下的 <code>~/.bash_logout</code>）造成影响。</p>
+
+<p><code>exec bash</code>：非常好！用了 <code>exec bash</code>，亩产一千八！</p>
+
+<p>所以这是重新加载配置文件的缩写（reload）：</p>
+
+<pre><code class="bash">alias rl='exec bash'
+</code></pre>
+
+<h2>总结</h2>
+
+<blockquote><p>打键盘是不错，但是也别敲过了头。打键盘打得太多，手指可就被磨短了。</p></blockquote>
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../../note/csapp-lab/datalab/a.html">CSAPP Data Lab 做题记录（上）</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../canvas/main.html">用盲文字符来在终端画黑白图像</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Tue Jan 25 23:06:00 2022</span>
+<!-- Created <span class="date dt-published">Tue Jan 25 23:06:00 2022</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

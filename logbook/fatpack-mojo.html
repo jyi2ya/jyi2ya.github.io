@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>fatpack-mojo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Ffatpack-mojo" />
+
+
+
+
+
+
+<link rel="prev" href="./ws/easytier-edge-service.html" title="easytier-edge-service" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+<link rel="next" href="./ws/fault-tolerent-program.html" title="怎么写出即使有 bug 也几乎能跑的程序？" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+fatpack-mojo
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Ffatpack-mojo" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/easytier-edge-service.html">easytier-edge-service</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/fault-tolerent-program.html">怎么写出即使有 bug 也几乎能跑的程序？</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Sat Nov 15 06:20:25 PM CST 2025</p>
+<p><a href="https://gist.github.com/dex4er/0e2ef2d1582307a14329">https://gist.github.com/dex4er/0e2ef2d1582307a14329</a></p>
+<p>看到有个 fatpack mojolicious，感觉有意思。看来 mojolicious 可以用不带 c 扩展的纯 perl 实现？</p>
+<pre>    [2] hepnode0 18:37 ~/tmp/mojo-fatpack
+    0 perl packed.pl daemon
+    Unable to open html entities file (resources/html_entities.txt): No such file or directory at packed.pl line 5742.
+    Compilation failed in require at packed.pl line 5742.
+    BEGIN failed--compilation aborted at packed.pl line 5742.
+    Compilation failed in require at packed.pl line 22280.
+    BEGIN failed--compilation aborted at packed.pl line 22280.
+    Compilation failed in require at packed.pl line 785.
+    BEGIN failed--compilation aborted at packed.pl line 27002.
+    Compilation failed in require at packed.pl line 34899.
+    BEGIN failed--compilation aborted at packed.pl line 34899.
+
+</pre>
+<p>好像不行。</p>
+<pre>    &gt;42s&lt; hepnode0 18:38 ~/tmp/mojo-fatpack
+    0 cp -a ~/.package/pkgsrc/lib/perl5/vendor_perl/5.42.0/Mojo/resources/ .
+    fatlib/  fatpacker.trace  fatpack-mojo-app.sh*  mojo-app.pl  mojo-app.plc*  packed.pl  packlists  resources/
+    hepnode0 18:39 ~/tmp/mojo-fatpack
+    0 perl packed.pl daemon
+    [2025-11-15 18:39:32.14857] [3105561] [info] Listening at &quot;http://*:3000&quot;
+    Web application available at http://127.0.0.1:3000
+
+</pre>
+<p>哦哦，把 resources 拷过来就好了。</p>
+<p>还真能用。看看异步行不行。还真可以。好玩。</p>
+<p>看了下 reactor 用的是 Mojo::Reactor::Poll</p>
+<p>不用那个 github 脚本，直接 fatpack 也能用。</p>
+<p>但是 async await 就用不了了，因为需要依赖 Future::AsyncAwait，那个是要 .so 的。只能用古法 continuation 编程了。</p>
+<p>嘻嘻，可以用 mojolicious 写小玩具什么的。
+</p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/easytier-edge-service.html">easytier-edge-service</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/fault-tolerent-program.html">怎么写出即使有 bug 也几乎能跑的程序？</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

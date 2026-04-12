@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>perl-plotlib-survey</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Fperl-plotlib-survey" />
+
+
+
+
+
+
+<link rel="prev" href="./perl-module-starter.html" title="module starter" />
+
+<link rel="up" href="../../logbook.html" title="logbook" />
+
+<link rel="next" href="./perl-ssh-rpc.html" title="perl-ssh-rpc" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../index.html">jyi</a>/ 
+
+<a href="../../logbook.html">logbook</a>/ 
+
+<a href="../../index.html">ws</a>/ 
+
+</span>
+
+
+<span class="title">
+perl-plotlib-survey
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Fperl-plotlib-survey" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./perl-module-starter.html">module starter</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./perl-ssh-rpc.html">perl-ssh-rpc</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<pre>Tue Oct  7 21:04:32 CST 2025
+
+调研一下 perl 的画图库……还有表格绘制库。
+
+希望能找到一个既支持画到 svg，又支持画到终端里的库。最好还要是 debian 源里有的。因为经常在 headless 的服务器上工作所以没法很优雅地看图……
+
+哦，X forward 也许可以。我研究一下怎么弄。
+
+好了。X forward 配好了，至少有个备用可以用。
+
+但是画到终端里还是很酷的，所以要研究一下。
+
+感觉 perl 的画图库质量都不高啊
+
+python 倒是有好多还不错的库，偷的话得用 inline::python，不是很优雅
+
+Chart::Gnuplot 这个好像还行，找了一圈发现是唯一一个还差不多可以用的
+
+在初始化的时候把 terminal 设置成 'dumb ansi' 输出的就是彩色的 ansi 序列了。
+
+研究了一下代码，发现它是直接用反引号加重定向标准错误到标准输出，在 perl 里面用正则表达式来处理错误的……有点不是很阳间。但是通过把渲染的结果保存到临时文件的方式还是可以跑一跑的。
+
+比较大的问题是我还没搞懂怎么给它的 bar chart 设置 x 轴的名字。
+
+https://github.com/piccolomo/plotext
+
+https://github.com/red-data-tools/YouPlot
+
+这些库倒是挺酷的
+
+https://github.com/tenox7/ttyplot
+
+这个也还行，能把 stdin 中读到的数字给变成动态的曲线图。很方便。而且 debian 仓库里有，可以留着备用一下。
+
+要是上次调温度传感器的时候知道有这个东西也就不用花十几分钟手搓一个了……
+
+https://www.chunqiuyiyu.com/ervy/#started
+
+我倒是很喜欢这个库，感觉完全是自己相像中的样子。可惜是 js 的。
+
+看来 perl 的确没什么人用了……
+
+还有一些基于 GD 的画图库。比如 GD::Graph。但是感觉不如 gnuplot 有名，学 gnuplot 肯定价值比学它高。决定学 gnuplot。
+
+哦，学会了，原来画柱状图不应该用 boxes，应该用 histogram。
+
+http://www.gnuplot.info/faq/faq.html#x1-500005.7
+
+但是为啥它不支持 pie chart，有点迷惑了。算了不管了，谁会在终端里写 pie chart……
+
+也算是学会了，嘻嘻。
+
+Text::Table 这个库不支持宽字符，也就是是遇到中文就对不齐了。
+
+Term::Table 这个库倒是工作地不错……那就 Term::Table 了。
+
+https://metacpan.org/pod/Term::Table#NOTE-ON-UNICODE/WIDE-CHARACTERS
+
+它还特意提了一嘴，真好啊。好感动
+
+欸原来是九月一号才更新了的新库。好好好
+
+Wed Oct 15 21:10:25 CST 2025
+
+哦，原来 Term::Table 还是标准库里的，可喜可贺
+</pre>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./perl-module-starter.html">module starter</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./perl-ssh-rpc.html">perl-ssh-rpc</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

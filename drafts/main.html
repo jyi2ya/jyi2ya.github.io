@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x7B80;&#x4ECB;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=drafts%2Fmain" />
+
+
+
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../index.html">drafts</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x7B80;&#x4ECB;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=drafts%2Fmain" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<p>Page/Buffer Cache 是什么？</p>
+
+<h1>简介</h1>
+
+<h2>Page Cache</h2>
+
+<ul>
+<li><p>试图最小化磁盘 IO</p></li>
+<li><p>本质上是一堆内存页面</p></li>
+</ul>
+
+
+<blockquote><p>内存页面（Page）：一小段连续内存，是操作系统管理内存的最小单位</p></blockquote>
+
+<ul>
+<li>包含了很多最近访问过的<strong>文件的内容</strong>
+
+<ul>
+<li>意思是不包括 inode、目录等东西！</li>
+</ul>
+</li>
+</ul>
+
+
+<blockquote><p>对于 inode 和目录来说，他们的 page cache 的类似物分别叫做 inode cache 和 directory entry cache。其中 directory entry cache 又由 inode cache 组织而来。</p></blockquote>
+
+<ul>
+<li><p>用途广泛，用于 file-backed mmap、buffered io，甚至 swap。</p></li>
+<li><p>需要文件系统支持</p></li>
+</ul>
+
+
+<h2>Buffer Cache</h2>
+
+<ul>
+<li><p>试图最小化磁盘 IO</p></li>
+<li><p>本质上是内存里的一堆块</p></li>
+</ul>
+
+
+<blockquote><p>块：操作系统对磁盘操作的基本单位，在 Linux 中要求大小为 2 的整数次幂，且比 sector 大，比 page 小</p>
+
+<p>sector：磁盘读写数据的最小单位，由磁盘决定。</p></blockquote>
+
+<ul>
+<li><p>包含了最近访问过的块</p></li>
+<li><p>用途不多，基本上只用来加速块设备</p></li>
+</ul>
+
+
+<blockquote><p>块设备（Block Device）：支持随机读写的设备。典型的比如磁盘。</p></blockquote>
+
+<ul>
+<li>不需要文件系统</li>
+</ul>
+
+
+<blockquote><p>比如，文件系统的 superblock 一般会躺在 buffer cache 里面</p></blockquote>
+
+<h2>两者的关系</h2>
+
+<p>可以参考下图（从 <a href="https://www.usenix.org/legacy/publications/library/proceedings/usenix01/full_papers/kroeger/kroeger_html/node8.html">usenix</a> 上面偷的）：</p>
+
+<p><img src="overview.png" alt="overview.png" /></p>
+
+<blockquote><p><strong>考古时间</strong></p>
+
+<p>为什么 page cache 是一堆内存页面，而 buffer cache 是一堆块呢？</p>
+
+<p>最开始 Linux 上面只有 buffer cache，此时 buffer cache 仅仅用于加速 buffered io 操作，向上与 read/write 交互，向下与磁盘交互。所以 buffer cache 设计成一堆块是很合适的。</p>
+
+<p>page cache 则是为了支持 mmap，在 2.2 版本中引入的。由于它和内存关系比较紧密，所以设计成一堆内存页的形式。不过此时 buffered io 仍然只与 buffer cache 交互，不与 page cache 交互。要等两个 cache 合并之后才会出现大家所熟知的「调用 read/write 之后会写 page cache，过一会儿由操作系统把脏页写回磁盘」这种模式。</p></blockquote>
+
+<h1>一些比较复杂的东西</h1>
+
+<h2>page cache 和 buffer cache 其实是一个东西？</h2>
+
+<p>虽然逻辑上还是可以将他们分为两个东西，但是其实两者只是同一套数据的不同组织方式。</p>
+
+<pre><code class="plain">+---------------------------------------+
+| page                                  |
+|+-------+ +--------+ +--------++------+|
+||buffer1| | buffer2| |buffer3 ||buffer||
+||       | |        | |        ||  4   ||
+|+-------+ +--------+ +--------++------+|
++---------------------------------------+
+</code></pre>
+
+<p>（没找到合适的图所以画了个）</p>
+
+<p>每个 buffer 可以通过 <code>buffer_head</code> 结构体中的 <code>b_page</code> 字段获取自己对应的 page，同时 page 也可以通过 <code>page</code> 结构体中的 <code>buffers</code> 字段来得到自己所拥有的一组 buffer。</p>
+
+<h2>既然 page cache 与 buffer cache 合并了……</h2>
+
+<p>那如果我在 A 进程对 <code>/dev/sda1</code> 上的一个文件 F 的一个连续区域做 shared mmap，再在 B 进程对 <code>/dev/sda</code> 本身做 shared mmap，两个进程映射的实际磁盘空间一致，那 A 进程与 B 进程能映射到同一个 page 吗？</p>
+
+<p>答案是不行 :3。因为 A 进程的 page 是文件系统给的，而 B 进程得到的东西更像是一堆 buffer 组合成的 page。</p>
+
+<p>此时数据组织大概是这样的：</p>
+
+<pre><code class="plain">+---------------------------------------+  +---------------------------------------+ 
+| A page                                |  | B page                                | 
+|                                       |  |                                       | 
+|                                       |  |                                       | 
+|    o         o          o           o |  |   o       o          o         o      | 
+|    |         |          |           | |  |   |       |          |         |      | 
++----|---------|----------|-----------|-+  +---|-------+----------+---------+------+ 
+     v         v          v           v        |       |          |         |
+ +-------+ +--------+ +--------+   +------+    |       |          |         |
+`|buffer1| | buffer2| |buffer3 |   |buffer|    |       |          |         |
+ |       | |        | |        |   |  4   |    |       |          |         |
+ +---^---+ +---^----+ +---^----+   +--^---+    |       |          |         |
+     +---------+----------|-----------+--------+       |          |         |
+               +----------|-----------+----------------+          |         |
+                          +-----------+---------------------------+         |
+                                      +---------------------------+---------+
+</code></pre>
+
+<h1>一些好玩的接口</h1>
+
+<h2>来点文件预读</h2>
+
+<p>除了缓存已经读过/写过的数据之外，猜测程序要读什么从而提前把它们读进 page cache 中，也能加快程序！</p>
+
+<ul>
+<li>posix_fadvise(2): <code>POSIX_FADV_SEQUENTIAL</code> 参数可以暗示内核自己将要顺序读文件。</li>
+<li><p>madvise(2): <code>MADV_SEQUENTIAL</code> 参数可以暗示内核自己将顺序使用一些内存，配合 <code>mmap(2)</code> 使用。</p></li>
+<li><p>readahead(2)：简单直接地告诉内核，偷偷多读一些东西（感觉这是个没用的屑调用……）。</p></li>
+</ul>
+
+
+<h2>掉落擦车</h2>
+
+<p>可以通过 <code>/proc/sys/vm/drop_caches</code> 来告知内核扔掉一些 cache 数据。可以通过 <code>echo X &gt; /proc/sys/vm/drop_caches</code> 来使用。其中 X 的取值可以为 1, 2 或 3。当 X 为 1 时意思是让内核扔掉所有 page cache 里面的数据。2 和 3 代表什么，不知道 :3。</p>
+
+<p>在测试一些 io-bounded 的程序时，为了防止 page cache 对测量结果造成干扰，可以在测试前运行一下。</p>
+
+<h1>未解之谜</h1>
+
+<p>发现自己还是不太看得懂 <code>free(1)</code>。</p>
+
+<pre><code class="plain">               total        used        free      shared  buff/cache   available
+Mem:            13Gi       4.4Gi       3.2Gi       135Mi       6.5Gi       9.1Gi
+</code></pre>
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

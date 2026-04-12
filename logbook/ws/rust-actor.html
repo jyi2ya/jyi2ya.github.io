@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x8C03;&#x7814; rust &#x7684; actor &#x6846;&#x67B6;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-actor" />
+
+
+
+
+
+
+<link rel="prev" href="../pkgsrc.html" title="pkgsrc" />
+
+<link rel="up" href="../../logbook.html" title="logbook" />
+
+<link rel="next" href="../rust-async-runtime.html" title="看看 rust 的异步运行时" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../index.html">jyi</a>/ 
+
+<a href="../../logbook.html">logbook</a>/ 
+
+<a href="../../index.html">ws</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x8C03;&#x7814; rust &#x7684; actor &#x6846;&#x67B6;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-actor" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../pkgsrc.html">pkgsrc</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../rust-async-runtime.html">看看 rust 的异步运行时</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+
+<ul><li><a href="#调研_rust_的_actor_框架">调研 rust 的 actor 框架</a>
+</li>
+</ul><hr />
+<!-- INDEX END -->
+
+<p>Fri Oct 24 18:25:50 CST 2025</p>
+<h1 id="调研_rust_的_actor_框架">调研 rust 的 actor 框架</h1>
+<div id="调研_rust_的_actor_框架_CONTENT">
+<p><a href="https://actix.rs/docs/actix/actor">https://actix.rs/docs/actix/actor</a></p>
+<pre>    Actix is built on the Actor Model which allows applications to be written as a group of independently executing but cooperating &quot;Actors&quot; which communicate via messages. Actors are objects which encapsulate state and behavior and run within the Actor System provided by the actix library.
+
+</pre>
+<p>这种通过 message passing 来实现线程间通信的模式似乎比较有名的就是 actor</p>
+<p>actix 可以作为写 actor 的基础库来用，但是 axum 不行，拉了。</p>
+<p><a href="https://ryhl.io/blog/actors-with-tokio/">https://ryhl.io/blog/actors-with-tokio/</a></p>
+<p>我去，用 tokio 实现 actor 模式……哦，原来 respond to 是用 oneshot channel 实现的，把消息传给 actor 的时候同时附带一个 oneshot channel 用来返回值。</p>
+<p><a href="https://github.com/slawlor/ractor">https://github.com/slawlor/ractor</a>:</p>
+<p>另一个 rust 写的 actor 框架。看起来用着似乎比 actix 灵活一些，可以在 tokio 里直接使用。</p>
+<p>但是不好写，没有 actix 的类型魔法好写，要手工处理很多东西。</p>
+<p><a href="https://tqwewe.com/blog/comparing-rust-actor-libraries/">https://tqwewe.com/blog/comparing-rust-actor-libraries/</a></p>
+<p>Rust actor 框架的对比。</p>
+<pre>    Actix – A mature framework that uses its own runtime (“Actix runtime”) which is built on Tokio.
+
+</pre>
+<p>原来 runtime 是自己搓的，那很坏了……</p>
+<p>里面有一项标准叫 distributed actors，就是把不同的 actor 扔到不同的机器上执行。我怎么感觉这个意义不大，有点怀疑它的可靠性。</p>
+<p>我去，actix 的性能几乎是其它实现的两倍多。一个消息传递需要大概 200 ns 的时间。</p>
+<p>那么它和 mutex 相比性能如何呢。</p>
+<p><a href="https://docs.rs/actix-rt/latest/actix_rt/">https://docs.rs/actix-rt/latest/actix_rt/</a>:</p>
+<pre>    In most parts of the the Actix ecosystem, it has been chosen to use !Send futures. For this reason, a single-threaded runtime is appropriate since it is guaranteed that futures will not be moved between threads. This can result in small performance improvements over cases where atomics would otherwise be needed.
+
+</pre>
+<p><code>!Send</code> 是对的。</p>
+<p>哦，我记得 kovi 好像自己也会管一个 tokio rt，actix rt 也会自己管一个 tokio rt，那它们俩岂不是不能放到一起用了。</p>
+<p><a href="https://www.reddit.com/r/rust/comments/n2cmvd/there_are_a_lot_of_actor_framework_projects_on/">https://www.reddit.com/r/rust/comments/n2cmvd/there_are_a_lot_of_actor_framework_projects_on/</a></p>
+<p>还有 actor 框架大赛马</p>
+<pre>    Long ago, actix-web was built on top of actix, a powerful and fast actor system. Now, actix-web is largely unrelated to the actor framework and is built using a different system. Though actix is still maintained, its usefulness as a general tool is diminishing as the futures and async/await ecosystem matures. At this time, the use of actix is only required for WebSocket endpoints.
+
+</pre>
+<p>草，原来 actix-web 和 actix 已经分家了吗。</p>
+<p><a href="https://github.com/tqwewe/kameo">https://github.com/tqwewe/kameo</a></p>
+<p>感觉这个是最好写的，写这个好了。</p>
+<p><a href="https://github.com/slawlor/ractor">https://github.com/slawlor/ractor</a></p>
+<p>但是这个把 actor 和 state 分离的设计比较有意思，需要学一下。</p>
+<pre>    When designing ractor, we made the explicit decision to make a separate state type for an actor, rather than passing around a mutable self reference. The reason for this is that if we were to use a &amp;mut self reference, creation + instantiation of the Self struct would be outside of the actor's specification (i.e. not in pre_start) and the safety it gives would be potentially lost, causing potential crashes in the caller when it maybe shouldn't.
+
+</pre>
+<p>原来是为了做到在初始化 actor 的时候也 panic safe 嘛。</p>
+<p>确实，感觉其它的库都是先初始化 actor，完毕之后再开始运行的。它这里直接把初始化的步骤也直接挪到 spawn 函数里执行了。</p>
+<p>不过说实话感觉意义不大……</p>
+<p>还是用更好写的 kameo 好了。</p>
+<p>哎但是我用了这些 actor 库之后好像就不能美美 <code>panic = 'abort'</code> 了，有点坏。</p>
+<p>actor 是不是并行版的 oop 啊……那是不是测试会很麻烦</p>
+<p>好像也不会，因为 actor 的内部状态只能由 message 改变（？，所以它实际上是一个相当函数式的东西？</p>
+<p>只要把 actor 做成返回计算结果和新的 actor 就很函数式了</p>
+<p><a href="https://news.ycombinator.com/item?id=22316693">https://news.ycombinator.com/item?id=22316693</a></p>
+<p>哈哈，有人问了和我一样的问题。</p>
+<p>哎，总之很有趣……</p>
+<p><a href="https://www.reddit.com/r/rust/comments/1btrw38/kameo_an_async_actor_library_built_on_tokio/">https://www.reddit.com/r/rust/comments/1btrw38/kameo_an_async_actor_library_built_on_tokio/</a>:</p>
+<pre>    In contrast with Actix, I've always struggled to comfortably use actix, especially when it comes to running async code. Kameo's message handlers are always async, so no special apis are needed for async stuff. There's also a very unscientific benchmark done comparing Actix with Kameo on the readme, it came out to be 13x faster than Actix for sending a simple message.
+
+</pre>
+<p><a href="https://docs.rs/actix/latest/actix/fut/future/trait.ActorFuture.html">https://docs.rs/actix/latest/actix/fut/future/trait.ActorFuture.html</a></p>
+<p>我草了，原来在 actix 的 actor 里面想搞异步只能写回调。</p>
+<p><a href="https://github.com/actix/actix/issues/628">https://github.com/actix/actix/issues/628</a></p>
+<pre>    For your information, we do not recommend Actix for new projects since it is in maintenance mode. The scheduler of Actix is not good, since I was in the same boat 4 years ago let me explain what that means:
+
+</pre>
+<p>哦，原来已经是维护模式了……不用了</p>
+<p><a href="https://www.reddit.com/r/rust/comments/1btrw38/kameo_an_async_actor_library_built_on_tokio/">https://www.reddit.com/r/rust/comments/1btrw38/kameo_an_async_actor_library_built_on_tokio/</a>:</p>
+<pre>    The major difference is that ractor uses an enum to define messages, and one handle method to match this enum and handle the message. In contrast, Kameo defines handlers per message. Admittedly this makes remote actors (like what ractor supports) more difficult, since there's no enum to deserialize into when receiving a message.
+
+</pre>
+<p>嘻嘻，kameo 是对的，从 ractor 偷了一点，又从 actix 偷了一点。</p>
+<p><a href="https://slawlor.github.io/ractor/assets/rustconf2024_presentation.pdf">https://slawlor.github.io/ractor/assets/rustconf2024_presentation.pdf</a></p>
+<p>偷学一个 actor 的 basic practice</p>
+<p>Wed Oct 29 19:52:20 CST 2025</p>
+<p>今天喜欢 smol，所以不用 kameo 了。看看 xtra</p>
+<p><a href="https://github.com/Restioson/xtra">https://github.com/Restioson/xtra</a></p>
+<p>xtra 不支持 supervision。不过也没什么大问题，反正我平时都是 <code>panic = &quot;abort&quot;</code>，出事了不管有没有 supervisor 都会直接似。</p>
+<p>Thu Oct 30 23:00:43 CST 2025</p>
+<p>感觉 smol 还是拉了，不如 tokio。所以继续决定用 kaemo</p>
+<p>需要调查 actor 的 best practice</p>
+<p>Mon Nov 24 13:51:29 CST 2025</p>
+<p><a href="https://tokio.rs/tokio/tutorial/shared-state">https://tokio.rs/tokio/tutorial/shared-state</a></p>
+<pre>    Using a blocking mutex to guard short critical sections is an acceptable strategy when contention is minimal. When a lock is contended, the thread executing the task must block and wait on the mutex. This will not only block the current task but it will also block all other tasks scheduled on the current thread.
+
+</pre>
+<p>mutex 只在没几个线程同时抢锁的时候比较好用。</p>
+<p><a href="https://tokio.rs/tokio/tutorial/channels">https://tokio.rs/tokio/tutorial/channels</a></p>
+<p>给了个在 tokio 里用 mpsc 和 oneshot 实现 actor 模式的简单例子
+</p>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../pkgsrc.html">pkgsrc</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../rust-async-runtime.html">看看 rust 的异步运行时</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

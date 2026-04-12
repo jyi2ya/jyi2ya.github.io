@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>rust-to-js</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-transpilers%2Frust-to-js" />
+
+
+
+
+
+
+<link rel="prev" href="../wasm-transpilers/wasm-to-jvm.html" title="wasm-to-jvm" />
+
+<link rel="up" href="../../../logbook.html" title="logbook" />
+
+<link rel="next" href="../../ikiwiki-weird-h1title.html" title="ikiwiki-weird-h1title" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../../index.html">jyi</a>/ 
+
+<a href="../../../logbook.html">logbook</a>/ 
+
+<a href="../../../index.html">ws</a>/ 
+
+<a href="../../../index.html">rust-transpilers</a>/ 
+
+</span>
+
+
+<span class="title">
+rust-to-js
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-transpilers%2Frust-to-js" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../wasm-transpilers/wasm-to-jvm.html">wasm-to-jvm</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../../ikiwiki-weird-h1title.html">ikiwiki-weird-h1title</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Fri Nov 21 13:56:30 CST 2025</p>
+<p>Hamster 新做了个看起来很好玩的游戏，用 js 操控机器人种地。玩一下。</p>
+<pre>    每个玩家独享一个 javascript 运行时（不是 v8，不支持 generator 但是支持 promise 和 async/await）。每个时间刻会调用玩家代码里的 function tick() 函数。然后玩家在 tick 函数里就可以实现自己的游玩逻辑了
+
+    但是这样如果有多步规划，就会要求玩家在两次调用 tick 之间手动维护状态。这就变成了古法的手搓状态机了，非常野蛮。我非常天才地（really！）想到 Generator 天生就是一个状态机，如果我能把自己的逻辑装在一个 Generator 里面，tick 函数直接调用 Generator 的 next 方法，然后每次行动完 yield 一下，就能让 Generator 来帮自己维护烦人的 state 了！
+
+    但是运行时不支持 generator。我回退一步想到 promise 也是状态机，使用 promise 的话我需要在 tick 函数里 poll 一个 promise。然后我现在就在这里了
+
+</pre>
+<p>昨天写的时候发现的。</p>
+<p>今天想了想，rust 有一个 asmjs 的 target，没准可以把 rust 编译到 asmjs 然后交上去。</p>
+<p>一看发现 asmjs 已经不见了。</p>
+<p>现在就只能把 rust 编译到 wasm 然后再编译到 js 来玩了……</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Rust_to_Wasm">https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Rust_to_Wasm</a></p>
+<p>参考这篇文档，先安装 <code>wasm-pack</code> 和 <code>wasm-opt</code>。然后改改 Cargo.toml，就可以用 <code>wasm-pack build --release --target no-modules</code> 编译了。它的 <code>target</code> 有好几个取值，但是我不知道哪个是最好的。先随便选了个顺眼的用着。</p>
+<pre>    Fatal: error validating input
+    Error: failed to execute `wasm-opt`: exited with exit status: 1
+    full command: &quot;/home/jyi/.cargo/bin/wasm-opt&quot; &quot;/home/jyi/dev/hamfarm-sdk/pkg/hamfarm_sdk_bg.wasm&quot; &quot;-o&quot; &quot;/home/jyi/dev/hamfarm-sdk/pkg/hamfarm_sdk_bg.wasm-opt.wasm&quot; &quot;-O&quot;
+    To disable `wasm-opt`, add `wasm-opt = false` to your package metadata in your `Cargo.toml`.
+    Caused by: failed to execute `wasm-opt`: exited with exit status: 1
+    full command: &quot;/home/jyi/.cargo/bin/wasm-opt&quot; &quot;/home/jyi/dev/hamfarm-sdk/pkg/hamfarm_sdk_bg.wasm&quot; &quot;-o&quot; &quot;/home/jyi/dev/hamfarm-sdk/pkg/hamfarm_sdk_bg.wasm-opt.wasm&quot; &quot;-O&quot;
+    To disable `wasm-opt`, add `wasm-opt = false` to your package metadata in your `Cargo.toml`.
+
+</pre>
+<p>报错了</p>
+<p><a href="https://github.com/garden-co/jazz-crypto-rs/pull/20">https://github.com/garden-co/jazz-crypto-rs/pull/20</a></p>
+<p><a href="https://doc.rust-lang.org/rustc/platform-support/wasm32-unknown-unknown.html#enabled-webassembly-features">https://doc.rust-lang.org/rustc/platform-support/wasm32-unknown-unknown.html#enabled-webassembly-features</a></p>
+<p>看来是 rust 生成 wasm 时用到了 bulk memory 的特性，但是 wasm-opt 默认没有启用导致的。解决方法可以是修改 wasm-opt 的参数，也可以是修改编译参数。考虑到后面的 wasm2js 也需要手工开启 bulk memory，还是想办法改改编译参数吧……</p>
+<pre>    0 cat .cargo/config.toml
+    [target.wasm32-unknown-unknown]
+    rustflags = [ '-Ctarget-cpu=mvp' ]
+
+</pre>
+<p>done</p>
+<p>下一步是使用 binaryen 的 wasm2js 来把 wasm 转换成 js</p>
+<pre>    0 head -3 hamfarm_sdk.js
+    import * as wbg from 'wbg';
+
+    var bufferView;
+
+</pre>
+<p>它怎么引用了一个 wbg 的包，哪来的，感觉有点野蛮。</p>
+<p>哦，wbg 是它的配套 bindgen js 文件里提供的。我要想办法把这个 js 和生成的 js 粘起来。</p>
+<pre>    use Text::Balanced qw/extract_bracketed/;
+
+    my $glue = do {
+        open my $fh, '&lt;:utf8', 'pkg/hamfarm_sdk.js';
+        local $/ = undef;
+        scalar &lt;$fh&gt;;
+    };
+
+    my ($body_and_res) = $glue =~ /\Qfunction\E\s+\Q__wbg_get_imports()\E\s+(.*)/s;
+    my ($body) = extract_bracketed( $body_and_res, '{}' );
+    print &lt;&lt;EOF;
+    let wbg = (function () $body)().wbg;
+    EOF
+
+    my $sdk = do {
+        open my $fh, '&lt;:utf8', 'pkg/hamfarm_sdk_bg.js';
+        local $/ = undef;
+        scalar &lt;$fh&gt;;
+    };
+
+    $sdk =~ s/^import.*$//gm;
+    $sdk =~ s/^export //gm;
+
+    print $sdk;
+
+</pre>
+<p>好吧，有点野蛮。但是它能用。</p>
+<pre>    0 node pkg/hamster.js
+    file:///home/jyi/dev/hamfarm-sdk/pkg/hamster.js:886
+        fimport$0(HEAP32[$2_1 + 20 &gt;&gt; 2], $3_1 | 0);
+        ^
+
+    TypeError: fimport$0 is not a function
+        at $4 (file:///home/jyi/dev/hamfarm-sdk/pkg/hamster.js:886:8)
+        at file:///home/jyi/dev/hamfarm-sdk/pkg/hamster.js:2165:1
+        at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+        at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+        at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+    Node.js v20.19.2
+
+</pre>
+<p>坏，翻车了。</p>
+<p>哦，原来是忘记 make 导致的。</p>
+<p>吼吼，还可以用 babel 把 es6 给转换到 es5，专门给杂鱼 js rt 使用。好玩</p>
+<p>有个 google-colsure-compiler，可以把 js 给进一步压缩。看一下。</p>
+<p>哎原来 rust 在 wasm 里还自带了一个内存分配器，我说怎么 <code>String::new()</code> 一跑就提示我代码语句数量超限……</p>
+<p>看来不能堆分配。或者得搞个好点的 allocator。</p>
+<p><a href="https://nickb.dev/blog/avoiding-allocations-in-rust-to-shrink-wasm-modules/">https://nickb.dev/blog/avoiding-allocations-in-rust-to-shrink-wasm-modules/</a></p>
+<p>给了几个可用的 allocator 出来。</p>
+<p>先试试换 alloacator，没有的话就写 no_std 好了。</p>
+<p><a href="https://github.com/sfbdragon/talc">https://github.com/sfbdragon/talc</a></p>
+<p>决定试试这个，最近更新。虽然也是 5 个月之前了。</p>
+<pre>        imports.wbg.__wbg_print_9f06068266e44f9b = function(arg0, arg1) {
+            let deferred0_0;
+            let deferred0_1;
+            try {
+                deferred0_0 = arg0;
+                deferred0_1 = arg1;
+                print(getStringFromWasm0(arg0, arg1));
+            } finally {
+                wasm.__wbindgen_export(deferred0_0, deferred0_1, 1);
+            }
+        };
+
+</pre>
+<p>talc 在 wasm 下似乎会生成对 wasm 的调用。然而我们最终要把它转换成 js，而不是在 wasm 环境里直接执行。在执行的时候是没有 wasm 这个模块的。所以似乎最好找个 arena 的内存分配器……不要对 wasm 特化的。</p>
+<p><a href="https://github.com/Craig-Macomber/lol_alloc">https://github.com/Craig-Macomber/lol_alloc</a></p>
+<p>试试这个好了。哦，这个好像也是对 wasm 特化的……</p>
+<p>哦不对！这个 export 是由于把一个堆分配带所有权的东西传给了 js 导致的，不是 allocator 的问题！</p>
+<p>改了一下，好像也不对。它把 <code>&amp;str</code> 传出去的时候需要用到辅助函数来做解码……叫 <code>getStringFromWasm0</code>。用途是把 wasm 的内存解码成字符串。</p>
+<p>我感觉我得重新设计一下胶水。</p>
+<p>哦，或者其实也不用设计。我把这俩函数拷过去就行了。又不是不能用。</p>
+<p><a href="https://github.com/wasm-bindgen/wasm-bindgen">https://github.com/wasm-bindgen/wasm-bindgen</a></p>
+<p>看了下这个，这些函数似乎是动态生成的。共享一个前缀，后面的 0 会变。</p>
+<p>哎，挠头了。</p>
+<p>想了想还是去改一下 sdk 和胶水的顺序好了。</p>
+<p>sdk 会初始化出来一个 retasmFunc，它和 wasm 模块的成员基本一样。胶水会依赖 wasm 模块。</p>
+<p>但是初始化 sdk 的时候会需要 wbg，而这个 wbg 是由胶水产出的。</p>
+<p>坏了，循环依赖了。</p>
+<p>哎，费了半天劲，搞各种引用魔法，终于让它能够工作了。</p>
+<p>但是交上去之后提示我不支持 TexeDecoder。有点幽默了。</p>
+<p>写了个简单的 TextEncoder 和 TextDecoder。现在一切都正常了。太好力。</p>
+<p>我想了下能不能直接用 LeakingPageAllocator，它只申请不释放内存。后来想想感觉不行，虽然 js 有 gc 但是这个 allocator 申请东西直接把一个 u8 数组当内存用的，该漏的还是会漏。</p>
+<p>努力了一番，把异步给调好了，大成功！</p>
+<p>但是用异步的时候会超最大指令数，所以还是得另想办法</p>
+<p>用 generator 好了。</p>
+<p>嘻嘻，generator 是好的。它可以跑起来。</p>
+<p>Mon Jan 12 18:53:04 CST 2026</p>
+<p>今天突然想到，用 wasm2js 的方法搞出来的 js，它会直接用巨大的 u8 数组来模拟内存。gc 之类的特性完全没用上，rust 也必须要配套一个 allocator。js 和 rs 互相调用还得做类似 ffi 的转换。</p>
+<p>我看到 rust 有个 asmjs 的 target，不知道编译成 asmjs 会不会好一点。</p>
+<p>坏，发现 rust 已经把 asmjs drop 掉了。最后一个支持 asmjs 的 stable 版本是 1.75-x86_64-unknown-linux-gnu </p>
+<p><a href="https://releases.rs/docs/1.76.0/">https://releases.rs/docs/1.76.0/</a></p>
+<pre>    Remove asmjs-unknown-emscripten target
+
+</pre>
+<p><a href="https://github.com/rust-lang/rust/pull/117338/">https://github.com/rust-lang/rust/pull/117338/</a></p>
+<pre>    asmjs-unknown-emscripten does not work as-specified, and lacks essential upstream support for generating asm.js, so it should not exist at all.
+
+</pre>
+<p><a href="https://github.com/rust-lang/compiler-team/issues/668">https://github.com/rust-lang/compiler-team/issues/668</a></p>
+<pre>    The target support code will be placed beyond the reach of mortal hands removed, because it is impossible to make the asmjs target functional again with any recent version of emscripten.
+
+</pre>
+<p><a href="https://github.com/emscripten-core/emscripten/issues/18013">https://github.com/emscripten-core/emscripten/issues/18013</a></p>
+<pre>    WASM=0 emits JS, correct. It isn't valid asm.js.
+    You'd need to use an older version of emcc for that.
+    Why do you need asm.js, btw?
+
+</pre>
+<p>哦，原来是 emscripten 把 asm.js 扬了导致的……</p>
+<pre>    You can target pure JS using -sWASM=0. Does that work for your case?
+
+</pre>
+<p>哦，但是 emcc 还是可以生成 wasm 的？</p>
+<p>所以现在有两条路可以选择，a) 调好一套旧的工具链 b) 用新的工具链，然后让 emcc 生成 js（但是不是 asm.js）</p>
+<p>决定先试试后一个。</p>
+<pre>    [101] jyi-00-rust-dev 19:13 (master) ~/dev/rust-hello
+    0 EMCC_CFLAGS='-sWASM_BIGINT=0 -sWASM=0' cr --target wasm32-unknown-emscripten
+       Compiling rust-hello v0.1.0 (/home/jyi/dev/rust-hello)
+    error: linking with `emcc` failed: exit status: 1
+      |
+      = note:  &quot;emcc&quot; &quot;-s&quot; &quot;EXPORTED_FUNCTIONS=[\&quot;_main\&quot;]&quot; &quot;&lt;9 object files omitted&gt;&quot; &quot;/home/jyi/.cargo/target/wasm32-unknown-emscripten/debug/deps/{libpanic_unwind-eabca3e06c8e1675,libstd-f6634c7a8e8f4e83,libcfg_if-06039441cf63711e,librustc_demangle-2e55913e8e5a0aa3,libstd_detect-b0944cac400fce63,libhashbrown-d50f57030afe2e60,librustc_std_workspace_alloc-d41e223207a84dc8,libunwind-f32468a84aa3db1e,liblibc-104f718dd92fbd8e,librustc_std_workspace_core-dab51820f68c2b19,liballoc-912baf8f4b33a340,libcore-290f9afa3a8590ad,libcompiler_builtins-75a0c59c5ac946f3}.rlib&quot; &quot;-B&lt;sysroot&gt;/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld&quot; &quot;--target=wasm32-unknown-emscripten&quot; &quot;-fwasm-exceptions&quot; &quot;-L&quot; &quot;&lt;sysroot&gt;/lib/rustlib/wasm32-unknown-emscripten/lib/self-contained&quot; &quot;-o&quot; &quot;/home/jyi/.cargo/target/wasm32-unknown-emscripten/debug/deps/rust_hello.js&quot; &quot;-O0&quot; &quot;-g0&quot; &quot;-sABORTING_MALLOC=0&quot; &quot;-sWASM_BIGINT&quot;
+      = note: some arguments are omitted. use `--verbose` to show all linker arguments
+      = note: Unknown option '--enable-bulk-memory-opt'
+              emcc: error: '/usr/bin/wasm2js --emscripten /tmp/emscripten_temp_ve3shvmy/rust_hello.wasm --mvp-features --enable-bulk-memory --enable-bulk-memory-opt --enable-call-indirect-overlong --enable-exception-handling --enable-multivalue --enable-mutable-globals --enable-nontrapping-float-to-int --enable-reference-types --enable-sign-ext' failed (returned 1)
+
+</pre>
+<p>？？怎么它看起来是先生成 wasm 再调用 wasm2js 转成 js 的。这不是和我的做法一样的吗。</p>
+<pre>    [101] &gt;11s&lt; jyi-00-rust-dev 19:17 (master) ~/dev/rust-hello
+    0 EMCC_CFLAGS='-sWASM_BIGINT=0 -sWASM=0' cr --target wasm32-unknown-emscripten
+       Compiling rust-hello v0.1.0 (/home/jyi/dev/rust-hello)
+    error: linking with `emcc` failed: exit status: 1
+      |
+      = note:  &quot;emcc&quot; &quot;-s&quot; &quot;EXPORTED_FUNCTIONS=[\&quot;_main\&quot;]&quot; &quot;&lt;9 object files omitted&gt;&quot; &quot;/home/jyi/.cargo/target/wasm32-unknown-emscripten/debug/deps/{libpanic_unwind-bdbe9a9b0274e44f,libstd-739ffc2e7855d128,libcfg_if-59e57702604b102d,librustc_demangle-a82bc4bf62771463,libstd_detect-beef2a27598aac14,libhashbrown-be2e328f12966f5f,librustc_std_workspace_alloc-64a3e3e592d1fda5,libunwind-6050c4518bfd2f51,liblibc-65c16e189fe6911c,librustc_std_workspace_core-19950484ac145676,liballoc-178f7f67cfaad25b,libcore-c5d669c26a2b4488,libcompiler_builtins-e33924f67dbd95d9}.rlib&quot; &quot;-B&lt;sysroot&gt;/lib/rustlib/x86_64-unknown-linux-gnu/bin/gcc-ld&quot; &quot;--target=wasm32-unknown-emscripten&quot; &quot;-fwasm-exceptions&quot; &quot;-L&quot; &quot;&lt;sysroot&gt;/lib/rustlib/wasm32-unknown-emscripten/lib/self-contained&quot; &quot;-o&quot; &quot;/home/jyi/.cargo/target/wasm32-unknown-emscripten/debug/deps/rust_hello.js&quot; &quot;-O0&quot; &quot;-g0&quot; &quot;-sABORTING_MALLOC=0&quot; &quot;-sWASM_BIGINT&quot;
+      = note: some arguments are omitted. use `--verbose` to show all linker arguments
+      = note: Fatal: wasm2js cannot convert (try $label$3
+               (do
+                (local.set $2
+                 (call $12
+                  (i32.add
+                   (local.get $1)
+                   (i32.const 12)
+                  )
+                 )
+                )
+               )
+               (catch_all
+                (global.set $global$0
+                 (local.get $1)
+                )
+                (rethrow $label$3)
+               )
+              )
+              emcc: error: '/usr/bin/wasm2js --emscripten /tmp/emscripten_temp_2zzgoriu/rust_hello.wasm --mvp-features --enable-exception-handling --enable-multivalue --enable-mutable-globals --enable-reference-types --enable-sign-ext' failed (returned 1)
+
+    
+
+
+    error: could not compile `rust-hello` (bin &quot;rust-hello&quot;) due to 1 previous error
+
+</pre>
+<p>好吧看起来不行。</p>
+<p>谁能想到 emcc 禁用 wasm 是靠先生成 wasm 再转换成 js 实现的……</p>
+<p><a href="https://ruanyifeng.com/blog/2017/09/asmjs_emscripten.html">https://ruanyifeng.com/blog/2017/09/asmjs_emscripten.html</a></p>
+<p>草，原来 asmjs 管理内存的方法就是开个数组当内存用。</p>
+<p>这下难绷了。rust 编译到 js 疑似大失败了。
+</p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../wasm-transpilers/wasm-to-jvm.html">wasm-to-jvm</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../../ikiwiki-weird-h1title.html">ikiwiki-weird-h1title</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Mon Jan 12 19:26:31 2026</span>
+<!-- Created <span class="date dt-published">Mon Jan 12 19:26:31 2026</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>shell &#x521D;&#x59CB;&#x5316;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=posts%2Fnote%2Fshell-init%2Fmain" />
+
+
+
+
+
+
+<link rel="prev" href="../running-process-constantly-consume-disk-space/main.html" title="对集群上 df 和 du 命令显示结果不一致的排查记录" />
+
+<link rel="up" href="../../../posts.html" title="posts" />
+
+<link rel="next" href="../perf/main.html" title="Perf 笔记" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../../index.html">jyi</a>/ 
+
+<a href="../../../posts.html">posts</a>/ 
+
+<a href="../../../index.html">note</a>/ 
+
+<a href="../../../index.html">shell-init</a>/ 
+
+</span>
+
+
+<span class="title">
+shell &#x521D;&#x59CB;&#x5316;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=posts%2Fnote%2Fshell-init%2Fmain" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../running-process-constantly-consume-disk-space/main.html">对集群上 df 和 du 命令显示结果不一致的排查记录</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../perf/main.html">Perf 笔记</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<hr />
+
+<p>title: shell 初始化
+date: 2023-10-01 17:48:39</p>
+
+<h2>tags:</h2>
+
+<h1>shell 初始化</h1>
+
+<p>众所周知，shell 初始化是一坨巨大的不祥之物。但是如果不了解初始化的过程的话，可能会在编写各种 rc、crontab 时被折磨。所以分享让大家试吃一下。</p>
+
+<h2>基本概念</h2>
+
+<h3>login shell</h3>
+
+<p>login shell 是个比较古老的概念，指由 logind 验证用户身份后，便提供一个 login shell 供用户工作。这个 shell 的特殊意义在于，它和用户的会话紧紧绑定在一起，在它开始运行前与它结束运行后都会往 <code>/var/log/wtmp</code> 写入用户的登录记录。除了它以外，所有的被用户手动运行的 shell 都被视作普通的应用程序。</p>
+
+<p>因为大家现在都在 tty7 用各种基于 X 的登录管理器，它们验证用户身份后会提供一个桌面环境，所以 login shell 的概念没啥用了。但是它的一些历史遗留问题还是可能给大家带来困惑。</p>
+
+<p>生成一个 login shell 有两种方法：</p>
+
+<ol>
+<li>在 shell 后面加上 <code>-l</code> 参数，比如 <code>bash -l</code>。</li>
+</ol>
+
+
+<p>比如，这是一个 login shell：</p>
+
+<pre><code class="plain">03:18 Syameimaru-Aya ~
+0 bash -l
+03:18 Syameimaru-Aya ~
+0 logout
+</code></pre>
+
+<p>而这不是一个 login shell：</p>
+
+<pre><code class="plain">03:18 Syameimaru-Aya ~
+0 bash
+03:18 Syameimaru-Aya ~
+0 logout
+bash: logout: not login shell: use `exit'
+</code></pre>
+
+<ol>
+<li>让 shell 的 <code>argv[0]</code> 以 <code>-</code> 开头。</li>
+</ol>
+
+
+<p>我们在通过 ssh 远程登录，或者从 ttyN 用 logind 登录时都可以获得 login shell。显然 logind 和 ssh 不应当对 shell 的参数做出假设（即不能假设自己即将运行的程序有一个 <code>-l</code> 参数）。所以他们用改 <code>argv[0]</code> 的方式来通知 shell。</p>
+
+<p>sshd 是这么干的的 <code>ssh/session.c</code> ：</p>
+
+<pre><code class="c">/*
+ * If we have no command, execute the shell.  In this case, the shell
+ * name to be passed in argv[0] is preceded by '-' to indicate that
+ * this is a login shell.
+ */
+</code></pre>
+
+<p>logind 也是这么干的（在 ttyN 里面试试这些东西）：</p>
+
+<pre><code class="plain">Debian GNU/Linux bookworm/sid Syameimaru-Aya tty2
+Syameimaru-Aya login: jyi
+Password:
+Linux Syameimaru-Aya 5.19.0-2-amd64 #1 SMP PREEMPT_DYNAMIC Debian 5.19.11-1 (2022-09-24) x86_64 GNU/Linux
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Fri Sep 30 03:06:30 CST 2022 on tty2
+03:34 Syameimaru-Aya ~/tmp
+0 echo $0
+-bash
+</code></pre>
+
+<h3>interactive shell</h3>
+
+<p>区分 interactive 与 non-interactive 的意义在于，让 shell 在给人类使用时与执行脚本时表现出不同的行为。</p>
+
+<p>要求标准输入和标准输出都指向终端（用 <code>isatty</code> 系统调用确定）。仅在 interactive shell 里面会打印提示符，同时启用行编辑和 job control 特性，对人类十分友好！</p>
+
+<p>这也解释了为啥用 <code>nc -l -p 2333 -e /bin/bash</code> 搞的丐版远程登录非常难用，因为这不是 interactive shell，没有方便的编辑特性。也能解释为啥 <code>echo echo hello | bash</code> 不会输出提示符而是直接输出命令结果，因为这不是 interactive shell，不会输出提示符。</p>
+
+<p>当然，也可以用 <code>-i</code> 选项暴力启动交互模式。</p>
+
+<pre><code class="plain">03:42 Syameimaru-Aya ~
+0 echo echo hello | bash -i
+    03:43 Syameimaru-Aya ~
+    0 echo hello
+    hello
+    03:43 Syameimaru-Aya ~
+    0 exit
+03:43 Syameimaru-Aya ~
+0
+</code></pre>
+
+<p>（为了分辨命令的输出，输出部分往右缩进了一些）。</p>
+
+<p>此时 shell 会像正常一样输出提示符，读取输出并且执行。</p>
+
+<h2>不同的组合读取配置文件的区别</h2>
+
+<p>以 bash 为例：</p>
+
+<p>login：首先是 <code>/etc/profile</code>，接着是 <code>/etc/profile.d/*</code>，最后是 <code>~/.bash_profile</code> <code>~/.bash_login</code> <code>~/.profile</code> 三者按顺序检查，读取第一个可读的文件。（注意没有 <code>~/.bashrc</code>）在 shell 退出时，还会读取 <code>~/.bash_logout</code>。
+non-login：不会读取任何配置。
+interactive：依次读取 <code>/etc/bash.bashrc</code> <code>~/.bashrc</code>。
+non-interactive：不会读取任何配置。</p>
+
+<p>一般情况下，shell 启动时读取的配置是上列之一，并且 login 优先于 interactive。比如，如果 shell 以 login + interactive 的方式启动，则会读取 <code>/etc/profile</code>、<code>/etc/profile.d/*</code>、<code>~/.bash_profile</code>或<code>~/.bash_login</code>或<code>~/.profile</code>，但是并不会考虑 <code>/etc/bash.bashrc</code> 和 <code>~/.bashrc</code>，即使这是一个 interactive shell。</p>
+
+<p>有个仅用于 bash 的例外是，当其以 non-login 且 non-interactive 的方式启动时，它会检查名为 <code>BASH_ENV</code> 的环境变量。如果变量值所表示的文件存在，则会读取该文件作为配置。</p>
+
+<h2>这套神秘机制造成的麻烦</h2>
+
+<h3><code>~/.bashrc</code> 与 <code>~/.bash_profile</code> 之间的互动</h3>
+
+<ol>
+<li>login shell 不会读取 <code>~/.bashrc</code>，这使得 login shell 不能读取一些配置，很难用。为了解决这个问题，人们决定在 <code>~/.bash_profile</code> 里引用 <code>~/.bashrc</code></li>
+<li>一些人会在 <code>~/.bashrc</code> 里对命令加入一些保护措施，比如 <code>alias rm='rm -I --preseve-root'</code>，使得在同时删除三个以上文件时需要确认才能删除，另外，有些人可能会拿垃圾桶代替 <code>rm</code>。</li>
+<li>一些脚本会以 login 的方式执行（通常是运行得非常早的脚本，甚至不能从父进程里继承 <code>PATH</code>），以保证自己能读取 <code>/etc/profile</code>，得到正确的环境变量。</li>
+</ol>
+
+
+<p>当这三点齐聚时，会发生什么呢？</p>
+
+<ol>
+<li>安装软件包时，本来应该被彻底删除的临时文件被不明不白地扔进了垃圾箱里，占用不知道多少的空间。</li>
+<li>即使用了 <code>-y</code> 参数来避免安装时的用户输出，仍然有可能因为 <code>rm -I</code> 等命令而需要等待输入。这对一些后台执行的脚本（比如定时自动更新）来说是非常坏的，因为很可能没有用户会来输入一个 <code>y</code>。</li>
+</ol>
+
+
+<p>为了解决这个问题，只好在 <code>~/.bashrc</code> 前面加上这一句看起来很像魔法咒语的指令：</p>
+
+<pre><code class="sh">&lt;span class="createlink"&gt;&lt;a href="/ikiwiki.cgi?do=create&amp;amp;from=posts%2Fnote%2Fshell-init%2Fmain&amp;amp;page=___36__-___61____61_____42__i__42___" rel="nofollow"&gt;?&lt;/a&gt; &amp;#36;- &amp;#61;&amp;#61; &amp;#42;i&amp;#42; &lt;/span&gt; || return
+</code></pre>
+
+<p>……使得 bash 在读取 <code>~/.bashrc</code> 当配置文件时，如果是非交互终端则立即停止读取。</p>
+
+<h3>crond 找不到命令，但是自己在终端里操作时又有</h3>
+
+<p>为了方便描述，把这个命令叫作 lolcat</p>
+
+<ol>
+<li>有些人喜欢把 lolcat 放在 <code>~/.local/bin/</code> 里</li>
+<li>有些人写 crontab 时喜欢用 lolcat（？）</li>
+<li>他在 <code>~/.bashrc</code> 里面将 <code>~/.local/bin/</code> 加入到 <code>PATH</code> 中</li>
+<li>crond 运行 shell 时为 non-interactive + non-login 模式</li>
+</ol>
+
+
+<p>会发生什么呢？</p>
+
+<ol>
+<li>当在终端里试图运行 lolcat 时，因为现有的是 interactive + non-login 模式，所以读取了 <code>~/.bashrc</code>，正确地设置了路径。</li>
+<li>当在 crond 里运行 lolcat 时，因为是 non-interactive + non-login 模式，没有读取 <code>~/.bashrc</code>，<code>PATH</code> 里没有 <code>~/.local/bin</code>，找不到 lolcat</li>
+</ol>
+
+
+<p>所以在写 crontab 时，只好写 <code>bash -lc lolcat</code></p>
+
+<p>不仅仅是 shell 脚本，C 中的 <code>system()</code>、Python 的 <code>os.system()</code> 以及更多类似物都会遇到这个问题。在终端里直接执行时，会从 bash 中继承 <code>PATH</code>，从而表现出正确的行为。而如果在 crond 内执行，则会出现找不到命令的问题。</p>
+
+<h3>更多例子</h3>
+
+<p>暂时没遇到……</p>
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../running-process-constantly-consume-disk-space/main.html">对集群上 df 和 du 命令显示结果不一致的排查记录</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../perf/main.html">Perf 笔记</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Nov 13 20:38:00 2022</span>
+<!-- Created <span class="date dt-published">Sun Nov 13 20:38:00 2022</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

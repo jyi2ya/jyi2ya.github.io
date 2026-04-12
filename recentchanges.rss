@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<rss version="2.0"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:dcterms="http://purl.org/dc/terms/"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>RecentChanges</title>
+<link>https://jyi2ya.github.io/recentchanges.html</link>
+<atom:link href="https://jyi2ya.github.io/recentchanges.rss" rel="self" type="application/rss+xml"/>
+
+<description>jyi</description>
+<generator>ikiwiki</generator>
+<pubDate>Thu, 01 Jan 1970 08:00:00 +0800</pubDate>
+
+</channel>
+</rss>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>rust-testability</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-testability" />
+
+
+
+
+
+
+<link rel="prev" href="../rust-target-cpu.html" title="rust-target-cpu" />
+
+<link rel="up" href="../../logbook.html" title="logbook" />
+
+<link rel="next" href="../selfhosted-jina-reader.html" title="selfhosted-jina-reader" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../index.html">jyi</a>/ 
+
+<a href="../../logbook.html">logbook</a>/ 
+
+<a href="../../index.html">ws</a>/ 
+
+</span>
+
+
+<span class="title">
+rust-testability
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-testability" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../rust-target-cpu.html">rust-target-cpu</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../selfhosted-jina-reader.html">selfhosted-jina-reader</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Sun Oct 12 14:07:20 CST 2025</p>
+<p>研究如何让 rust 代码易于测试。</p>
+<p>Tue Nov 11 17:21:15 CST 2025</p>
+<p><a href="https://alastairreid.github.io/rust-testability/">https://alastairreid.github.io/rust-testability/</a></p>
+<p>嘻嘻，发现文献综述。有点太巨大了，留着后面再看。</p>
+<p><a href="https://www.reddit.com/r/rust/comments/3tpegb/how_testable_is_rust/">https://www.reddit.com/r/rust/comments/3tpegb/how_testable_is_rust/</a></p>
+<p>讨论 rust 在多大程度上是测试友好的。没什么有价值的信息。</p>
+<p><a href="https://en.wikipedia.org/wiki/Test_double">https://en.wikipedia.org/wiki/Test_double</a></p>
+<p>test double，这里 double 是指替身的意思。</p>
+<p><a href="https://medium.com/better-programming/structuring-rust-project-for-testability-18207b5d0243">https://medium.com/better-programming/structuring-rust-project-for-testability-18207b5d0243</a></p>
+<pre>    Most software can be structured with a Ports-and-Adapters Pattern. In this pattern, you structure your project into the following component types
+
+</pre>
+<p>听起来有点像六边形架构。这篇也好长。</p>
+<p>六边形架构比较坏的一点是会遇到错误不好定义以及异步染色的问题。虽然领域模型是和异步无关的，但是由于它用到了各个 repo 提供的功能，它仍然需要是 async 的。又因为这点，需要 async trait。</p>
+<p>还有就是太难写了。</p>
+<p>哦，不过要是全同步就不用管这些了。或者是 go 那样的有栈协程也不用管这些。</p>
+<p>这么看来 go 写六边形架构是比较好的，类型系统弱，语法简单，有内置的测试机制</p>
+<p><a href="https://github.com/asomers/mockall">https://github.com/asomers/mockall</a></p>
+<p>好库，可以根据 trait 来很方便地创建 mock 对象，很适合用来做测试。轮椅</p>
+<p>那没这种库的语言想做 mock 测试，感觉会很难受……</p>
+<p>这篇文章最大的价值就是演示了怎么用 mockall（</p>
+<p><a href="https://www.reddit.com/r/rust/comments/3tpegb/how_testable_is_rust/">https://www.reddit.com/r/rust/comments/3tpegb/how_testable_is_rust/</a></p>
+<p>reddit 另一个关于可测试性的讨论。</p>
+<p>展示了一个副作用分离方面的例子。</p>
+<p><a href="https://audunhalland.github.io/blog/testability-reimagining-oop-design-patterns-in-rust/">https://audunhalland.github.io/blog/testability-reimagining-oop-design-patterns-in-rust/</a></p>
+<p>怎么又 oop，开历史倒车。</p>
+<pre>    If things only were that simple! We forgot that an application usually has very deep call graphs. If we test a very high level function, it will usually call into layer upon layer of intermediate steps before returning an answer, and sometimes it will even perform I/O.
+
+</pre>
+<p>我去，作者是懂的。</p>
+<pre>    I like to group functions into these two categories. Business logic is deep, but utilities are shallow. An example of a utility in the context of an application, could be e.g. HashMap. If the function we are testing uses a HashMap, we just let it do so, because it's not considered a Business Logic dependency, it's just a utility.
+
+</pre>
+<p>作者将函数分为业务逻辑和工具函数两类……</p>
+<pre>    I am not sure whether passing a function pointer would classify as DI.
+
+</pre>
+<p>通过传递函数指针来实现依赖注入的理念有点像通过闭包实现的 algebra effect 。只不过手动的麻烦一些。</p>
+<p>之前觉得使用 trait 指定接口，通过泛型实现的六边形架构是比较好的东西，但是作者好像有点不同的观点。</p>
+<pre>    It looks Object Oriented, which is probably not the correct paradigm
+    It's a little verbose, tedious to write.
+    It inherits the many-methods-in-many-dependencies design from OOP
+
+    Types (struct, enum) should be used to represent the data types in the domain of the application. A type like FooServiceImpl is no such thing, and my view is that these have no place in a Rust program. I once developed a Rust application at work where I used a Service-oriented design, and I wasn't fond of the end result at all. It felt very unnatural to work with. These OOP patterns just don't tend to fit well with Rust.
+
+</pre>
+<p>作者觉得 struct 和 enum 应该就是纯数据。</p>
+<p>感觉有点不好懂啊。还有点太监了。</p>
+<p>我觉得它的 deps pattern 的理念很好，把所有依赖都放在函数参数里约束而不是把所有 repo 之类的玩意全塞进 app state 里面。</p>
+<p>哦，好像有点明白了。比如如果一个函数需要同时用到 UserRepo 和 TodoRepo，那函数签名里就要有两个参数，或者创建新的实现两个 repo 的类。</p>
+<p>也不对啊，他到底在讲什么。</p>
+<pre>    We have managed to flatten our earlier dependency graph (which was based on an actual in-memory graph of references) to something where the dependency graph is just a compile-time concept.
+
+</pre>
+<p>我想想，如果 App 需要用到 MyService，MyService 需要用到 UserRepo 和 TodoRepo，</p>
+<p>感觉还是不如直接把 MyService 里面都搞成函数，然后把 UserRepo 和 TodoRepo 当参数传进去。</p>
+<p>哦，理解了。如果参数太多的话签名确实会有点难看。而且还可能会遇到 UserRepo 和 TodoRepo 都是 App 的成员，但是它们都需要可变引用的问题。</p>
+<p>但是写起来也太麻烦了吧这个。</p>
+<p>好像也理解的有问题。他应该从一开始就是对着 App 来实现各种 trait 的！也就是说 App 同时担当了 UserRepo 和 TodoRepo 的功能？</p>
+<p>哦，它是先用 App 实现各种 trait，再在 trait 实现里调用业务逻辑的函数。为什么要这么做……App 就像过了一下水一样啥也没干，然后就被传到底层 trait 里当 data class 用了。</p>
+<p>Fri Nov 14 13:34:53 CST 2025</p>
+<pre>    The Application struct holds all the data the application needs to operate.
+
+</pre>
+<p>今天又看一遍，感觉有点看懂了。</p>
+<p>要理解这个过程，需要首先区分函数和方法。方法是在 trait 和结构体里有 <code>self</code> 的函数。</p>
+<p>这种依赖注入实现的时候，逻辑是基于函数和纯数据结构体的，并没有对象的概念在里面。它的函数需要用 trait 来支持依赖注入，因此需要辅助结构体来实现 trait 并且作为函数的参数传入。这些 trait 的实现看起来仅仅是将外部函数包裹起来了一样。</p>
+<p>这样做确实让类型之间的依赖解耦且变得扁平了。很有趣。</p>
+<p><a href="https://github.com/audunhalland/entrait">https://github.com/audunhalland/entrait</a></p>
+<p>作者的配套库。怎么一个函数就要配一个 trait，感觉有点激进了。这下好像彻底理解了。</p>
+<pre>    As an example, consider DDD-based applications consisting of DomainServices. There will typically be one such class per domain object, with a lot of methods in each. This results in dependency graphs with fewer nodes overall, but the number of possible call graphs is much larger. A common problem with this is that the actual dependencies—the functions actually getting called—are encapsulated and hidden away from public interfaces. To construct valid dependency mocks in unit tests, a developer will have to read through full function bodies instead of looking at signatures.
+
+</pre>
+<p>哦，原来如此。通过将所有调用的函数暴露在函数签名上，来简化测试的编写流程并且降低理解成本？这样就不用读函数体了。</p>
+<p>有意义的。</p>
+<p>虽然感觉还是不如 algebra effect。宇宙万法的那个源头，它是什么，是 algebra effect。</p>
+<p>总结一下，程序由计算和 IO 组成，计算的测试谁都会弄，IO 方面的现在主要靠依赖注入和 mock 测试。</p>
+<p>依赖注入一般会用类似 java 的基于对象和接口的注入，不过 entrait 也提供了以函数为单位的依赖注入方案。</p>
+<p>Thu Nov 27 21:24:14 CST 2025</p>
+<p><a href="https://zerotomastery.io/blog/complete-guide-to-testing-code-in-rust/">https://zerotomastery.io/blog/complete-guide-to-testing-code-in-rust/</a></p>
+<p>讲了很多关于 rust 测试的技巧，还提供了一些库供选择。不过最有用的应该是它提到的 snapshot test 的概念。</p>
+<pre>    Instead of running assert! on all aspects of the output, the output instead gets a manual review by a developer. If the output passes manual review, it is then saved as a snapshot.
+
+</pre>
+<p>不用费劲地手造动复制程序输出了，很方便。</p>
+<p><a href="https://geo-ant.github.io/blog/2025/rust-testability-and-non-send-types/">https://geo-ant.github.io/blog/2025/rust-testability-and-non-send-types/</a></p>
+<p>将传递实例变成传递构造函数，从而实现了测试创建音乐线程（音乐实例是 <code>!Send</code>的，依赖注入的时候无法先初始化再传递给线程）的功能……有点好玩。</p>
+<p>思路值得学习一番。</p>
+<p><a href="https://alastairreid.github.io/rust-testability/">https://alastairreid.github.io/rust-testability/</a></p>
+<pre>    Use intermediate data structures to separate deciding what to do from performing the action: allowing tests to check that the right decision is being made and avoiding the need to mock/fake the filesystem, etc.
+
+</pre>
+<p>需要更加实际的例子……</p>
+<pre>    Use of std::io::Write trait and writeln! instead of println! (and handle resulting potential error)
+
+</pre>
+<p>有道理的。</p>
+<pre>    Beware of additional randomness in libraries: e.g., Rust’s HashMap uses randomized hashing to protect against denial of service attacks. This makes testing harder.
+
+</pre>
+<p>HashSet，坏！但是好像大多数时候也没必要测那么细，所以该用还是用好了。</p>
+<pre>    Always implement Clone and fmt::Debug for public types
+
+</pre>
+<p>!</p>
+
+
+
+
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../rust-target-cpu.html">rust-target-cpu</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../selfhosted-jina-reader.html">selfhosted-jina-reader</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

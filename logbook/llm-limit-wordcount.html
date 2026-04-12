@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>llm-limit-wordcount</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fllm-limit-wordcount" />
+
+
+
+
+
+
+<link rel="prev" href="./ws/jsonrpc.html" title="jsonrpc" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+<link rel="next" href="./lxc-systemd-resolved.html" title="lxc-systemd-resolved" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+llm-limit-wordcount
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fllm-limit-wordcount" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/jsonrpc.html">jsonrpc</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./lxc-systemd-resolved.html">lxc-systemd-resolved</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>似乎是要限制 llm 的输出单词数量。</p>
+<p>Tue Nov 25 10:51:19 CST 2025</p>
+<p>什么没头没尾的活，先摸一下。</p>
+<p>玩一下 rio。</p>
+<p>不对，先去修美术堂。美术堂需要加入多租户……也许。其实也不是多租户，只要区别 jyi 和其他用户就好了。</p>
+<p>哎，修好了。现在看来这一坨代码太烂了，等哪天给它们全扬了重写一遍。</p>
+<p>Tue Nov 25 12:32:31 CST 2025</p>
+<p><a href="https://bingyanstudio.feishu.cn/wiki/YgozwxP0CitqGokhw8CcAjUTnLf">https://bingyanstudio.feishu.cn/wiki/YgozwxP0CitqGokhw8CcAjUTnLf</a></p>
+<p>有点懂了。意思应该是各个院校对他们的文书要求字数不一样，希望能限制这个吧。</p>
+<p>这玩意真的是可做的吗。</p>
+<p>哦，调用 llm 的时候给个反馈，让 llm 多次重写应该行。但是延迟高。感觉不行。</p>
+<p><a href="https://arxiv.org/html/2412.18626v1">https://arxiv.org/html/2412.18626v1</a></p>
+<pre>    These results suggest that the problems of LLMs to count letters are not related to the frequency of words or tokens in the training data but to the complexity of the counting operation. However, further studies are needed to build a better understanding of the limitations of LLMs to count the letters in a word.
+
+</pre>
+<p>llm 数单词里的字符不行。不过成功率竟然和单词的常用程度无关，很神奇。</p>
+<p><a href="https://www.reddit.com/r/PromptDesign/comments/1aq82qp/can_you_make_llm_produce_text_with_exact_word/">https://www.reddit.com/r/PromptDesign/comments/1aq82qp/can_you_make_llm_produce_text_with_exact_word/</a></p>
+<p>数单词数量也不太行……</p>
+<pre>    LLMs on their own can't. Maybe having some kind of &quot;checker&quot; function which spits back a &quot;too many&quot; or &quot;too few&quot; would work. But LLMs have no ability to count the number of words or tokens in their output
+
+</pre>
+<p>这不是我的点子吗，怎么两年前就偷走了。</p>
+<p>一年前还是两年前流行过一种鉴定 llm 是否被量化/变小的方法是让 llm 说话接着说出自己刚刚说了多少个字。小模型做不到这些。但是忘记大模型表现如何了，也不知道现在发展怎么样了。</p>
+<pre>    You can set max_token parameter somewhere in range 100-150 depending on the model (e.g. Claude has longer tokens than GPT).
+
+</pre>
+<p>我感觉这样做的话它应该会被截断而不是写完吧。可以试一下。</p>
+<p>max token 的方案太麻烦了，先试试直接用提示词。</p>
+<p>好无聊啊。</p>
+<pre>    0 ds write a sentence with exactly five words
+    &quot;Birds sing in the morning.&quot;
+
+</pre>
+<p>好。</p>
+<pre>    0 for i in {1..5}; do ds write a story with about 500 words | wc; done
+        37     468    2731
+        37     368    2219
+        27     316    1936
+        25     422    2544
+        33     450    2708
+
+</pre>
+<p>哎这很坏啊。</p>
+<pre>    0 perl calc.pl
+    u: 404.80
+    s: 55.81
+
+</pre>
+<p>变异系数有 13.7% 了。</p>
+<pre>    0 for i in {1..5}; do ds write a story with exactly 500 words | wc; done
+        63     489    3097
+        51     413    2681
+        33     305    1906
+        49     470    2766
+        51     428    2636
+
+</pre>
+<p>修改了一下措辞。“about”，“exactly”。希望 llm 能知道我在说什么。</p>
+<pre>    0 perl calc.pl
+    u: 421.00
+    s: 64.18
+
+</pre>
+<p>垃圾。</p>
+<p>虽然可能可以通过设置略高的词数限制来把u卡到 500 那里，但是s还是太神秘了。</p>
+<p>好像也不是很神秘。</p>
+<pre>    - 格式／长度建议：大约 1-2 页 A4（约 500-1 000 词）字体字号约 12。
+
+</pre>
+<p>500 - 1000。也就是说s在 80 左右都是合理的？</p>
+<p>或者如果只做 2 sigma 保证 95% 的数值在区间的话，s可以放到 500 / 4 = 125 这个级别。</p>
+<p>那看来是够用了。</p>
+<p>呃，前提是大模型的输出支持正态分布。应该是的对吧……</p>
+<pre>    0 for i in {1..5}; do ds write a story with exactly 625 words | wc; done
+        29     300    1885
+        57     464    2983
+        50     511    3062
+        37     494    2797
+        65     689    4127
+
+    0 perl calc.pl
+    u: 491.60
+    s: 123.95
+
+</pre>
+<p>把 500 换成了 625 试图让它输出 500 词，但是结果不太好。</p>
+<p>会不会是被离群值把数据带偏了。300 那个。</p>
+<p>还真是，修了之后就从变成 539 和 87 了。</p>
+<p>多跑几组试试。</p>
+<p>跑的时候还可以看围墙花园，好耶。</p>
+<pre>    0 for i in {1..10}; do ds write a story with exactly 600 words | wc -w; done
+    603
+    382
+    496
+    398
+    507
+    529
+    531
+    517
+    569
+    493
+
+    0 perl calc.pl
+    u: 502.50
+    s: 64.68
+
+</pre>
+<p>鉴定为好。</p>
+<p>接下来试试它在长提示词里的表现……拿我的试试</p>
+<pre>    0 ll bg.txt
+    -rw-r--r-- 1 jyi jyi 25K Nov 24 18:44 bg.txt
+
+    0 for i in {1..10}; do ds 根据用户背景和写作要求，'写一篇 **精确 600 个词** 的 SoP' &lt; bg.txt | wc -w; done
+    505
+    624
+    498
+    564
+    689
+    601
+    547
+    578
+    504
+    475
+
+    0 perl calc.pl
+    u: 558.50
+    s: 63.35
+
+</pre>
+<p>怎么数据突然往上飘了。</p>
+<p>神秘。也许输出长度还会和输入长度有点关系……</p>
+<p>不过标准差倒是没怎么变，这是好的。</p>
+<pre>    0 ll text.txt
+    -rw-r--r-- 1 jyi jyi 1.5K Nov 19 19:45 text.txt
+
+    0 perl calc.pl
+    u: 593.90
+    s: 61.50
+
+</pre>
+<p>输入变短的时候输出反而变长了吗……</p>
+<p>换个模型试试。</p>
+<pre>    0 perl calc.pl
+    u: 756.10
+    s: 59.16
+
+</pre>
+<p>换了 dsv3.2 之后字数反而变多了。</p>
+<p>没法做啊感觉。模型之间都有差别。</p>
+<pre>    0 ds 写一个尽量长的故事，在 1000 字以上
+    ## 成为霸总亡妻的替身后
+    &gt;为了给白月光治病，顾沉娶了我这个替身。
+    &gt;他警告我：“不许有非分之想，你只是长得像她。”
+    &gt;三年间，我扮演着
+
+</pre>
+<p>设置 max tokens 的方案。</p>
+<pre>    0 ds 写一个尽量长但是完整的故事
+    ## 成为他的妻子后，我成了他白月光的器官库
+    &gt;为了救他的白月光，他让我生一个孩子。
+    &gt;“用孩子的脐带血，就能救她了。”他轻描淡写地说。
+    &gt;我
+
+</pre>
+<p>byd 别搁那写你的霸总文了。</p>
+
+
+
+
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/jsonrpc.html">jsonrpc</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./lxc-systemd-resolved.html">lxc-systemd-resolved</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

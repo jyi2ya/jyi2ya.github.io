@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>When to use async rust</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-async-whentouse" />
+
+
+
+
+
+
+<link rel="prev" href="./rust-async-structured-concurrency.html" title="rust-async-structured-concurrency" />
+
+<link rel="up" href="../../logbook.html" title="logbook" />
+
+<link rel="next" href="../rust-compile-speed.html" title="rust-compile-speed" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../index.html">jyi</a>/ 
+
+<a href="../../logbook.html">logbook</a>/ 
+
+<a href="../../index.html">ws</a>/ 
+
+</span>
+
+
+<span class="title">
+When to use async rust
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-async-whentouse" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./rust-async-structured-concurrency.html">rust-async-structured-concurrency</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../rust-compile-speed.html">rust-compile-speed</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+
+<ul><li><a href="#When_to_use_async_rust">When to use async rust</a>
+</li>
+</ul><hr />
+<!-- INDEX END -->
+
+<p>Fri Oct 17 15:14:10 CST 2025</p>
+<h1 id="When_to_use_async_rust">When to use async rust</h1>
+<div id="When_to_use_async_rust_CONTENT">
+<p>调研什么时候应该使用 async rust，什么时候不应该用。</p>
+<p><a href="https://github.com/jimblandy/context-switch">https://github.com/jimblandy/context-switch</a></p>
+<pre>    A context switch takes around 0.2µs between async tasks, versus 1.7µs between kernel threads. But this advantage goes away if the context switch is due to I/O readiness: both converge to 1.7µs. The async advantage also goes away in our microbenchmark if the program is pinned to a single core. So inter-core communication is something to watch out for.
+
+    Creating a new task takes ~0.3µs for an async task, versus ~17µs for a new kernel thread.
+
+</pre>
+<p>异步任务的创建和切换的时间在 200 到 300 纳秒左右。</p>
+<p>异步用来做 IO 密集型，线程用来做计算密集型。</p>
+<p>把 rayon 和 tokio 连起来？在 tokio 里 spawn blocking 之后调用 rayon 似乎是好主意。</p>
+<p><a href="https://medium.com/@the_atomic_architect/we-deleted-tokio-from-our-payment-system-and-cut-cloud-costs-by-127-000-b745a86f973b">https://medium.com/@the_atomic_architect/we-deleted-tokio-from-our-payment-system-and-cut-cloud-costs-by-127-000-b745a86f973b</a></p>
+<p>这篇说从异步切换到同步之后，性能提升了。但是但是</p>
+<pre>    We had a cascade failure. One database query took longer than expected. That blocked an async task. Which held up the executor. Which caused other tasks to queue. Within minutes, the whole service was timing out.
+
+</pre>
+<p>感觉是作者不会写异步造成的……</p>
+<p><a href="https://www.reddit.com/r/rust/comments/1ax5038/what_is_the_performance_cost_of_running_rust/">https://www.reddit.com/r/rust/comments/1ax5038/what_is_the_performance_cost_of_running_rust/</a></p>
+<p>在讨论 Rust 的异步的开销。感觉没啥帮助。</p>
+<p><a href="https://corrode.dev/blog/async/">https://corrode.dev/blog/async/</a>:</p>
+<pre>    Keep your domain logic synchronous and only use async for I/O and external services. Following these guidelines will make your code more composable and accessible. On top of that, the error messages of sync Rust are much easier to reason about than those of async Rust.
+
+</pre>
+<p>有道理的。但是我的 domain logic 如果需要调用外部的 API 该怎么办呢？</p>
+<p><a href="https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/">https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/</a></p>
+<p>我去，这篇文章讲的就是我遇到的问题。还讲了为啥有栈协程不会遇到这个问题。</p>
+<p>但是他给出的解决方案是不要用 async，或者用有栈的，感觉还是有点野蛮。</p>
+<p>Sat Nov 15 03:46:17 PM CST 2025</p>
+<p><a href="https://fmoya.dev/posts/async-rust/">https://fmoya.dev/posts/async-rust/</a></p>
+<pre>    In summary, use async Rust when you need to manage many concurrent I/O-bound operations efficiently, particularly in network-heavy applications or constrained environments. Avoid it when working with CPU-heavy tasks, simple applications, or workloads where threading already provides an effective solution.
+
+</pre>
+<p>说是对于小的程序来说，线程模型已经足够好，用 async 是一种过度优化了。</p>
+<p>坏，现在 rust 的 web 框架已经全是 async 的了。</p>
+<p><a href="https://maciej.codes/2022-06-09-local-async.html">https://maciej.codes/2022-06-09-local-async.html</a></p>
+<pre>    If you write regular synchronous Rust code, unless you have a really good reason, you don't just start with a thread-pool. You write single-threaded code until you find a place where threads can help you, and then you parallelize it, which can be as simple as replacing iter with par_iter using Rayon.
+
+
+</pre>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./rust-async-structured-concurrency.html">rust-async-structured-concurrency</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../rust-compile-speed.html">rust-compile-speed</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

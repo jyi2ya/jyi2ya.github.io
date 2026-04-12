@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x9884;&#x5904;&#x7406; markdown &#x7684;&#x5C0F;&#x5DE5;&#x5177;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=drafts%2Fbbmd%2Fmain" />
+
+
+
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../index.html">jyi</a>/ 
+
+<a href="../../index.html">drafts</a>/ 
+
+<a href="../../index.html">bbmd</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x9884;&#x5904;&#x7406; markdown &#x7684;&#x5C0F;&#x5DE5;&#x5177;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=drafts%2Fbbmd%2Fmain" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<h1>预处理 markdown 的小工具</h1>
+
+<h2>背景</h2>
+
+<p>我喜欢把帖子先在本地编辑好，再复制粘贴到 BBHust 上发表。因为可以用我最爱的编辑器和文本处理小工具。但是这样写图文混排的内容时很烦。想要发表图文混排的文章时，需要先复制粘贴一段文字，再复制粘贴一些图片，然后又复制粘贴一些文字……非常繁琐。这也是 <strong>阻止我写东湖游记的直接原因</strong> （不是因为懒，是因为 BBHust 太不好用了！）</p>
+
+<p>所以，我觉得我需要一个小工具，来把 markdown 预处理一下。它应该先把写好的 markdown 文件里面所有图片提取出来，接着把图片上传到某个地方 X，然后把所有的链接给换成指向 X 中图片的链接。这样一来，我就只要把预处理之后的文件贴到 BBHust 的编辑区里，再点一下 “发布” 就可以发布帖子了。</p>
+
+<p>最好还要能生成目录！</p>
+
+<p>于是就有了这个小工具。这个小工具做的就是上面提到的工作。</p>
+
+<h2>依赖</h2>
+
+<ul>
+<li><a href="https://imagemagick.org/">imagemagick</a> 里的 <code>convert(1)</code> 命令</li>
+<li><code>curl(1)</code></li>
+<li><code>perl(1)</code></li>
+<li><code>sh(1)</code></li>
+</ul>
+
+
+<h2>功能</h2>
+
+<ul>
+<li>替换图片链接</li>
+<li>生成目录</li>
+</ul>
+
+
+<h2>局限性</h2>
+
+<ul>
+<li>只能在 Linux 上使用（BSD 也不可以）</li>
+<li>没有完整实现 markdown 语法，而是用了很多 tricky 的正则表达式</li>
+<li>只是能用而已……也许也不一定能用</li>
+</ul>
+
+
+<h2>使用方法</h2>
+
+<ol>
+<li>把下面的代码复制下来，保存成 <code>bbmd.pl</code>。</li>
+<li>假设你的 markdown 文件叫 <code>XXX.md</code>，运行 <code>perl bbmd.pl XXX.md</code>。</li>
+<li>然后程序会在标准输出流输出预处理过后的 markdown 文本。之后是接着连别的小工具还是直接复制粘贴到编辑区发布……就随便了</li>
+</ol>
+
+
+<p>一个典型的命令：</p>
+
+<pre><code class="plain">perl bbmd.pl XXX.md | xclip -selection clipboard
+</code></pre>
+
+<p>将 <code>XXX.md</code> 预处理之后直接复制到剪贴板。然后用浏览器粘贴就好了。</p>
+
+<p>要是 BBHust 有终端版就好了，最好能直接 <code>perl bbmd.pl XXX.md | xclip -selection clipboard | submit</code> 这样，一键发布……</p>
+
+<h2>代码</h2>
+
+<pre><code class="perl">#!/usr/bin/env perl
+
+use v5.12;
+use utf8;
+use Encode qw/decode_utf8/;
+binmode STDOUT, ':encoding(utf8)';
+
+sub process_image
+{
+    $_ = shift;
+    my $filename;
+    my $uuid = `tr -d '&lt;span class="createlink"&gt;&lt;a href="/ikiwiki.cgi?do=create&amp;amp;from=drafts%2Fbbmd%2Fmain&amp;amp;page=%3Aspace%3A" rel="nofollow"&gt;?&lt;/a&gt;:space:&lt;/span&gt;' &lt; /proc/sys/kernel/random/uuid`;
+    if (/\.gif$/) {
+        $filename = "$uuid.gif";
+    } elsif (/\.png$/) {
+        $filename = "$uuid.png";
+    } else {
+        $filename = "$uuid.jpg";
+    }
+    system 'convert', $_, "/tmp/$filename";
+    system 'curl', '-F', "path=@/tmp/$filename", 'http://110.41.5.30:6788/upload?path=/';
+    unlink "/tmp/$filename";
+    "http://110.41.5.30:6788/$filename"
+}
+
+my @lines = map { decode_utf8 $_ } (&lt;&gt;);
+
+my @title_count;
+say "# 目录";
+for (@lines) {
+    next if /^```/ ... /^```/;
+    if (/^(#+)\s*(.*?)\s*$/) {
+        my ($level, $title) = (length($1), $2);
+        my $indent = "  " x $level;
+        my $url = $title;
+        $url =~ s/[^_[:^punct:]]//g;
+        $url =~ s/&lt;span class="createlink"&gt;&lt;a href="/ikiwiki.cgi?do=create&amp;amp;from=drafts%2Fbbmd%2Fmain&amp;amp;page=%3Aspace%3A" rel="nofollow"&gt;?&lt;/a&gt;:space:&lt;/span&gt;/-/g;
+        $url = lc $url;
+        @title_count = splice @title_count, 0, $level;
+        $title_count[$level - 1] += 1;
+        my $index = join ".", @title_count;
+        say "$indent+ $index [$title](#$url)";
+    }
+}
+
+say "";
+
+for my $line (@lines) {
+    if ($line =~ /^```/ ... $line =~ /^```/) {
+        print $line;
+    } else {
+        for ($line =~ /![[^\]]*\]\([^)]*\)/g) {
+            my ($mark, $desc, $file) = /(!\[([^\]]*)\]\(([^)]*)\))/;
+            $file = process_image $file;
+            $line =~ s/\Q$mark\E/![]($file)/;
+        }
+        print $line;
+    }
+}
+</code></pre>
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

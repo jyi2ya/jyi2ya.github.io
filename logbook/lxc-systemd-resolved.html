@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>lxc-systemd-resolved</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Flxc-systemd-resolved" />
+
+
+
+
+
+
+<link rel="prev" href="./llm-limit-wordcount.html" title="llm-limit-wordcount" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+<link rel="next" href="./ws/maybe-radeon-bug.html" title="maybe-radeon-bug" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+lxc-systemd-resolved
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Flxc-systemd-resolved" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./llm-limit-wordcount.html">llm-limit-wordcount</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/maybe-radeon-bug.html">maybe-radeon-bug</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<pre>Sat Oct  4 12:34:23 CST 2025
+
+    touch /etc/.pve-ignore.resolv.conf
+
+首先防止 pve 覆写我们的配置
+
+然后安装 systemd-resolved
+
+    vi /etc/systemd/resolved.conf
+
+修改 resolved 的配置
+
+    ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
+将 /etc/resolv.conf 设置成由 resolved 维护
+
+    resolvectl default-route eth0 no
+
+禁用 default route，否则 dns 请求还是会走网卡从 dhcp 搞来的地址……不知道重启还有没有用
+
+Thu Jan 29 16:48:06 CST 2026
+
+答案是重启就没了，要搭配这个使用
+
+    [Unit]
+    Description=Set resolvectl default-route for eth0 to no
+    After=network-online.target systemd-resolved.service
+    Wants=network-online.target systemd-resolved.service
+
+    [Service]
+    Type=oneshot
+    ExecStart=/usr/bin/resolvectl default-route eth0 no
+    RemainAfterExit=no
+
+    [Install]
+    WantedBy=multi-user.target
+
+</pre>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./llm-limit-wordcount.html">llm-limit-wordcount</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/maybe-radeon-bug.html">maybe-radeon-bug</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

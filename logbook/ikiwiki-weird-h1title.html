@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ikiwiki-weird-h1title</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fikiwiki-weird-h1title" />
+
+
+
+
+
+
+<link rel="prev" href="./ws/rust-transpilers/rust-to-js.html" title="rust-to-js" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+<link rel="next" href="./ws/rust-trait-design-mut.html" title="rust-trait-design-mut" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+ikiwiki-weird-h1title
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fikiwiki-weird-h1title" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/rust-transpilers/rust-to-js.html">rust-to-js</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/rust-trait-design-mut.html">rust-trait-design-mut</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Wed Jan  7 21:26:16 CST 2026</p>
+<p>我有一个 ikiwiki 的网站，我写了个类似 h1title 的插件，想让它在 inline archive 的时候从文章中提取标题而不是直接用文件名当作标题。</p>
+<p>但是现在很怪，inline archive 的前十个是可以正常提取标题的，后面的就不行了，就回归到使用文件名当作标题的模式了。不知道为什么。</p>
+<pre>    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    Posted Thu Jan 1 02:14:05 2026
+
+    CSAPP Data Lab 做题记录（上）
+    Posted Sun Dec 28 19:23:58 2025
+
+    CSAPP Data Lab 做题记录（下）
+    Posted Sun Dec 28 19:23:58 2025
+
+    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    Posted Sun Dec 28 19:23:58 2025
+
+    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    Posted Sun Dec 28 19:23:58 2025
+
+    从 zerotier 迁移到 headscale
+    Posted Sun Dec 28 19:23:58 2025
+
+    重新重新开始
+    Posted Sun Dec 28 19:23:58 2025
+
+</pre>
+<p>翻了一会代码之后，发现大概是要打开这个选项：</p>
+<pre>    raw - Rather than the default behavior of creating a blog, if raw is set to &quot;yes&quot;, the page will be included raw, without additional markup around it, as if it were a literal part of the source of the inlining page.
+
+</pre>
+<p>这会让代码走另一条路径，从而触发我的插件。有点神秘了。</p>
+<p>好像不太对啊，这样的话它又不会渲染 markdown 了。也不是期望的行为。</p>
+<pre>    my $needcontent=$raw || (!($archive &amp;&amp; $quick) &amp;&amp; $template-&gt;query(name =&gt; 'content'));
+    $needcontent = 1;
+
+</pre>
+<p>经常尝试只要让这个 <code>$needcontent</code> 值为 1 就可以解决标题的问题了。</p>
+<p>看来首先要把 <code>$quick</code> 给变成 0。然后再试试……</p>
+<p>坏了，还是没用。那还得保证 <code>$template query</code> 那个是 1？</p>
+<p>Thu Jan  8 20:30:44 CST 2026</p>
+<p>哦，最新进展！</p>
+<p><code>template query</code> 是 1 会要求模板文件中有个叫 <code>CONTENT</code> 的变量。在模板中，<code>inlinepage</code> 有这个变量而 <code>archivepage</code> 没有。传入参数有个 <code>archive</code> 会控制它选择 <code>inlinepage</code> 还是 <code>archivepage</code>。</p>
+<p>我现在完全理解了。</p>
+<p>博客归档页面里，第十条之后的页面之所以只能展示文件名而不会展示文章标题，是因为 h1title 插件根本没有生效，没有从文章中提取出标题，所以 ikiwiki 只能回落到文件名。</p>
+<p>而 h1title 没有生效则是因为它是一个在处理全文时被调用的钩子函数，归档页面不需要处理文章全文，因此就错过了调用 h1title 的机会。</p>
+<p>那为什么前十条页面能够正常显示标题呢？答案是首页会展示十篇文章的完整内容，在渲染这些内容时调用了 h1title，h1title 修改了这些文章的元数据。</p>
+<p>最好的修改方式就是在 inline 插件加个强制处理全文的选项。
+</p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/rust-transpilers/rust-to-js.html">rust-to-js</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./ws/rust-trait-design-mut.html">rust-trait-design-mut</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Thu Jan  8 20:51:24 2026</span>
+<!-- Created <span class="date dt-published">Thu Jan  8 20:51:24 2026</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

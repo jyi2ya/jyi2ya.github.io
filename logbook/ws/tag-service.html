@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tag-service</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Ftag-service" />
+
+
+
+
+
+
+<link rel="prev" href="./vibe-coding.html" title="vibe-coding" />
+
+<link rel="up" href="../../logbook.html" title="logbook" />
+
+<link rel="next" href="./comp7903-assignment-1.html" title="comp7903-assignment-1" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../index.html">jyi</a>/ 
+
+<a href="../../logbook.html">logbook</a>/ 
+
+<a href="../../index.html">ws</a>/ 
+
+</span>
+
+
+<span class="title">
+tag-service
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Ftag-service" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./vibe-coding.html">vibe-coding</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./comp7903-assignment-1.html">comp7903-assignment-1</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Tue Feb 10 17:21:38 CST 2026</p>
+<p>需要写一个标签服务，把 AI 生成的标签聚合起来，来消除重复但是本质相同的标签。</p>
+<p>本来想着用向量模型把文本转换成向量，再用向量数据库查询相关性。但是发现有种叫重排序模型的东西，可以直接给出查询和文本之间的相关性。可以试试</p>
+<p>这个是本地 llama.cpp 部署的 qwen 0.6b reranking……</p>
+<pre>    0 perl test-reranking.pl 'What is the capital of France?' 'Paris is the capital of France.' 'London is a major city in England.' 'France is a country in Europe.'
+    +------------------------------------+----+----------------------+
+    | item                               | id | relevance            |
+    +------------------------------------+----+----------------------+
+    | London is a major city in England. | 1  | 0.987469732761383    |
+    | France is a country in Europe.     | 2  | 2.38278868858188e-10 |
+    | Paris is the capital of France.    | 0  | 1.77041062365824e-10 |
+    +------------------------------------+----+----------------------+
+
+</pre>
+<p>完全不能用。</p>
+<pre>    rivus-sweethome 17:23 ~/tmp
+    0 perl test-reranking.pl 'What is the capital of France?' 'Paris is the capital of France.' 'London is a major city in England.' 'France is a country in Europe.'
+    +------------------------------------+----+---------------------+
+    | item                               | id | relevance           |
+    +------------------------------------+----+---------------------+
+    | Paris is the capital of France.    | 0  | 0.999846935272217   |
+    | France is a country in Europe.     | 2  | 0.0626271590590477  |
+    | London is a major city in England. | 1  | 0.00230952468700707 |
+    +------------------------------------+----+---------------------+
+
+</pre>
+<p>这个是硅基流动的免费 bge m3 模型，看起来还行。</p>
+<pre>    0 perl test-reranking.pl 交通出行 城市交通 交通工具 交通设施 公共交通 交通方式 铁路运输 铁路系统 出行方式
+    +----------+----+-------------------+
+    | item     | id | relevance         |
+    +----------+----+-------------------+
+    | 出行方式 | 7  | 0.967969298362732 |
+    | 交通方式 | 4  | 0.947917878627777 |
+    | 交通工具 | 1  | 0.914558112621307 |
+    | 公共交通 | 3  | 0.898177921772003 |
+    | 城市交通 | 0  | 0.88713127374649  |
+    | 交通设施 | 2  | 0.816911399364471 |
+    | 铁路运输 | 5  | 0.287989258766174 |
+    | 铁路系统 | 6  | 0.216271221637726 |
+    +----------+----+-------------------+
+
+</pre>
+<p>用在标签场景也不错。</p>
+<p>但是我觉得这个 llama.cpp + qwen 的方案有点太离谱了……虽然说是模型小还量化了，但是不至于这种 1+1 的问题都给个错误结果出来。不如直接随机排序了都。</p>
+<p><a href="https://github.com/ggml-org/llama.cpp/issues/16407">https://github.com/ggml-org/llama.cpp/issues/16407</a></p>
+<p>哦，原来是模型搞错了。</p>
+<pre>    0 perl test-reranking.pl 'What is the capital of France?' 'Paris is the capital of France.' 'London is a major city in England.' 'France is a country in Europe.'
+    +------------------------------------+----+---------------------+
+    | item                               | id | relevance           |
+    +------------------------------------+----+---------------------+
+    | Paris is the capital of France.    | 0  | 0.997535645961761   |
+    | France is a country in Europe.     | 2  | 0.00643254164606333 |
+    | London is a major city in England. | 1  | 0.00310845742933452 |
+    +------------------------------------+----+---------------------+
+
+</pre>
+<p>重测了一下，还是不错的。但是推理一次要 30 秒，还是有点太慢了……而且单个实例要 4.4 GB 内存。</p>
+<p>试试把自己的可怜集显利用起来……集显虽然打不过 16 Core 的大 CPU，但是打个 4 Core 的小哈基米应该还是能打得过的吧。</p>
+<p>Vulkan，启动！</p>
+<pre>    sudo apt install libvulkan-dev glslc
+    cmake -B build -DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS -DLLAMA_CURL=OFF -DGGML_VULKAN=ON
+    cmake --build build --config Release -j
+
+</pre>
+<p>PVE 把 /dev/dri/renderD128 给透传到 lxc 里，lxc 就能用了。注意需要在高级选项里把 group id 改成 lxc 内名为 render 的用户组的 id。</p>
+<p>如果不使用 vulkan 加速，跑一轮推理时间大概是 30 秒。加速之后大概是 20 秒，而且几乎不占用 CPU 时间了。</p>
+<p>然而还是慢慢的……</p>
+<p>本地部署的 rerank 模型似乎在有多个请求的时候是串行执行的，每个请求都要花掉 20 秒。</p>
+<p>哦，默认的 batch size 还只有 512。玩鸡毛啊</p>
+<p>硅基流动上面免费的 bge m3 可以有 8K 的</p>
+<p>哎，还是偷吃 siliconflow 的好了。
+</p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./vibe-coding.html">vibe-coding</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./comp7903-assignment-1.html">comp7903-assignment-1</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Tue Feb 10 20:00:38 2026</span>
+<!-- Created <span class="date dt-published">Tue Feb 10 20:00:38 2026</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

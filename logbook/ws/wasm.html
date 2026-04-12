@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>wasm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Fwasm" />
+
+
+
+
+
+
+<link rel="prev" href="./minecraft-server-tuning.html" title="minecraft-server-tuning" />
+
+<link rel="up" href="../../logbook.html" title="logbook" />
+
+<link rel="next" href="./wasm-transpilers/wasm-to-c.html" title="wasm-to-c" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../index.html">jyi</a>/ 
+
+<a href="../../logbook.html">logbook</a>/ 
+
+<a href="../../index.html">ws</a>/ 
+
+</span>
+
+
+<span class="title">
+wasm
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Fwasm" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./minecraft-server-tuning.html">minecraft-server-tuning</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./wasm-transpilers/wasm-to-c.html">wasm-to-c</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Fri Jan 16 17:16:19 CST 2026</p>
+<p>学一点 wasm。</p>
+<p><a href="https://kripken.github.io/blog/binaryen/2018/04/18/rust-emscripten.html">https://kripken.github.io/blog/binaryen/2018/04/18/rust-emscripten.html</a></p>
+<pre>    wasm32-unknown-unknown makes sense if you have code that does some pure computation and you want to call it from JavaScript. For example, maybe you’re writing some Rust code for your website that does math that benefits from the speed of WebAssembly. On the other hand, wasm32-unknown-emscripten makes sense if you have a complete program that uses APIs like libc, SDL, OpenGL, etc. For example, maybe you’re writing a game in Rust and you want to compile that same codebase to both a native build and to the Web.
+
+</pre>
+<p>如果要让 wasm 纯计算，就用 wasm32-unknown-unknown；如果想让它调 API，就用 emscripten ……</p>
+<p>那么 emscripten 和 wasi 的关系是什么呢。</p>
+<p><a href="https://github.com/WebAssembly/wasi-sdk/issues/222">https://github.com/WebAssembly/wasi-sdk/issues/222</a></p>
+<p>只说了 wasi 是怎么运作的，没有提供什么有用的信息。</p>
+<p><a href="https://www.webassembly.guide/webassembly-guide/browser/emscripten-tutorial">https://www.webassembly.guide/webassembly-guide/browser/emscripten-tutorial</a></p>
+<p>这里说 emscripten ABI 不稳定，wasi 会好一些。</p>
+<p><a href="https://emscripten.org/docs/compiling/Building-Projects.html">https://emscripten.org/docs/compiling/Building-Projects.html</a></p>
+<pre>    emcc ... -o output.wasm omits generating either JavaScript or HTML launcher file, and produces a single Wasm file built in standalone mode as if the -sSTANDALONE_WASM setting had been used. The resulting file expects to be run with the WASI ABI - in particular, as soon as you initialize the module you must manually invoke either the _start export or (in the case of --no-entry) the _initialize export before doing anything else with it.
+
+</pre>
+<p>哦，emcc 搞出来的 wasm 是依赖 wasi 的。</p>
+<p>wasm 和 jvm 相比有哪些优势呢？我就知道一个 jvm 为了支持反射牺牲了很多优化机会。</p>
+<p><a href="https://stackoverflow.com/questions/58131892/why-the-jvm-cannot-be-used-in-place-of-webassembly">https://stackoverflow.com/questions/58131892/why-the-jvm-cannot-be-used-in-place-of-webassembly</a></p>
+<p>大概是 1) 支持流式编译 2) 编译速度快 3) 攻击面小 4) 不仅仅是为了 Java 设计，更通用
+</p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./minecraft-server-tuning.html">minecraft-server-tuning</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./wasm-transpilers/wasm-to-c.html">wasm-to-c</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Fri Jan 16 19:29:01 2026</span>
+<!-- Created <span class="date dt-published">Fri Jan 16 19:29:01 2026</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

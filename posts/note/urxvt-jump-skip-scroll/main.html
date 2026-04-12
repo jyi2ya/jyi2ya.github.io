@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>urxvt &#x8DD1;&#x5F97;&#x6BD4; alacritty &#x8FD8;&#x5FEB;&#xFF0C;&#x4E3A;&#x4EC0;&#x4E48;&#x5462;&#xFF1F;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=posts%2Fnote%2Furxvt-jump-skip-scroll%2Fmain" />
+
+
+
+
+
+
+<link rel="prev" href="../lto-plo/main.html" title="一些书上不怎么讲的编译器优化方法" />
+
+<link rel="up" href="../../../posts.html" title="posts" />
+
+<link rel="next" href="../../fun/perl-is-fun/main.html" title="后现代编程语言介绍" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../../index.html">jyi</a>/ 
+
+<a href="../../../posts.html">posts</a>/ 
+
+<a href="../../../index.html">note</a>/ 
+
+<a href="../../../index.html">urxvt-jump-skip-scroll</a>/ 
+
+</span>
+
+
+<span class="title">
+urxvt &#x8DD1;&#x5F97;&#x6BD4; alacritty &#x8FD8;&#x5FEB;&#xFF0C;&#x4E3A;&#x4EC0;&#x4E48;&#x5462;&#xFF1F;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=posts%2Fnote%2Furxvt-jump-skip-scroll%2Fmain" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../lto-plo/main.html">一些书上不怎么讲的编译器优化方法</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../../fun/perl-is-fun/main.html">后现代编程语言介绍</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<hr />
+
+<p>title: urxvt 跑得比 alacritty 还快，为什么呢？
+date: 2023-10-01 17:48:39</p>
+
+<h2>tags:</h2>
+
+<h1>urxvt 跑得比 alacritty 还快，为什么呢？</h1>
+
+<h2>答案</h2>
+
+<p>答案是 urxvt 并没有老老实实地绘制其内程序输出的每一个字符，而是通过一些非常取巧的方法，减少了屏幕渲染的内容数量。</p>
+
+<p>具体来说，是用了以下两个优化：</p>
+
+<ul>
+<li>jump scroll：如果短时间内需要渲染很多行，那么 urxvt 仅会在收到的行能充满一屏时尝试刷新。</li>
+<li>skip scroll：在 jump scroll 的基础上，限制刷新率为 60 Hz。</li>
+</ul>
+
+
+<p>开启这两个优化之后，urxvt 收到的很多内容实际上都被直接扔进历史记录里了，根本没在屏幕上出现过。同时，因为人的眼睛是非常低速的设备，所以即使这些内容没有在屏幕上出现，也不会影响使用体验。</p>
+
+<p>如果禁用掉这些小优化，urxvt 的速度大概仅是 alacritty 的 1/2 到 1/3。</p>
+
+<h2>alacritty 与 urxvt 的简介</h2>
+
+<p>urxvt 本身是个二十多年前的老东西，使用了很多奇怪的 X 特性。配置文件和 xterm 一样非常奇怪，可能是 Xorg 给世界留下的遗产之一……使用 C 和 C++ 编写，用 Perl 扩展。rxvt 的可扩展性很强，对标准支持也很好，各种 corner case 处理相对比较完善。</p>
+
+<p>alacritty 是个很新的项目，号称要成为最快的终端。使用超级炒作语言 rust 开发，并且实现了 GPU 加速。他们一度声称自己是 “Fastest Terminal Emulator in Existence（现存最快终端）”。但是在 2020 年末的 <a href="https://github.com/alacritty/alacritty/commit/3d7b16d4b0d867268c315f421904f3a2dc81a72d">一次提交</a> 中不知道为什么他们换了说法，甚至连大家炒作时最爱的 “Blazing Fast” 也干没了。可能是开发者开发地表最速终端的梦想在现实里撞车了。非常快乐，大家快去围观。总之，相比项目早期的自述，现在的自述温和了很多。</p>
+
+<p>两个都是非常好的终端。我之前是在 Windows 下用 alacritty，在 Linux 下用 urxvt。</p>
+
+<h2>为什么需要关注终端速度</h2>
+
+<p>……其实意义也不是很大，因为大家在输出内容太长的时候都会 <code>| less</code> 一下，用 pager 分页来看，终端速度对使用体验的影响很小。</p>
+
+<p>但是既然速度是个能比的项目，那总会有人抱着一种宝可梦对决的心态来研究两个终端谁快谁慢，这也促进了这篇水帖的诞生！</p>
+
+<h2>urxvt 的小优化相关代码</h2>
+
+<p>摘自 urxvt 代码仓库 <code>src/command.C</code> 的第 2267 行。</p>
+
+<pre><code>if (ecb_unlikely (ch == C0_LF || str &gt;= eol))
+  {
+    if (ch == C0_LF)
+      nlines++;
+
+    refresh_count++;
+
+    if (!option (Opt_jumpScroll) || refresh_count &gt;= nrow - 1)
+      {
+        refresh_count = 0;
+
+        if (!option (Opt_skipScroll) || ev_time () &gt; ev::now () + 1. / 60.)
+          {
+            refreshnow = true;
+            ch = NOCHAR;
+            break;
+          }
+      }
+</code></pre>
+
+<p>大概就是它用一堆错综复杂的条件变量实现了上面提到的小优化，整段代码唯一的注释的是这样的：</p>
+
+<pre><code>/*
+ * If there have been a lot of new lines, then update the screen
+ * What the heck we'll cheat and only refresh less than every page-full.
+ * if skipScroll is enabled.
+ */
+</code></pre>
+
+<p>摆了。这啥 GNU-style 的神秘老代码看得我头疼……</p>
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../lto-plo/main.html">一些书上不怎么讲的编译器优化方法</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../posts.html">posts</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../../fun/perl-is-fun/main.html">后现代编程语言介绍</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Thu Apr  6 17:43:00 2023</span>
+<!-- Created <span class="date dt-published">Thu Apr  6 17:43:00 2023</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

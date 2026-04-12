@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>minecraft-server-tuning</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Fminecraft-server-tuning" />
+
+
+
+
+
+
+<link rel="prev" href="./eventemitter-promise-await.html" title="eventemitter-promise-await" />
+
+<link rel="up" href="../../logbook.html" title="logbook" />
+
+<link rel="next" href="./wasm.html" title="wasm" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../index.html">jyi</a>/ 
+
+<a href="../../logbook.html">logbook</a>/ 
+
+<a href="../../index.html">ws</a>/ 
+
+</span>
+
+
+<span class="title">
+minecraft-server-tuning
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Fminecraft-server-tuning" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./eventemitter-promise-await.html">eventemitter-promise-await</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./wasm.html">wasm</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Fri Jan 16 19:53:59 CST 2026</p>
+<p>有大量 JVM 调优经验，很可能是指开过服务器……</p>
+<p>网上流传了很多关于 minecraft 服务器性能的玄学。最好总结一下备用。</p>
+<p>Sun Jan 18 23:38:45 CST 2026</p>
+<p><a href="https://optimisemyserver.com/">https://optimisemyserver.com/</a></p>
+<p>总集篇</p>
+<pre>    The foundation of your Minecraft 1.20+ server performance lies in choosing the right server software. Modern high-performance forks offer significant improvements over vanilla servers, with enhanced optimization, better plugin support, and advanced features. We recommend selecting from these proven, actively maintained options.
+
+</pre>
+<p>我要玩 mod 怎么说……PaperMC 之类的能跑 forge/fabric 吗</p>
+<p><a href="https://www.reddit.com/r/admincraft/comments/syrpwq/best_way_to_use_papermc_but_still_have_forge_mods/">https://www.reddit.com/r/admincraft/comments/syrpwq/best_way_to_use_papermc_but_still_have_forge_mods/</a></p>
+<pre>    You can't.
+    Unless you try forks that are not supported by mods and plugin developpers. So a lucky wheel.
+
+</pre>
+<p>答案是不行。</p>
+<p><a href="https://www.reddit.com/r/admincraft/comments/hwg8h0/is_it_possible_to_use_forge_with_papermc/">https://www.reddit.com/r/admincraft/comments/hwg8h0/is_it_possible_to_use_forge_with_papermc/</a></p>
+<pre>    Forge/fabric/lithium and bukitt/spigot/paper are different and incompatible things. Many are starting to use Lithium because it changes the technical side of the game, which is based on bugs once you hit a certain level, a lot less than Paper, which aggressively patches bugs in the vanilla code. Also quite frankly &quot;because Hermitcraft uses it&quot; which is not imo a good reason in and of itself.
+
+</pre>
+<p>PaperMC 之类的东西对 minecraft 服务器做了很多优化，让它们性能更高。然而它们并不兼容 neoforge 的 API。</p>
+<pre>    JVM startup flags are crucial for optimizing your Minecraft server's garbage collection behavior. There are two main garbage collector types to consider: G1GC (recommended for most servers) and ZGC (for high-performance setups with JDK 16+). Properly tuned flags will eliminate garbage collection spikes and maintain consistent TPS, though CPU usage may increase slightly for better stability.
+
+</pre>
+<p>使用 ZGC 可以让服务器跑得更快？</p>
+<p><a href="https://optimisemyserver.com/flags">https://optimisemyserver.com/flags</a></p>
+<p><a href="https://flags.sh/">https://flags.sh/</a></p>
+<p>两个生成 JVM 配置的网站。我打算用这一组：</p>
+<pre>    -Xms8G -Xmx8G --add-modules=jdk.incubator.vector -XX:+UseZGC -XX:+ZGenerational -XX:+AlwaysPreTouch -XX:+ParallelRefProcEnabled -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+UseNUMA -XX:+PerfDisableSharedMem -XX:TieredStopAtLevel=1 -XX:ZUncommitDelay=60 --nogui
+
+</pre>
+<p>服务器配置文件也需要调整。</p>
+<p><a href="https://github.com/YouHaveTrouble/minecraft-optimization">https://github.com/YouHaveTrouble/minecraft-optimization</a></p>
+<p>好像比较有用。</p>
+<p>修改 server.properties：设置 sync-chunk-writes 为 false</p>
+<p>有很多文档说预生成世界会比较有用……但是这只是优化了一点跑图体验吧。又不是时时刻刻都在跑图，感觉没啥必要。真等遇到问题了再说。</p>
+<p>network-compression-threshold 推荐成 256，说是能节约一点 CPU 资源。就是用 CPU 资源来换带宽。但是我带宽和 CPU 都很捉急。相比之下感觉带宽更捉急一点，所以还是设置成 0 好了。</p>
+<p>主要是不知道这个数据压缩是不是在主循环做的，如果 IO 是单独的线程的话那压缩就是纯收益了。正常人肯定不会把数据压缩放到主循环，但是它是 Mojang，我不好说。</p>
+<p><code>simulation-distance: 4</code> <code>view-distance: 7</code>。肯定是越小越快的。但是不知道群友玩机械动力会不会动不动做横跨几个区块的大机机……先这么设置着等出问题再说。</p>
+<pre>    Alternative JVM implementations such as OpenJ9 or GraalVM can work, however they are not supported by Paper and have been known to cause issues, therefore they are not currently recommended.
+
+</pre>
+<p>坏，GraalVM 说是跑起来会有问题。</p>
+<p><a href="https://github.com/GoldenForge/GoldenForge">https://github.com/GoldenForge/GoldenForge</a></p>
+<p>挠头，说是一个性能更好，移植了 PaperMC 的性能补丁的 neoforge。听起来感觉有点灵车……</p>
+<p>看了下提交记录发现最新的一个是修复机械动力附属模组的兼容性问题的，还是别用好了。</p>
+<p><a href="https://www.gamehostbros.com/guides/games/minecraft/neoforge-performance-guide">https://www.gamehostbros.com/guides/games/minecraft/neoforge-performance-guide</a></p>
+<p>一大坨 neoforge 性能优化 mod。最好安一些试试。</p>
+<p><a href="https://github.com/MeowIce/meowice-flags">https://github.com/MeowIce/meowice-flags</a></p>
+<p>比前面的 ZGC 更激进的 JVM 参数，还适配了 GraalVM。也许试一下 GraalVM 也不是不行……</p>
+<p>里面提到了 ZGC 在 8 核以下反而会更慢。无所谓我的机器一般核都挺多……</p>
+<p><a href="https://github.com/tigercat2000/minecraft_graalvm_tutorial">https://github.com/tigercat2000/minecraft_graalvm_tutorial</a></p>
+<p>graalvm 的教程，聚集于客户端，应该是写给小白看的。</p>
+<p><a href="https://www.reddit.com/r/feedthebeast/comments/uz21wc/graalvm_speeds_up_modded_minecraft/">https://www.reddit.com/r/feedthebeast/comments/uz21wc/graalvm_speeds_up_modded_minecraft/</a></p>
+<p>这里提到了 graalvm 把启动时间加快了约 10%。</p>
+<p><a href="https://github.com/brucethemoose/Minecraft-Performance-Flags-Benchmarks">https://github.com/brucethemoose/Minecraft-Performance-Flags-Benchmarks</a></p>
+<pre>    You must use G1GC with these arguments. GraalVM currently doesn't work with ZGC or Shenandoah.
+
+</pre>
+<p>哦，原来是3 年之前的帖子</p>
+<p>里头说 GraalVM 在客户端可能有显示上的问题，在服务端没啥问题。还给了一大堆参数。</p>
+<p><a href="https://github.com/DataDalton/Minecraft-Performance-Guide/blob/main/Java%20Arguments/README.md">https://github.com/DataDalton/Minecraft-Performance-Guide/blob/main/Java%20Arguments/README.md</a></p>
+<pre>    ZGC is great for high memory and high core count servers. It has no server throughput hit which can be significantly measured, and does not stutter. However, it requires more RAM and more cores than most other garbage collectors.
+
+    The terms Enterprise Edition (EE) and Community Edition (CE) are now deprecated from GraalVM with a rebranding from Oracle. In the past, you had to be a Oracle subscriber to use the Enterprise Edition which had the features we want or use the Community Edition, now the public version which is just GraalVM have these features for free to the public, the new versions also include ZGC which is recommended to use with GraalVM over using its G1GC collector
+
+</pre>
+<p>耶！GraalVM 免费了！</p>
+<p>哎，这里说推荐使用 ZGC，上面又说小内存不推荐使用 ZGC。</p>
+<p>还是用一下 ZGC 好了。</p>
+<p>Mon Jan 19 18:07:47 CST 2026</p>
+<p>开服大成功！</p>
+<p>虽然有些微妙的 bug，有人打开了奖励箱，生成战利品中的地图的时候需要查找周边结构，在寻找结构的时候超时了，导致它崩溃了一次……</p>
+<p>但是看起来不是 JVM 的问题。说明 GraalVM 是对的！
+</p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./eventemitter-promise-await.html">eventemitter-promise-await</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./wasm.html">wasm</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Mon Jan 19 18:09:00 2026</span>
+<!-- Created <span class="date dt-published">Mon Jan 19 18:09:00 2026</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

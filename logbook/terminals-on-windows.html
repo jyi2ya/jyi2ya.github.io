@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>terminals-on-windows</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fterminals-on-windows" />
+
+
+
+
+
+
+<link rel="prev" href="./selfhosted-jina-reader.html" title="selfhosted-jina-reader" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+<link rel="next" href="./u3810a.html" title="u3810a" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+terminals-on-windows
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fterminals-on-windows" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./selfhosted-jina-reader.html">selfhosted-jina-reader</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./u3810a.html">u3810a</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+<hr />
+<!-- INDEX END -->
+
+<p>Mon Nov 24 18:42:27 CST 2025</p>
+<p><a href="https://github.com/alacritty/alacritty/issues/6899">https://github.com/alacritty/alacritty/issues/6899</a></p>
+<p>用 alacritty 用了几天，遇到了这个 bug。tmux 的 prefix key 突然就不好使了。打算换个终端看看。</p>
+<p>现在用笔记本用的多，找个省电的……</p>
+<p>wezterm、rio 和 kitty 看起来都不错。</p>
+<p><a href="https://forums.macrumors.com/threads/alacritty-vs-kitty-vs-rio-vs-wezterm-minimalistic-terminal-emulator.2396104/">https://forums.macrumors.com/threads/alacritty-vs-kitty-vs-rio-vs-wezterm-minimalistic-terminal-emulator.2396104/</a></p>
+<p>吼吼还真有人把这四个拿来比的。省的自己动手了。</p>
+<p>但是没几个人回答。所以还是没啥用，白高兴一场。</p>
+<p><a href="https://www.reddit.com/r/linuxmasterrace/comments/vq98yr/which_terminal_emulator_do_you_recommend/">https://www.reddit.com/r/linuxmasterrace/comments/vq98yr/which_terminal_emulator_do_you_recommend/</a></p>
+<pre>    Wezterm has that, kitty graphics support, sixel graphics (lsix works), iTerm2 image support, multiplexer, splits, panes, gpu rendering, yadda yadda yadda. (If you're looking for features - Wezterm is the shit!)
+
+    Use it for a day, and then notice high CPU spikes (I have AMD CPU &amp; GPU)
+
+</pre>
+<p>hmm wezterm 看起来不妙啊……</p>
+<pre>    Kitty has built in opt-out telemetry, and when the main dev is told about this, he just says he disagrees rather than solving the issue.
+
+</pre>
+<p>kitty 也不太行？好吧终端是好终端。</p>
+<pre>    executing &quot;time find /usr&quot;
+        alacritty: 0,65s user 1,37s system 98% cpu 2,047 total
+        gnome-terminal: 0,66s user 1,49s system 50% cpu 4,272 total
+        kitty: 0,89s user 1,46s system 64% cpu 3,633 total
+
+</pre>
+<p><a href="https://sw.kovidgoyal.net/kitty/performance/">https://sw.kovidgoyal.net/kitty/performance/</a></p>
+<p>kitty 的性能测试。里面专门有一栏就是 energy use</p>
+<p>我去，kitty 原来可以调 fps 啊，那我调个 30 出来不爽了。</p>
+<p>坏。kitty 不支持 windows</p>
+<p><a href="https://github.com/alacritty/alacritty/issues/5126">https://github.com/alacritty/alacritty/issues/5126</a></p>
+<p>alacritty 是不支持调 fps 的。</p>
+<p>Tue Nov 25 16:24:31 CST 2025</p>
+<p>试了下感觉 rio 好酷，可以调 fps，还有好玩的 crt 模式。感觉试几天 rio。</p>
+<p>哦，rio 也遇到了和 alacritty 同样的问题……那看来不是软件的 bug 了。</p>
+<p><a href="https://github.com/raphamorim/rio/issues/354">https://github.com/raphamorim/rio/issues/354</a></p>
+<pre>    Update: after spending more time on this and testing a few different settings, I found that disabling disable-ctlseqs-alt makes it work (as expected):
+
+</pre>
+<p>原来是这样！虽然没搞懂发生了什么，但是反正它现在暂时可以工作了。</p>
+<p>Tue Nov 25 19:41:52 CST 2025</p>
+<p>坏，rio 在用 aichat 在 tmux 里输出长篇大论的时候会有问题，底下的 bar 会莫名其妙往上移。</p>
+<p>不懂了。</p>
+<p>把高亮和 wrap 关掉还是这样的。感觉是个 bug</p>
+<p>Wed Nov 26 18:17:01 CST 2025</p>
+<p>这个不能用 aichat 的 bug 太烦人了。我得想办法修一下。不是修 aichat 就是修 rio。</p>
+<p>呃，似乎只在 aichat 输出到行尾，自然换行的时候会问题。如果之前分个屏就不会出问题了。</p>
+<p>好吧，继续用吧</p>
+<p>Thu Nov 27 13:32:42 CST 2025</p>
+<p><a href="https://github.com/raphamorim/rio/issues/1013">https://github.com/raphamorim/rio/issues/1013</a></p>
+<p>看到了个 issue，看起来就是我遇到的问题。</p>
+<p>Thu Nov 27 14:06:38 CST 2025</p>
+<p>hmm，调查了一下，tmux prefix 快捷键不好使的本质是终端把 alt + 快捷键发送成 esc 序列了。然后 tmux 的设置里又把 escape-time 设置成了 0，导致 alt 快捷键被识别成单独的 esc。很坏。</p>
+<p>那么解决方法就是 a) 让 alacritty 不发送 esc 序列和 b) 增大 escape-time</p>
+<p>改 tmux 好了。</p>
+<p>花了好久和 ai 一起试图修 rio 的换行问题。没什么进展。</p>
+<p>Tue Jan 20 16:52:47 CST 2026</p>
+<p>Ghostty，自称是 platform native，也许可以试试。</p>
+<p>坏，ghostty 不支持 Windows</p>
+<p>Windterm，用 C 写的终端，看起来功能很多的样子，值得一试……感觉有点像 IDE 了，可能不太用得惯。但是东西应该是好东西。</p>
+<p>ConEmu，我记得高中的时候我就在用这个。感觉要开历史倒车了。</p>
+<p>Thu Jan 22 21:15:16 CST 2026</p>
+<p>ConEmu 不太行，显示大段中文的时候会出字挤到一起和换行不正确的 bug。不知道是我的字体的问题还是它本身的问题。</p>
+<p>性能也不太好，用起来一卡一卡的。
+</p>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./selfhosted-jina-reader.html">selfhosted-jina-reader</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./u3810a.html">u3810a</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

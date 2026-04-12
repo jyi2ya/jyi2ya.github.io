@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x5305;&#x7BA1;&#x7406;&#x5668;&#x7684;&#x5FEB;&#x7167;&#xFF01;</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fapt-snapshot" />
+
+
+
+
+
+
+<link rel="prev" href="./ws/admin-log.html" title="admin-log" />
+
+<link rel="up" href="../logbook.html" title="logbook" />
+
+<link rel="next" href="./astrorinas.html" title="astrorinas" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../index.html">jyi</a>/ 
+
+<a href="../logbook.html">logbook</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x5305;&#x7BA1;&#x7406;&#x5668;&#x7684;&#x5FEB;&#x7167;&#xFF01;
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fapt-snapshot" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/admin-log.html">admin-log</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./astrorinas.html">astrorinas</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+
+<ul><li><a href="#包管理器的快照">包管理器的快照！</a>
+</li>
+</ul><hr />
+<!-- INDEX END -->
+
+<h1 id="包管理器的快照">包管理器的快照！</h1>
+<div id="包管理器的快照_CONTENT">
+<p>Mon Oct 20 19:06:50 CST 2025</p>
+<p>感觉在玩的时候总会安装各种奇怪的软件，玩完之后往往又忘记删掉了。需要一个快照工具来帮忙。</p>
+<p>首先肯定是要用 Perl 来写的……看看有什么库可以读写已经安装的软件信息。</p>
+<p><a href="https://askubuntu.com/questions/17823/how-to-list-all-installed-packages">https://askubuntu.com/questions/17823/how-to-list-all-installed-packages</a></p>
+<p>这里面提到的 <code>dpkg get-selections</code> 和 <code>apt-clone</code> 好像都挺好的，不用重新造轮子了。</p>
+<p>坏，<code>get-selections</code> 和 <code>apt</code> 疑似是两个系统的，还是得和 apt 打架</p>
+<p><a href="https://askubuntu.com/questions/1213029/snapshot-and-rollback-of-apt-installed-packages">https://askubuntu.com/questions/1213029/snapshot-and-rollback-of-apt-installed-packages</a></p>
+<p>这个人问了和我一样的问题。</p>
+<p>算了，自己写一个吧</p>
+<p>嘻嘻，写好了。通过调用 <code>apt</code> 和 <code>apt-mark</code> 实现。
+</p>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="./ws/admin-log.html">admin-log</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="./astrorinas.html">astrorinas</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Dec 28 19:23:58 2025</span>
+<!-- Created <span class="date dt-published">Sun Dec 28 19:23:58 2025</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

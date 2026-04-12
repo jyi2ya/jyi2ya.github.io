@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>xslt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../../../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../../../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=plugins%2Fikiplugins%2Fdoc%2Fikiwiki%2Fdirective%2Fxslt" />
+
+
+
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../../../../index.html">jyi</a>/ 
+
+<a href="../../../../../index.html">plugins</a>/ 
+
+<a href="../../../../../index.html">ikiplugins</a>/ 
+
+<a href="../../../../../index.html">doc</a>/ 
+
+<a href="../../../../../index.html">ikiwiki</a>/ 
+
+<a href="../directive.html">directive</a>/ 
+
+</span>
+
+
+<span class="title">
+xslt
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=plugins%2Fikiplugins%2Fdoc%2Fikiwiki%2Fdirective%2Fxslt" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<p>The <code>xslt</code> directive is supplied by the <a href="http://ikiwiki.info/plugins/contrib/xslt/">xslt</a> plugin.</p>
+
+<p>This directive processes an input XML data file with XSLT, and outputs the
+result in the page where the directive was called.</p>
+
+<pre><code>[[!xslt  file="data1.xml" stylesheet="style1.xsl"]]
+</code></pre>
+
+<p>There are two arguments to this directive.</p>
+
+<ul>
+<li><p><strong>file:</strong>
+The file which contains XML data to be processed. This file <em>must</em> have a <code>.xml</code> extension (<code>filename.xml</code>). This file is searched for using the usual IkiWiki mechanism, thus finding the file first in the same directory as the page, then in the directory above, and so on.</p></li>
+<li><p><strong>stylesheet:</strong>
+The file which contains XSLT stylesheet to apply to the XML data.  This file <em>must</em> have a <code>.xsl</code> extension (<code>filename.xsl</code>). This file is searched for using the usual IkiWiki mechanism, thus finding the file first in the same directory as the page, then in the directory above, and so on.</p></li>
+</ul>
+
+
+<p>It is expected that the XSLT stylesheet will output valid HTML markup.</p>
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+
+
+
+
+
+<div id="backlinks">
+
+Links:
+
+
+<a href="../../plugins/contrib/xslt.html">plugins/contrib/xslt</a>
+
+
+</div>
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Sun Apr 12 01:09:07 2026</span>
+<!-- Created <span class="date dt-published">Sun Apr 12 01:09:07 2026</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>

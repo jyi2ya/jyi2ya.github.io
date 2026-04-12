@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<rss version="2.0"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:dcterms="http://purl.org/dc/terms/"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>pages tagged type/chrome</title>
+<link>https://jyi2ya.github.io/tags/type/chrome.html</link>
+<atom:link href="https://jyi2ya.github.io/tags/type/chrome.rss" rel="self" type="application/rss+xml"/>
+
+<description>jyi</description>
+<generator>ikiwiki</generator>
+<pubDate>Sun, 12 Apr 2026 01:09:07 +0800</pubDate>
+<item>
+	<title>xslt</title>
+
+	<guid isPermaLink="false">https://jyi2ya.github.io/plugins/ikiplugins/doc/plugins/contrib/xslt.html</guid>
+
+	<link>https://jyi2ya.github.io/plugins/ikiplugins/doc/plugins/contrib/xslt.html</link>
+
+
+
+	<category>type/chrome</category>
+
+
+	<pubDate>Sun, 12 Apr 2026 01:09:07 +0800</pubDate>
+	<dcterms:modified>2026-04-11T17:09:07Z</dcterms:modified>
+
+
+	<description>&lt;p&gt;[[!template &lt;span class=&quot;error&quot;&gt;Error: failed to process template &amp;lt;span class=&amp;quot;createlink&amp;quot;&amp;gt;&amp;lt;a href=&amp;quot;/ikiwiki.cgi&amp;#63;do=create&amp;amp;amp;from=plugins&amp;#37;2Fikiplugins&amp;#37;2Fdoc&amp;#37;2Fplugins&amp;#37;2Fcontrib&amp;#37;2Fxslt&amp;amp;amp;page=&amp;#37;2Ftemplates&amp;#37;2Fplugin&amp;quot; rel=&amp;quot;nofollow&amp;quot;&amp;gt;&amp;#63;&amp;lt;/a&amp;gt;plugin&amp;lt;/span&amp;gt; template plugin not found&amp;#10;&lt;/span&gt;]]&lt;/p&gt;
+
+&lt;p&gt;IkiWiki::Plugin::xslt is an IkiWiki plugin implementing the
+&lt;a href=&quot;https://jyi2ya.github.io/plugins/ikiplugins/doc/ikiwiki/directive/xslt.html&quot;&gt;xslt&lt;/a&gt; &lt;a href=&quot;https://jyi2ya.github.io/plugins/ikiplugins/doc/ikiwiki/directive.html&quot;&gt;directive&lt;/a&gt;
+to process an input XML data file with XSLT, and output the result in
+the page where the directive was called.&lt;/p&gt;
+
+&lt;h2&gt;DOWNLOAD&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;browse at GitHub: &lt;a href=&quot;http://github.com/rubykat/ikiplugins/blob/master/IkiWiki/Plugin/xslt.pm&quot;&gt;http://github.com/rubykat/ikiplugins/blob/master/IkiWiki/Plugin/xslt.pm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;git repo at git://github.com/rubykat/ikiplugins.git&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+
+
+</item>
+
+</channel>
+</rss>

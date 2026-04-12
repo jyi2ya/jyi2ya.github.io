@@ -1,0 +1,4 @@
+[1] 16:49 Syameimaru-Aya (master) ~/sr/do/bl/draft/ddcutil
+0 ddcutil detect
+No /dev/i2c devices exist.
+ddcutil requires module i2c-dev.

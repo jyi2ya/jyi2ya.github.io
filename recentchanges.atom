@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>RecentChanges</title>
+<link href="https://jyi2ya.github.io/recentchanges.html"/>
+<link href="https://jyi2ya.github.io/recentchanges.atom" rel="self" type="application/atom+xml"/>
+<author>
+
+<name>jyi</name>
+
+</author>
+
+
+
+
+<id>https://jyi2ya.github.io/recentchanges.html</id>
+
+<subtitle type="html">jyi</subtitle>
+<generator uri="http://ikiwiki.info/">ikiwiki</generator>
+<updated>1970-01-01T00:00:00Z</updated>
+
+</feed>

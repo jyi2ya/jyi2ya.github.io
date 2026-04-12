@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>&#x628A; rust &#x7F16;&#x8BD1;&#x5230; c</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="../../../style.css" type="text/css" />
+
+<link rel="stylesheet" href="../../../local.css" type="text/css" />
+
+
+
+
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-transpilers%2Fcompile-rust-to-c" />
+
+
+
+
+
+
+<link rel="prev" href="../wasm-transpilers/wasm-to-c.html" title="wasm-to-c" />
+
+<link rel="up" href="../../../logbook.html" title="logbook" />
+
+<link rel="next" href="../wasm-transpilers/wasm-to-jvm.html" title="wasm-to-jvm" />
+
+
+
+
+</head>
+<body>
+
+<div class="page">
+
+<div class="pageheader">
+<div class="header">
+<span>
+
+
+<span class="parentlinks">
+
+<a href="../../../index.html">jyi</a>/ 
+
+<a href="../../../logbook.html">logbook</a>/ 
+
+<a href="../../../index.html">ws</a>/ 
+
+<a href="../../../index.html">rust-transpilers</a>/ 
+
+</span>
+
+
+<span class="title">
+&#x628A; rust &#x7F16;&#x8BD1;&#x5230; c
+
+</span>
+</span>
+
+
+<form action="https://duckduckgo.com/" id=searchform>
+  <div>
+    <input type="text" autocomplete="off" name="q" id="searchbox" value="" size=16 placeholder="Search with DuckDuckGo" />
+    <input type="hidden" name="sites" value="https://jyi2ya.github.io" />
+  </div>
+</form>
+
+
+
+</div>
+
+
+<div class="actions">
+<ul>
+
+<li><a href="/ikiwiki.cgi?do=edit&amp;page=logbook%2Fws%2Frust-transpilers%2Fcompile-rust-to-c" rel="nofollow">Edit</a></li>
+
+
+
+
+
+<li><a rel="nofollow" href="/ikiwiki.cgi?do=prefs">Preferences</a></li>
+
+
+
+
+
+</ul>
+</div>
+
+
+
+
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../wasm-transpilers/wasm-to-c.html">wasm-to-c</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../wasm-transpilers/wasm-to-jvm.html">wasm-to-jvm</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<div id="pagebody">
+
+<div id="content" role="main">
+<div class="pod">
+<!-- INDEX START -->
+<h3 id="TOP">Index</h3>
+
+<ul><li><a href="#把_rust_编译到_c">把 rust 编译到 c</a>
+</li>
+</ul><hr />
+<!-- INDEX END -->
+
+<h1 id="把_rust_编译到_c">把 rust 编译到 c</h1>
+<div id="把_rust_编译到_c_CONTENT">
+<p>Tue Sep 23 15:25:23 CST 2025</p>
+<p>https://github.com/rust-lang/rustc_codegen_c</p>
+<p>今天玩一下 `rustc_codegen_c`</p>
+<p>感觉不如 mrustc……画质</p>
+<pre>    0 ./y rustc examples/basic_math.rs
+    [BUILD] build system
+    error: -Zbuild-std requires --target
+
+</pre>
+<p>出现了怪报错。总之是和 build-std 有关，把 build-std 关掉看看。</p>
+<pre>    7     fn codegen_allocator(
+    6         &amp;self,
+    5         _tcx: TyCtxt&lt;'_&gt;,
+    4         _module_name: &amp;str,
+    3         _kind: AllocatorKind,
+    2         _alloc_error_handler_kind: AllocatorKind,
+    1     ) -&gt; Self::Module {
+    113         todo!()
+    1     }
+
+</pre>
+<p>byd 这玩个鸡毛啊，内存分配器都做不出来</p>
+<p>还是去玩 mrustc 好了。</p>
+<p>Sat Oct 25 17:19:36 CST 2025</p>
+<p>mrustc 已经有过使用经验了。</p>
+<p>经过一番大调查，大概有 rust to c、mir to c 和 llvm-ir to c 三种方案</p>
+<p>rust to c 就是经典的 mrustc。感觉因为是从头开始另造一套，不是很阳间……不知道标准库测试结果如何。</p>
+<p>mir to c 有完全不能用的 rustc-codegen-c</p>
+<p><a href="https://www.reddit.com/r/rust/comments/1bhajzp/rust_to_c_compiler/">https://www.reddit.com/r/rust/comments/1bhajzp/rust_to_c_compiler/</a>:</p>
+<pre>    This means that, instead of having to maintain 2 separate projects, I can maintain one project. Bug fixes to the .NET side of things also fix C bugs. Because of that, the support for C in the project is almost as good as support for .NET.
+
+</pre>
+<p>无意间发现 rustc-codegen-clr 也是支持生成 c 的！</p>
+<pre>    Most components of std are about 95% working in .NET, and 80% working in C. So, you can compile a lot of existing Rust code, but it may not necessarily work.
+
+</pre>
+<p>而且支持 std，画质看起来比 rustc-codegen-c 高好多。</p>
+<p>试吃一下。</p>
+<pre>    Q: Is Rust's memory management useless in .NET?
+    A: Rust code typically uses the stack more than the heap, which can speed up code running within the CLR runtime. Heap-allocated objects are allocated from unmanaged (non-GC) memory and are allocated and freed in the same way as in Rust.
+
+</pre>
+<p>这么强？</p>
+<p>也不对啊，80% working 不是说明每五个测试就会挂一个，感觉也不是很能用……</p>
+<pre>    Enidianess problems mostly come from const data - currently, it is stored as binary blobs. When I refactor that, enidianess issues will only remain in stdlib. That could be patched around by adding a new intrinsic and leaving enidianess to the compiler backend to deal with.
+
+</pre>
+<p>const data 会有端序的问题？没懂到底是只有 rustc-codegen-clr 有还是 mir 就有，需要注意一手</p>
+<p>llvm ir to c 就是 llvm-cbe</p>
+<p><a href="https://github.com/JuliaHubOSS/llvm-cbe">https://github.com/JuliaHubOSS/llvm-cbe</a></p>
+<p>感觉这个能最大程度复用既有的基础设施，是最阳间的一个。</p>
+<p>但是需要自己编译 llvm……？也不用，安装正确版本的 llvm 就行了。</p>
+<p><a href="https://github.com/rust-lang/rust/commits/master/src/llvm-project">https://github.com/rust-lang/rust/commits/master/src/llvm-project</a></p>
+<p>需要先从这里选出和 llvm-cbe 用相同版本 llvm 的 rust。现在的 llvm-cbe 版本是 llvm 19，对应的 rust 版本是 1.86.0。最好能搞个 nightly 版本的出来。</p>
+<p><a href="https://ianwwagner.com/the-rust-toolchain-toml-file.html">https://ianwwagner.com/the-rust-toolchain-toml-file.html</a></p>
+<p>写一个 rust-toolchain.toml，限定一下版本。</p>
+<pre>    [toolchain]
+    channel = &quot;nightly-2025-02-13&quot;
+    profile = &quot;minimal&quot;
+    components = ['rust-src']
+
+</pre>
+<p><a href="https://github.com/louy2/rust2c-llvm-cbe">https://github.com/louy2/rust2c-llvm-cbe</a></p>
+<p>然后对着这个偷偷抄一下怎么弄……</p>
+<p>C 语言的已经跑起来力。</p>
+<p>我要是把 c 转换成 llvm ir 再转换成 c 会发生什么……神秘，多次转换的时候代码会逐渐膨胀</p>
+<pre>    jyi-00-rust-dev 19:24 (master) ~/dev/pixpix
+    0 rustc --version --verbose
+    rustc 1.86.0-nightly (ef148cd7e 2025-02-12)
+    binary: rustc
+    commit-hash: ef148cd7eb00a5a973130dc6473da71fd6c487ee
+    commit-date: 2025-02-12
+    host: x86_64-unknown-linux-gnu
+    release: 1.86.0-nightly
+    LLVM version: 19.1.7
+
+</pre>
+<p>检查 rustc 使用的 llvm 版本</p>
+<pre>    jyi-00-rust-dev 19:07 (master) ~/sr/la/llvm-cbe/build
+    0 ~/src/lang/llvm-cbe/build/tools/llvm-cbe/llvm-cbe --version
+    Debian LLVM version 19.1.7
+    Optimized build.
+
+</pre>
+<p>检查 llvm-cbe 使用的 llvm 版本</p>
+<pre>    jyi-00-rust-dev 19:26 (master) ~/dev/pixpix
+    0 cargo rustc --release --target-dir ./packed-llvm-ir -- --emit=llvm-ir
+
+</pre>
+<p>使用 <code>cargo rustc</code> 构建项目，并且生成 llvm-ir</p>
+<pre>    &gt;1m 6s&lt; jyi-00-rust-dev 19:27 (master) ~/dev/pixpix
+    0 f packed-llvm-ir/ -iname '*.ll'
+    packed-llvm-ir/release/build/num-traits-5ed0581bb5df252b/out/autocfg_691fac96cb4b949d_0.ll
+    packed-llvm-ir/release/build/num-traits-5ed0581bb5df252b/out/autocfg_691fac96cb4b949d_1.ll
+    packed-llvm-ir/release/build/lock_api-66145dcd3bee64ab/out/autocfg_377041ae42a1d975_0.ll
+    packed-llvm-ir/release/deps/pixpix-30f5a8383400f414.ll
+
+</pre>
+<p>这对吗，为啥就这么几个 <code>.ll</code> 文件，依赖也没有……哦但是它一个 <code>.ll</code> 有 20 MB。吓哭了。</p>
+<pre>    jyi-00-rust-dev 19:29 (master) ~/dev/pixpix
+    0 ~/src/lang/llvm-cbe/build/tools/llvm-cbe/llvm-cbe ./packed-llvm-ir/release/deps/pixpix-30f5a8383400f414.ll
+    LLVM ERROR: Code generator does not support intrinsic function 'llvm.minnum.f64'!
+    Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):
+
+</pre>
+<p>坏，你怎么死了。</p>
+<p><a href="https://github.com/JuliaHubOSS/llvm-cbe/issues/111">https://github.com/JuliaHubOSS/llvm-cbe/issues/111</a></p>
+<p>真坏啊，看起来是 llvm-cbe 本身的问题</p>
+<p>换个项目试试。</p>
+<pre>    jyi-00-rust-dev 19:33 (master) ~/dev/lead-to-rome
+    0 ~/src/lang/llvm-cbe/build/tools/llvm-cbe/llvm-cbe packed-llvm-ir/release/deps/lead_to_rome-f8468ec2cf92376a.ll
+    LLVM ERROR: Code generator does not support intrinsic function 'llvm.x86.sse2.pause'!
+    Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):
+
+</pre>
+<p>byd，怎么 sse2 都不支持，我操死你的马</p>
+<p><a href="https://github.com/JuliaHubOSS/llvm-cbe/issues/217">https://github.com/JuliaHubOSS/llvm-cbe/issues/217</a></p>
+<p>有个类似的，但是疑似不是同一个问题。</p>
+<p>把 sse 关掉试试。我最好找一个足够老的 cpu 它不支持 sse2 的这种。</p>
+<p>奔腾 3 好像是，但是它是 32 位的，烦内。</p>
+<p><a href="https://github.com/HenrikBengtsson/x86-64-level">https://github.com/HenrikBengtsson/x86-64-level</a></p>
+<p>哈哈，没有 sse2 连 x86-64 v1 都算不上。</p>
+<p>好像没有这样的 cpu。支持 x64 的 cpu 必支持 sse2 ……算了，手动把 sse2 关掉好了。</p>
+<p><a href="https://github.com/rust-lang/rust/issues/133611">https://github.com/rust-lang/rust/issues/133611</a></p>
+<pre>    on all x86 targets, we could pass SIMD vectors of up to 128 bits in registers rather than indirectly
+
+</pre>
+<p>太坏了！不让关。sse2 的寄存器会被用来传递 float</p>
+<p><a href="https://os.phil-opp.com/disable-simd/">https://os.phil-opp.com/disable-simd/</a></p>
+<p>不过那样的话我们只能用 soft float 了，和写操作系统一样。</p>
+<p>哦坏，用 <code>RUSTFLAGS</code> 设置 target feature 的时候会导致 build.rs 出 illegal instruction 的错误。</p>
+<p><a href="https://users.rust-lang.org/t/different-rustflags-for-build-rs-and-main-rs/67080">https://users.rust-lang.org/t/different-rustflags-for-build-rs-and-main-rs/67080</a></p>
+<p>这里说手动指定 <code>--target</code> 就好了。</p>
+<pre>    warning: target feature `sse2` must be enabled to ensure that the ABI of the current target can be implemented correctly
+      |
+      = note: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+      = note: for more information, see issue #116344 &lt;https://github.com/rust-lang/rust/issues/116344&gt;
+
+    warning: target feature `soft-float` must be disabled to ensure that the ABI of the current target can be implemented correctly
+      |
+      = note: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+      = note: for more information, see issue #116344 &lt;https://github.com/rust-lang/rust/issues/116344&gt;
+
+</pre>
+<p>哎，急。</p>
+<p><a href="https://github.com/rust-lang/rust/issues/116344">https://github.com/rust-lang/rust/issues/116344</a></p>
+<pre>    In other words, setting -Ctarget-feature=-x87 or -Ctarget-feature=+soft-float can introduce UB unless the standard library is rebuilt with the same flags.
+
+</pre>
+<p>对啊，我确实在 build-std 啊……所以没问题。至于之后 hard error 的时候，那肯定会有之后的解决方法（</p>
+<pre>    [134] jyi-00-rust-dev 20:17 (master) ~/dev/lead-to-rome
+    0 RUSTFLAGS='-Ctarget-feature=-sse2,+soft-float' cargo rustc --release --target x86_64-unknown-linux-gnu --target-dir ./packed-llvm-ir -- --emit=llvm-ir
+
+</pre>
+<p>神秘小抄。</p>
+<pre>    jyi-00-rust-dev 20:18 (master) ~/dev/lead-to-rome
+    0 ~/src/lang/llvm-cbe/build/tools/llvm-cbe/llvm-cbe packed-llvm-ir/x86_64-unknown-linux-gnu/release/deps/lead_to_rome-47d99845349acce0.ll
+    LLVM ERROR: Code generator does not support intrinsic function 'llvm.x86.sse2.pause'!
+
+</pre>
+<p>不中嘞，为什么还是有 sse2 啊。</p>
+<p>搞不懂了。</p>
+<p>哦我是不是不应该用 <code>x86_64-unknown-linux-gnu</code>。我得用一点不那么 feature rich 的东西。</p>
+<p><a href="https://stackoverflow.com/questions/70738522/is-llvm-ir-a-machine-independent-language">https://stackoverflow.com/questions/70738522/is-llvm-ir-a-machine-independent-language</a></p>
+<p>它说 llvm ir 是个 platform independent 的东西，那我只要找个垃圾 target 过来就好了吗。</p>
+<p><a href="https://users.rust-lang.org/t/is-it-possible-to-cross-compile-to-a-host-platform-in-which-rust-codebase-has-no-support-for/94087/3">https://users.rust-lang.org/t/is-it-possible-to-cross-compile-to-a-host-platform-in-which-rust-codebase-has-no-support-for/94087/3</a></p>
+<pre>    LLVM's IR is not portable. It's not like JVM bytecode. It's more like assembly. It encodes a lot of specific and implicit assumptions about the target platform.
+
+</pre>
+<p>hmm，也并非 platform independent</p>
+<p>哦我草，也不对啊，我要用 soft float，我的 libc 不用 soft float 啊，那我想调 libc 的时候不还是炸了吗。</p>
+<p>哦，原来 <code>llvm.x86.sse2.pause</code> 是暗示 cpu 自己在自旋的指令，可以看作是 nop？</p>
+<p>原来是锁相关的啊，我还以为是数学呢。</p>
+<p><a href="https://github.com/zlfn/rust-gb/issues/10">https://github.com/zlfn/rust-gb/issues/10</a></p>
+<p>有人和我遇到了一样的问题，用 llvm cbe 写 rust。</p>
+<p>感觉不太搞的定这一坨……</p>
+<pre>    jyi-00-rust-dev 21:18 (master) ~/dev/rust-hello
+    0 ~/src/lang/llvm-cbe/build/tools/llvm-cbe/llvm-cbe a.ll
+    Segmentation fault
+
+</pre>
+<p>它自杀了。</p>
+<p>还是试试 <code>rustc_codegen_clr</code> 好了。</p>
+<p><a href="https://github.com/FractalFir/rustc_codegen_clr/blob/main/BROKEN_TESTS.md">https://github.com/FractalFir/rustc_codegen_clr/blob/main/BROKEN_TESTS.md</a></p>
+<p>怎么挂的测试这么多。好像也不是很阳间的样子。</p>
+<p><a href="https://github.com/thepowersgang/mrustc/issues/355">https://github.com/thepowersgang/mrustc/issues/355</a></p>
+<pre>    Nothing in rustc/cargo needs async blocks, so they are not supported currently
+
+</pre>
+<p>嘛的，卧龙凤雏，这位不支持 async ……</p>
+<p>！又试了一下 llvm-cbe，发现把优化全关了就不会生成 sse2.pause 的代码了！</p>
+<pre>    jyi-00-rust-dev 22:10 (master) ~/dev/rust-hello
+    0 cargo rustc --target-dir ./packed-llvm-ir -- -C opt-level=0 -C no-prepopulate-passes -C passes=&quot;&quot; -C link-dead-code=yes --emit=llvm-ir
+
+</pre>
+<p><a href="https://github.com/JuliaHubOSS/llvm-cbe/issues/111">https://github.com/JuliaHubOSS/llvm-cbe/issues/111</a></p>
+<pre>    There was also llvm.x86.sse2.pause, which is an x86-specific intrinsic. While we could add support for that, I assume you probably want to use C for portability reasons, and therefore you would want to get Rust to avoid that intrinsic by specifying a different target. Maybe something very generic like WebAssembly?
+
+</pre>
+<p>哎，又没认真读 issue，原来是已经有人遇到过的问题……</p>
+<p>保存一下开发出来的 cargo config</p>
+<pre>    [build]
+    rustflags = [
+        &quot;--cfg=has_std&quot;,
+        &quot;--emit=llvm-ir&quot;
+    ]
+    target-dir = './packed-llvm-ir'
+    target = 'wasm32-unknown-unknown'
+
+    [unstable]
+    build-std = ['std', 'panic_abort']
+    build-std-features = [
+        'compiler-builtins-no-f16-f128',
+        'optimize_for_size',
+    ]
+
+</pre>
+<p>编译流程：</p>
+<pre>    build:
+            cargo clean
+            cargo rustc --release --target-dir ./packed-llvm-ir
+
+</pre>
+<p>toolchain:</p>
+<pre>    0 cat rust-toolchain.toml
+    [toolchain]
+    channel = &quot;nightly-2025-02-13&quot;
+    # channel = &quot;1.86&quot;
+    profile = &quot;minimal&quot;
+    components = ['rust-src']
+    targets = ['wasm32-unknown-unknown']
+
+</pre>
+<p>先用 wasm32，可以开优化。x86 开优化的时候会生成 sse2 pause 指令，llvm-cbe 搞不动。</p>
+<p>哦，wasm32 是错的！它会生成 llvm.wasm.memory.grow 指令在 dlmalloc 里面。不要用 wasm。</p>
+<p>太坏了</p>
+<p>那还是整没优化的 x86 好了</p>
+<p>坏了，虽然主函数里没有 sse2 pause 了，但是但是 std 里又有了！wtf</p>
+<p>这玩毛线啊……</p>
+<p>这么看难道 rustc-codegen-clr 反而比较拟人吗。</p>
+<p><a href="https://github.com/FractalFir/rustc_codegen_clr">https://github.com/FractalFir/rustc_codegen_clr</a>:</p>
+<pre>    The project currently supports most Rust features (except proc macros), but it is not bug-free. It can compile a mostly working version of Rust std, but there are many minor bugs that make such std not 100% functional.
+
+</pre>
+<p>……except proc macros。</p>
+<p>哎，没一个是人</p>
+<p>目前来看希望最大的应该是 llvm-cbe！watch 一下好了。</p>
+<p>rustc-codegen-clr 不知道长期来看怎么样，但是应该是最适合临时使用一下的。</p>
+<p>……试了下发现 rustc 内部的 codegen api 改掉了，现在 master 分支已经通不过编译了，坏。</p>
+<p>Mon Oct 27 19:15:23 CST 2025</p>
+<p>试着改改 llvm-cbe，看看能不能跑通。感觉 cxx 好难写……</p>
+<p>rustc 会对 bool 生成 i1 类型的 llvm ir，这个类型在 c 里没有直接的映射，很坏。</p>
+<p>它还会生成一些不能直接映射到 c 的指令，比如一些移位什么的。需要手工写函数处理。太坏了。</p>
+<p>我能不能从 mrustc 里面偷一些函数出来……</p>
+<p>还有一些浮点数相关的指令，头疼。</p>
+<p>哎，太难了。不弄了。</p>
+<p>Mon Nov 24 12:02:35 CST 2025</p>
+<p>前几天把 rs 编译到 js 了，启发我可能可以先把 rs 编译到 wasm，再编译到 c！</p>
+<p>不过这样的话文件之类的库就不好用了。有点坏。可能需要 wasi，或者自己定制的一套 IO 东西？</p>
+<p>https://www.wingolog.org/archives/2025/10/30/wastrel-a-profligate-implementation-of-webassembly</p>
+<pre>    So on coremark, Wastrel is some 2-5% percent slower than native, and w2c2 is some 2-5% slower than that. Wasmtime is 30-40% slower than GCC. Voilà.
+
+</pre>
+<p>性能也不错。</p>
+<p>这个 wastrel 是用 c 写的啊，感觉有点不妙。</p>
+<pre>    &gt;23s&lt; jyi-00-rust-dev 12:14 (main) ~/sr/lang/wastrel
+    0 ./pre-inst-env bin/wastrel compile -S -o test-out.c test.wasm
+    ;;; note: auto-compilation is enabled, set GUILE_AUTO_COMPILE=0
+    ;;;       or pass the --no-auto-compile argument to disable.
+    ;;; compiling /home/jyi/src/lang/wastrel/bin/wastrel
+    ;;; compiling /home/jyi/src/lang/wastrel/module/wastrel/resource.scm
+    ;;; compiled /home/jyi/.cache/guile/ccache/3.0-LE-8-4.7/home/jyi/src/lang/wastrel/module/wastrel/resource.scm.go
+    ;;; compiled /home/jyi/.cache/guile/ccache/3.0-LE-8-4.7/home/jyi/src/lang/wastrel/bin/wastrel.go
+    LICENSE.txt  README.md     autom4te.cache/  config.log      guix.scm         resource/   whippet/
+    Makefile     acinclude.m4  bin/             config.status*  module/          test-out.c
+    Makefile.am  aclocal.m4    bootstrap.sh*    configure*      pre-inst-env*    test.c
+    Makefile.in  apt.snapshot  build-aux/       configure.ac    pre-inst-env.in  test.wasm*
+
+</pre>
+<p>命令行接口不太好用，没啥提示信息。跟着 readme 走倒是可以。</p>
+<pre>    &gt;28s&lt; jyi-00-rust-dev 12:18 (main) ~/sr/lang/wastrel
+    0 gcc test-out.c
+    /usr/bin/ld: /tmp/ccNSKTkk.o: in function `func_52':
+    test-out.c:(.text+0x6f2ab): undefined reference to `trunc'
+    /usr/bin/ld: test-out.c:(.text+0x7d622): undefined reference to `trunc'
+    collect2: error: ld returned 1 exit status
+
+</pre>
+<p>呃。看来需要数学库。加个 <code>-lm</code> 就好了。</p>
+<p>rust 会依赖 libm 吗。</p>
+<p>感觉这个还行。至少特性支持还算完整。</p>
+<p>https://doc.rust-lang.org/nightly/rustc/platform-support.html</p>
+<p>wasi 是个 T2 platform，好像也不错。</p>
+<p>Fri Dec 12 21:20:35 CST 2025</p>
+<p><a href="https://jonathan.protzenko.fr/2025/10/28/eurydice.html">https://jonathan.protzenko.fr/2025/10/28/eurydice.html</a></p>
+<p><a href="https://github.com/AeneasVerif/eurydice">https://github.com/AeneasVerif/eurydice</a></p>
+<p>一个把 rust 编译到 c 的编译器。看起来不用借助 wasm，而且完成度也挺高？</p>
+<p>试吃一下。</p>
+<pre>    In terms of software architecture, Eurydice consumes Rust programs via the Charon infrastructure, then extracts Rust to KaRaMeL's internal AST via a type-driven translation. Once in the KaRaMeL AST, 30+ nano-passes allow going from Rust down to C code. About half of these passes were already implemented for KaRaMeL, the rest of the passes reuse the KaRaMeL infrastructure but were freshly written for Eurydice.
+
+</pre>
+<p>Tue Jan 13 18:28:51 CST 2026</p>
+<pre>    There are more in the pipeline, and I look forward to seeing the supported subset of Rust grow even more. Next on the horizon is support for dyn traits via vtables, and relying on Charon’s monomorphization to get MIR exactly as the Rust compiler would monomorphize it, intead of relying on a custom procedure in Eurydice.
+
+</pre>
+<p>好吧，连 dyn 都不支持。算了。
+</p>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+
+<div id="footer" class="pagefooter" role="contentinfo">
+
+<div id="pageinfo">
+
+
+<div class="trails">
+<div class="trail">
+
+<span class="trailprev">
+<span class="trailarrow">←</span>
+<a href="../wasm-transpilers/wasm-to-c.html">wasm-to-c</a>
+<span class="trailsep">|</span>
+</span>
+
+<span class="trailup">
+<a href="../../../logbook.html">logbook</a>
+</span>
+
+<span class="trailnext">
+<span class="trailsep">|</span>
+<a href="../wasm-transpilers/wasm-to-jvm.html">wasm-to-jvm</a>
+<span class="trailarrow">→</span>
+</span>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="pagedate">
+Last edited <span class="date">Tue Jan 13 18:29:02 2026</span>
+<!-- Created <span class="date dt-published">Tue Jan 13 18:29:02 2026</span> -->
+</div>
+
+</div>
+
+
+<!-- from jyi -->
+</div>
+
+</div>
+
+</body>
+</html>
